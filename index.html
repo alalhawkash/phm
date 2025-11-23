@@ -1061,41 +1061,7 @@
             min-width: 0;
         }
         .header {
-            background: linear-gradient(135deg, rgba(90, 90, 90, 0.25) 0%, rgba(107, 107, 107, 0.25) 30%, rgba(74, 74, 74, 0.25) 100%);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            margin-bottom: 30px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            position: relative;
-            z-index: 1;
-            color: white;
-            overflow: hidden;
-        }
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-        }
-        .header h1 {
-            color: rgba(255, 255, 255, 0.95);
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            font-family: 'Janna LT', 'JannaLT-Regular', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .header p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1em;
-            margin-bottom: 15px;
-            font-family: 'Janna LT', 'JannaLT-Regular', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: none;
         }
         .loading {
             text-align: center;
@@ -1205,18 +1171,9 @@
                 height: 100dvh; /* Dynamic viewport height for mobile */
             }
             
-            /* Make header smaller on mobile */
+            /* Header hidden on mobile */
             .header {
-                padding: 12px;
-                margin-bottom: 10px;
-            }
-            .header h1 {
-                font-size: 1.3em;
-                margin-bottom: 5px;
-            }
-            .header p {
-                font-size: 0.75em;
-                margin-bottom: 8px;
+                display: none;
             }
             .refresh-info {
                 font-size: 0.7em;
@@ -1227,10 +1184,9 @@
             /* Overlapping cards on mobile */
             .main-cards-container {
                 position: relative !important;
-                height: calc(100vh - 180px) !important;
-                height: calc(100dvh - 180px) !important; /* Dynamic viewport height */
-                min-height: 400px !important;
-                max-height: calc(100dvh - 180px) !important;
+                height: auto !important;
+                min-height: auto !important;
+                max-height: none !important;
                 display: block !important;
                 margin-bottom: 10px !important;
                 overflow: hidden !important;
@@ -1255,18 +1211,21 @@
                 display: none !important;
             }
             .main-cards-container .stat-card {
-                flex: 0 0 88% !important;
+                flex: 0 0 82% !important;
                 scroll-snap-align: center !important;
                 position: relative !important;
                 opacity: 1 !important;
                 visibility: visible !important;
                 pointer-events: auto !important;
-                overflow-y: auto !important;
+                overflow-y: visible !important;
                 overflow-x: hidden !important;
                 -webkit-overflow-scrolling: touch !important;
-                min-height: auto !important;
+                max-height: none !important;
                 height: auto !important;
-                max-height: calc(100dvh - 240px) !important;
+                min-height: auto !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-self: stretch !important;
             }
             
             /* Mobile card navigation buttons - hidden, using swipe instead */
@@ -1516,7 +1475,16 @@
             
             /* Adjust card padding on mobile - reduced by 15% total */
             .stat-card {
-                padding: 10px !important;
+                padding: 12px !important;
+                min-height: auto !important;
+                height: auto !important;
+                max-height: none !important;
+            }
+            
+            /* Ensure all cards have consistent sizing */
+            .main-cards-container .stat-card {
+                width: 82% !important;
+                max-width: 82% !important;
             }
             
             /* Make charts more compact on mobile - reduced by 15% total */
@@ -1920,12 +1888,6 @@
         </aside>
         
         <div class="main-content">
-        <div class="header">
-            <h1>منظور | Manthoor</h1>
-        <div id="refreshInfo" class="refresh-info" style="display: none;">
-                Last updated: <span id="lastUpdate"></span>
-            </div>
-        </div>
 
         <div id="loading" class="loading">
             <div id="loadingEnglish"></div>
