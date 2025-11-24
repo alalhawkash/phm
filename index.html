@@ -1571,24 +1571,6 @@
                 min-height: 257px !important;
             }
             
-            /* Dashboard filter mobile styles */
-            #dashboard-filter-container {
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                margin-bottom: 16px !important;
-            }
-            
-            #dashboard-filter-container label {
-                font-size: 0.8rem !important;
-            }
-            
-            #zoneFilter {
-                width: 100% !important;
-                min-width: unset !important;
-                font-size: 0.85rem !important;
-                padding: 10px 12px !important;
-            }
-            
             /* Building Visualization mobile styles */
             .building-viz-grid {
                 grid-template-columns: 1fr !important;
@@ -1951,6 +1933,7 @@
             <h2>Navigation</h2>
             <ul class="sidebar-menu">
                 <li><a href="#dashboard" class="sidebar-link" data-section="dashboard">Dashboard</a></li>
+                <li><a href="#overview" class="sidebar-link" data-section="overview">Overview</a></li>
                 <li><a href="#dm-patients" class="sidebar-link" data-section="dm-patients">KPIs</a></li>
                 <li><a href="#pre-dm-patients" class="sidebar-link" data-section="pre-dm-patients">Goals</a></li>
                 <li><a href="#screening-target" class="sidebar-link" data-section="screening-target">Target</a></li>
@@ -1973,17 +1956,6 @@
             <!-- Dashboard Section (default) -->
             <div id="dashboard-section" class="content-section" style="display: none;">
                 <div id="dashboard">
-            <div id="dashboard-filter-container" style="margin-bottom: 20px; display: flex; justify-content: flex-end; align-items: center; gap: 12px;">
-                <label for="zoneFilter" style="color: rgba(255, 255, 255, 0.9); font-size: 0.875rem; display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity: 0.8;">
-                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                    </svg>
-                    Filter by Zone:
-                </label>
-                <select id="zoneFilter" style="padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.95); font-size: 0.875rem; cursor: pointer; min-width: 150px; backdrop-filter: blur(10px);">
-                    <option value="all">All Zones</option>
-                </select>
-            </div>
             <div id="mainCardsContainer"></div>
             <div class="charts-grid" id="chartsGrid"></div>
         </div>
@@ -2060,6 +2032,13 @@
                 </div>
             </div>
 
+            <!-- Overview Section (Same cards as Dashboard) -->
+            <div id="overview-section" class="content-section" style="display: none;">
+                <div id="overview">
+                    <div id="overviewCardsContainer"></div>
+                </div>
+            </div>
+
         </div>
     </div>
     
@@ -2067,6 +2046,7 @@
     <nav class="mobile-tab-bar">
         <div class="mobile-tab-pill">
             <button class="mobile-tab-link active" data-section="dashboard">Dashboard</button>
+            <button class="mobile-tab-link" data-section="overview">Overview</button>
             <button class="mobile-tab-link" data-section="dm-patients">KPIs</button>
             <button class="mobile-tab-link" data-section="pre-dm-patients">Goals</button>
             <button class="mobile-tab-link" data-section="screening-target">Target</button>
@@ -2192,11 +2172,8 @@
                     throw new Error('Failed to fetch data from all sources. Please ensure the Google Sheet is publicly accessible.');
                 }
                 
-                // Store CSV text for zone filtering
-                window.lastCsvText = csvText;
-                
                 // Process data stream - only calculate what we need
-                processDataStream(csvText, currentSelectedZone);
+                processDataStream(csvText);
 
             } catch (error) {
                 console.error('Error:', error);
@@ -2313,7 +2290,7 @@
             return entry ? entry.target : 0;
         }
 
-        function processDataStream(csvText, filterZone = 'all') {
+        function processDataStream(csvText) {
             // Initialize counters - only store what we need
             let totalRecords = 0;
             const patientSet = new Set();
@@ -2497,16 +2474,6 @@
                         patientOrganizations[data.Patient_ID] = data['Organization Name'];
                     }
                     
-                    // Filter by zone if specified
-                    if (filterZone !== 'all') {
-                        const orgName = data['Organization Name'] || '';
-                        const normalizedOrg = normalizeOrgName(orgName);
-                        const patientZone = ZONE_LOOKUP[normalizedOrg] || "Unknown";
-                        if (patientZone !== filterZone) {
-                            return; // Skip this record if not in selected zone
-                        }
-                    }
-                    
                     // Count unique organizations
                     if (data['Organization Name']) {
                         orgSet.add(data['Organization Name']);
@@ -2518,12 +2485,10 @@
                     }
                 },
                 complete: function() {
-                    // Store data globally for daily summary and filtering
+                    // Store data globally for daily summary
                     globalAllPatientData = allPatientData;
                     globalHasDmIds = hasDmIds;
                     globalOrgZoneMap = ORG_ZONE_MAP;
-                    globalPatientRecords = patientRecords;
-                    globalOrgTargets = ORG_TARGETS;
                     
                     // Create zone lookup for daily summary
                     function normalizeOrgNameForLookup(org) {
@@ -2891,13 +2856,7 @@
                     }
                     
                     // Calculate total target (sum of all zone targets derived from PHC table)
-                    // Filter by zone if specified
-                    let totalTarget;
-                    if (filterZone !== 'all' && TOTAL_CUMULATIVE_TARGETS[filterZone]) {
-                        totalTarget = TOTAL_CUMULATIVE_TARGETS[filterZone];
-                    } else {
-                        totalTarget = Object.values(TOTAL_CUMULATIVE_TARGETS).reduce((sum, target) => sum + target, 0);
-                    }
+                    const totalTarget = Object.values(TOTAL_CUMULATIVE_TARGETS).reduce((sum, target) => sum + target, 0);
                     
                     // Total screened (unique patients: DM + Pre-DM + Normal results)
                     const screenedCount = dmPatientCount + predmPatientCount + normalPatientCount;
@@ -2974,22 +2933,6 @@
                     // Count unique zones
                     const uniqueZones = new Set(Object.values(ORG_ZONE_MAP));
                     const zoneCount = uniqueZones.size;
-                    
-                    // Populate zone filter dropdown
-                    const zoneFilter = document.getElementById('zoneFilter');
-                    if (zoneFilter) {
-                        // Clear existing options except "All Zones"
-                        while (zoneFilter.children.length > 1) {
-                            zoneFilter.removeChild(zoneFilter.lastChild);
-                        }
-                        // Add zone options
-                        Array.from(uniqueZones).sort().forEach(zone => {
-                            const option = document.createElement('option');
-                            option.value = zone;
-                            option.textContent = zone;
-                            zoneFilter.appendChild(option);
-                        });
-                    }
                     
                     // Create stats cards
                     createStatsCards(
@@ -3492,14 +3435,172 @@
             // Setup dashboard swipe and pagination dots
             setupDashboardSwipe();
             
-            // Setup zone filter
-            setupZoneFilter();
+            // Populate overview section with same cards
+            populateOverviewCards(dmPatientCount, controlledCount, uncontrolledCount, predmPatientCount, improvedCount, needFollowupCount, totalTarget, screenedCount, screenedPct, screenedFrom20241001Count, screenedFrom20241001Pct);
             
             // Setup sidebar navigation
             setupSidebarNavigation();
             
             // Setup daily summary button
             setupDailySummary();
+        }
+        
+        // Function to populate overview section with same cards as dashboard
+        function populateOverviewCards(dmPatientCount, controlledCount, uncontrolledCount, predmPatientCount, improvedCount, needFollowupCount, totalTarget, screenedCount, screenedPct, screenedFrom20241001Count, screenedFrom20241001Pct) {
+            const overviewCardsContainer = document.getElementById('overviewCardsContainer');
+            if (!overviewCardsContainer) return;
+            
+            const controlledPct = dmPatientCount > 0 ? ((controlledCount / dmPatientCount) * 100).toFixed(1) : 0;
+            const uncontrolledPct = dmPatientCount > 0 ? ((uncontrolledCount / dmPatientCount) * 100).toFixed(1) : 0;
+            const needFollowupPct = predmPatientCount > 0 ? ((needFollowupCount / predmPatientCount) * 100).toFixed(1) : 0;
+            const improvedPct = predmPatientCount > 0 ? ((improvedCount / predmPatientCount) * 100).toFixed(1) : 0;
+            
+            overviewCardsContainer.innerHTML = `
+            <div class="main-cards-container">
+                <div class="stat-card active" data-card-index="0" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
+                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Total DM</div>
+                            </div>
+                    <div style="text-align: center; margin-bottom: 12px;">
+                        <div style="font-size: 1.5em; font-weight: 700; color: rgba(255, 255, 255, 0.98); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(dmPatientCount || 0).toLocaleString()}</div>
+                                                    </div>
+                    <div class="sub-sub-cards-container" style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <div class="sub-sub-card success-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
+                                                <div class="sub-sub-card-inner">
+                                <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.12) 100%); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
+                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(controlledCount || 0).toLocaleString()}</div>
+                                        <div style="font-size: 0.65rem; color: rgba(147, 197, 253, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Controlled (${controlledPct}%)</div>
+                                                        </div>
+                                                    </div>
+                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.12) 100%); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    HbA1c ≤8.0%<br>or Fasting ≤9.0<br>(Latest result)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-sub-card alert-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
+                            <div class="sub-sub-card-inner">
+                                <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.12) 100%); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
+                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(uncontrolledCount || 0).toLocaleString()}</div>
+                                        <div style="font-size: 0.65rem; color: rgba(252, 165, 165, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Uncontrolled (${uncontrolledPct}%)</div>
+                                        </div>
+                                        </div>
+                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.12) 100%); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    HbA1c >8.0%<br>or Fasting >9.0<br>(Latest result)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75); text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
+                        <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
+                        <div style="text-align: left; padding-left: 16px;">
+                            HbA1c ≥6.5% or Fasting ≥7.0<br>
+                            First after 2025-06-01<br>
+                            Age > 34
+                            </div>
+                        </div>
+                            </div>
+                <div class="stat-card" data-card-index="1" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
+                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Total Pre-DM</div>
+                            </div>
+                    <div style="text-align: center; margin-bottom: 12px;">
+                        <div style="font-size: 1.5em; font-weight: 700; color: rgba(255, 255, 255, 0.98); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(predmPatientCount || 0).toLocaleString()}</div>
+                        </div>
+                    <div class="sub-sub-cards-container" style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <div class="sub-sub-card success-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
+                                                <div class="sub-sub-card-inner">
+                                                    <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.12) 100%); border: 1px solid rgba(34, 197, 94, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
+                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(improvedCount || 0).toLocaleString()}</div>
+                                        <div style="font-size: 0.65rem; color: rgba(134, 239, 172, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Improved (${improvedPct}%)</div>
+                                                        </div>
+                                                    </div>
+                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.12) 100%); border: 1px solid rgba(34, 197, 94, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    Normal result after 2025-06-01<br>(HbA1c <5.7% or Fasting <5.6)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-sub-card alert-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
+                            <div class="sub-sub-card-inner">
+                                <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.12) 100%); border: 1px solid rgba(251, 191, 36, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
+                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(needFollowupCount || 0).toLocaleString()}</div>
+                                        <div style="font-size: 0.65rem; color: rgba(253, 230, 138, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Need Follow-up (${needFollowupPct}%)</div>
+                                        </div>
+                                        </div>
+                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.12) 100%); border: 1px solid rgba(251, 191, 36, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    No visit within last 3 months<br>(or no visit recorded)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75); text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
+                        <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
+                        <div style="text-align: left; padding-left: 16px;">
+                            HbA1c: 5.7-6.4% or Fasting: 5.6-6.9<br>
+                            Result ≥ 2025-01-01<br>
+                            Age > 34<br>
+                            Excludes DM
+                                        </div>
+                                    </div>
+                                </div>
+                <div class="stat-card" data-card-index="2" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
+                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Screened</div>
+                            </div>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5em; font-weight: 700; margin-bottom: 8px; color: rgba(255, 255, 255, 0.98);">${(screenedCount || 0).toLocaleString()}</div>
+                            <div style="font-size: 0.75rem; opacity: 0.85; color: rgba(255, 255, 255, 0.8); margin-bottom: 12px;">Screened (${screenedPct}%)</div>
+                        </div>
+                        <div style="margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75);">
+                            <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
+                            <div style="text-align: left; padding-left: 16px;">
+                                • Age above 34<br>
+                                • Not pregnant
+                        </div>
+                    </div>
+                        </div>
+                            </div>
+                <div class="stat-card" data-card-index="3" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
+                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Screened (from 2024-10-01)</div>
+                            </div>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5em; font-weight: 700; margin-bottom: 8px; color: rgba(255, 255, 255, 0.98);">${(screenedFrom20241001Count || 0).toLocaleString()}</div>
+                            <div style="font-size: 0.75rem; opacity: 0.85; color: rgba(255, 255, 255, 0.8); margin-bottom: 12px;">Screened (${screenedFrom20241001Pct || '0.0'}%)</div>
+                        </div>
+                        <div style="margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75);">
+                            <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
+                            <div style="text-align: left; padding-left: 16px;">
+                                • Age above 34<br>
+                                • Not pregnant
+                        </div>
+                    </div>
+                        </div>
+                            </div>
+                        </div>
+            <div class="dashboard-pagination">
+                <div class="dashboard-dot active" data-card-index="0"></div>
+                <div class="dashboard-dot" data-card-index="1"></div>
+                <div class="dashboard-dot" data-card-index="2"></div>
+                <div class="dashboard-dot" data-card-index="3"></div>
+            </div>
+            `;
+            
+            // Setup swipe functionality for overview cards
+            setTimeout(() => {
+                const overviewContainer = document.querySelector('#overview-section .main-cards-container');
+                if (overviewContainer) {
+                    setupDashboardSwipe();
+                }
+            }, 100);
+            
+            // Setup click handlers for stat sub-cards
+            setupStatSubCardHandlers();
         }
         
         // Store global data for daily summary and DM raw data export
@@ -3511,31 +3612,6 @@
         
         // Flag to prevent multiple event listeners
         let dailySummaryListenerAdded = false;
-        
-        function setupZoneFilter() {
-            const zoneFilter = document.getElementById('zoneFilter');
-            if (!zoneFilter) return;
-            
-            zoneFilter.addEventListener('change', function() {
-                currentSelectedZone = this.value;
-                // Reload the CSV data with zone filter
-                // We need to reload from the original source
-                const csvInput = document.getElementById('csvInput');
-                if (csvInput && csvInput.files && csvInput.files.length > 0) {
-                    const file = csvInput.files[0];
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        processDataStream(e.target.result, currentSelectedZone);
-                    };
-                    reader.readAsText(file);
-                } else {
-                    // If no file input, try to get from stored CSV text
-                    if (window.lastCsvText) {
-                        processDataStream(window.lastCsvText, currentSelectedZone);
-                    }
-                }
-            });
-        }
         
         function setupDailySummary() {
             // Use event delegation on the document to handle clicks even if button is in hidden section
@@ -4115,6 +4191,8 @@
                     let targetSection = null;
                     if (section === 'dashboard') {
                         targetSection = document.getElementById('dashboard-section');
+                    } else if (section === 'overview') {
+                        targetSection = document.getElementById('overview-section');
                     } else if (section === 'dm-patients') {
                         targetSection = document.getElementById('dm-patients-section');
                     } else if (section === 'pre-dm-patients') {
