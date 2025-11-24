@@ -1149,8 +1149,8 @@
         }
         
         /* Hide pagination dots when dashboard section is not visible */
-        #dashboard-section:not([style*="display: block"]) .dashboard-pagination,
-        #dashboard-section[style*="display: none"] .dashboard-pagination {
+        #overview-section:not([style*="display: block"]) .dashboard-pagination,
+        #overview-section[style*="display: none"] .dashboard-pagination {
             display: none !important;
         }
         
@@ -1193,7 +1193,7 @@
                 grid-template-columns: none !important;
                 gap: 0 !important;
             }
-            #dashboard-section {
+            #overview-section {
                 padding-bottom: 60px;
             }
             
@@ -1268,8 +1268,8 @@
             }
             
             /* Hide pagination dots when dashboard section is not visible */
-            #dashboard-section:not([style*="display: block"]) .dashboard-pagination,
-            #dashboard-section[style*="display: none"] .dashboard-pagination {
+            #overview-section:not([style*="display: block"]) .dashboard-pagination,
+            #overview-section[style*="display: none"] .dashboard-pagination {
                 display: none !important;
             }
             
@@ -1932,7 +1932,6 @@
         <aside class="sidebar">
             <h2>Navigation</h2>
             <ul class="sidebar-menu">
-                <li><a href="#dashboard" class="sidebar-link" data-section="dashboard">Dashboard</a></li>
                 <li><a href="#overview" class="sidebar-link" data-section="overview">Overview</a></li>
                 <li><a href="#dm-patients" class="sidebar-link" data-section="dm-patients">KPIs</a></li>
                 <li><a href="#pre-dm-patients" class="sidebar-link" data-section="pre-dm-patients">Goals</a></li>
@@ -1952,14 +1951,6 @@
             <div id="loadingArabic"></div>
         </div>
         <div id="error" class="error" style="display: none;"></div>
-
-            <!-- Dashboard Section (default) -->
-            <div id="dashboard-section" class="content-section" style="display: none;">
-                <div id="dashboard">
-            <div id="mainCardsContainer"></div>
-            <div class="charts-grid" id="chartsGrid"></div>
-        </div>
-    </div>
 
             <!-- DM Patients Section (Daily KPI) -->
             <div id="dm-patients-section" class="content-section" style="display: none;">
@@ -2033,7 +2024,8 @@
             </div>
 
             <!-- Overview Section (Same cards as Dashboard) -->
-            <div id="overview-section" class="content-section" style="display: none;">
+            <!-- Overview Section (Main section with cards) -->
+            <div id="overview-section" class="content-section" style="display: block;">
                 <div id="overview">
                     <div id="overviewCardsContainer"></div>
                 </div>
@@ -2045,8 +2037,7 @@
     <!-- Mobile bottom tab bar (words instead of icons) -->
     <nav class="mobile-tab-bar">
         <div class="mobile-tab-pill">
-            <button class="mobile-tab-link active" data-section="dashboard">Dashboard</button>
-            <button class="mobile-tab-link" data-section="overview">Overview</button>
+            <button class="mobile-tab-link active" data-section="overview">Overview</button>
             <button class="mobile-tab-link" data-section="dm-patients">KPIs</button>
             <button class="mobile-tab-link" data-section="pre-dm-patients">Goals</button>
             <button class="mobile-tab-link" data-section="screening-target">Target</button>
@@ -2964,8 +2955,7 @@
                     
                     // Show dashboard
                     document.getElementById('loading').style.display = 'none';
-                    document.getElementById('dashboard-section').style.display = 'block';
-                    document.getElementById('dashboard').style.display = 'block';
+                    document.getElementById('overview-section').style.display = 'block';
                     // Update refresh info if element exists (header was removed)
                     const refreshInfo = document.getElementById('refreshInfo');
                     if (refreshInfo) {
@@ -4216,8 +4206,15 @@
                 });
             });
             
-            // Set dashboard as default active
-            if (navLinks.length > 0) {
+            // Set overview as default active
+            const overviewLink = document.querySelector('[data-section="overview"]');
+            if (overviewLink) {
+                overviewLink.classList.add('active');
+                const overviewSection = document.getElementById('overview-section');
+                if (overviewSection) {
+                    overviewSection.style.display = 'block';
+                }
+            } else if (navLinks.length > 0) {
                 navLinks[0].classList.add('active');
             }
         }
