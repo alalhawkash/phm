@@ -2861,7 +2861,8 @@
                     for (const [patientId, records] of Object.entries(patientRecords)) {
                         if (!dmPatientIds.has(patientId)) continue;
                         for (const record of records) {
-                            if (record.resultDate && record.resultDate >= dateFrom20241001) {
+                            if (!record.resultDate || isNaN(record.resultDate.getTime())) continue;
+                            if (record.resultDate >= dateFrom20241001) {
                                 screenedFrom20241001Set.add(patientId);
                                 break;
                             }
@@ -2872,7 +2873,8 @@
                     for (const [patientId, records] of Object.entries(patientRecords)) {
                         if (!predmPatientIds.has(patientId)) continue;
                         for (const record of records) {
-                            if (record.resultDate && record.resultDate >= dateFrom20241001) {
+                            if (!record.resultDate || isNaN(record.resultDate.getTime())) continue;
+                            if (record.resultDate >= dateFrom20241001) {
                                 screenedFrom20241001Set.add(patientId);
                                 break;
                             }
@@ -2913,7 +2915,7 @@
                     }
                     
                     const screenedFrom20241001Count = screenedFrom20241001Set.size;
-                    const screenedFrom20241001Pct = totalTarget > 0 ? ((screenedFrom20241001Count / totalTarget) * 100).toFixed(1) : 0;
+                    const screenedFrom20241001Pct = (totalTarget && totalTarget > 0) ? ((screenedFrom20241001Count / totalTarget) * 100).toFixed(1) : '0.0';
                     
                     // Remaining to reach target
                     const remainingToTarget = Math.max(0, totalTarget - screenedCount);
@@ -2942,7 +2944,9 @@
                         remainingToTarget,
                         targetProgress,
                         zoneScreened,
-                        zoneOrgScreened
+                        zoneOrgScreened,
+                        screenedFrom20241001Count,
+                        screenedFrom20241001Pct
                     );
                     
                     // Create zone charts
@@ -3395,7 +3399,7 @@
                     <div style="display: flex; flex-direction: column; gap: 12px;">
                         <div style="text-align: center;">
                             <div style="font-size: 1.5em; font-weight: 700; margin-bottom: 8px; color: rgba(255, 255, 255, 0.98);">${(screenedFrom20241001Count || 0).toLocaleString()}</div>
-                            <div style="font-size: 0.75rem; opacity: 0.85; color: rgba(255, 255, 255, 0.8); margin-bottom: 12px;">Screened (${screenedFrom20241001Pct}%)</div>
+                            <div style="font-size: 0.75rem; opacity: 0.85; color: rgba(255, 255, 255, 0.8); margin-bottom: 12px;">Screened (${screenedFrom20241001Pct || '0.0'}%)</div>
                         </div>
                         <div style="margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75);">
                             <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
