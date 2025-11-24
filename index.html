@@ -1571,6 +1571,24 @@
                 min-height: 257px !important;
             }
             
+            /* Dashboard filter mobile styles */
+            #dashboard-filter-container {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                margin-bottom: 16px !important;
+            }
+            
+            #dashboard-filter-container label {
+                font-size: 0.8rem !important;
+            }
+            
+            #zoneFilter {
+                width: 100% !important;
+                min-width: unset !important;
+                font-size: 0.85rem !important;
+                padding: 10px 12px !important;
+            }
+            
             /* Building Visualization mobile styles */
             .building-viz-grid {
                 grid-template-columns: 1fr !important;
@@ -1955,6 +1973,17 @@
             <!-- Dashboard Section (default) -->
             <div id="dashboard-section" class="content-section" style="display: none;">
                 <div id="dashboard">
+            <div id="dashboard-filter-container" style="margin-bottom: 20px; display: flex; justify-content: flex-end; align-items: center; gap: 12px;">
+                <label for="zoneFilter" style="color: rgba(255, 255, 255, 0.9); font-size: 0.875rem; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity: 0.8;">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                    Filter by Zone:
+                </label>
+                <select id="zoneFilter" style="padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.95); font-size: 0.875rem; cursor: pointer; min-width: 150px; backdrop-filter: blur(10px);">
+                    <option value="all">All Zones</option>
+                </select>
+            </div>
             <div id="mainCardsContainer"></div>
             <div class="charts-grid" id="chartsGrid"></div>
         </div>
@@ -2163,8 +2192,11 @@
                     throw new Error('Failed to fetch data from all sources. Please ensure the Google Sheet is publicly accessible.');
                 }
                 
+                // Store CSV text for zone filtering
+                window.lastCsvText = csvText;
+                
                 // Process data stream - only calculate what we need
-                processDataStream(csvText);
+                processDataStream(csvText, currentSelectedZone);
 
             } catch (error) {
                 console.error('Error:', error);
@@ -2281,7 +2313,7 @@
             return entry ? entry.target : 0;
         }
 
-        function processDataStream(csvText) {
+        function processDataStream(csvText, filterZone = 'all') {
             // Initialize counters - only store what we need
             let totalRecords = 0;
             const patientSet = new Set();
@@ -2465,6 +2497,16 @@
                         patientOrganizations[data.Patient_ID] = data['Organization Name'];
                     }
                     
+                    // Filter by zone if specified
+                    if (filterZone !== 'all') {
+                        const orgName = data['Organization Name'] || '';
+                        const normalizedOrg = normalizeOrgName(orgName);
+                        const patientZone = ZONE_LOOKUP[normalizedOrg] || "Unknown";
+                        if (patientZone !== filterZone) {
+                            return; // Skip this record if not in selected zone
+                        }
+                    }
+                    
                     // Count unique organizations
                     if (data['Organization Name']) {
                         orgSet.add(data['Organization Name']);
@@ -2476,10 +2518,12 @@
                     }
                 },
                 complete: function() {
-                    // Store data globally for daily summary
+                    // Store data globally for daily summary and filtering
                     globalAllPatientData = allPatientData;
                     globalHasDmIds = hasDmIds;
                     globalOrgZoneMap = ORG_ZONE_MAP;
+                    globalPatientRecords = patientRecords;
+                    globalOrgTargets = ORG_TARGETS;
                     
                     // Create zone lookup for daily summary
                     function normalizeOrgNameForLookup(org) {
@@ -2847,7 +2891,13 @@
                     }
                     
                     // Calculate total target (sum of all zone targets derived from PHC table)
-                    const totalTarget = Object.values(TOTAL_CUMULATIVE_TARGETS).reduce((sum, target) => sum + target, 0);
+                    // Filter by zone if specified
+                    let totalTarget;
+                    if (filterZone !== 'all' && TOTAL_CUMULATIVE_TARGETS[filterZone]) {
+                        totalTarget = TOTAL_CUMULATIVE_TARGETS[filterZone];
+                    } else {
+                        totalTarget = Object.values(TOTAL_CUMULATIVE_TARGETS).reduce((sum, target) => sum + target, 0);
+                    }
                     
                     // Total screened (unique patients: DM + Pre-DM + Normal results)
                     const screenedCount = dmPatientCount + predmPatientCount + normalPatientCount;
@@ -2924,6 +2974,22 @@
                     // Count unique zones
                     const uniqueZones = new Set(Object.values(ORG_ZONE_MAP));
                     const zoneCount = uniqueZones.size;
+                    
+                    // Populate zone filter dropdown
+                    const zoneFilter = document.getElementById('zoneFilter');
+                    if (zoneFilter) {
+                        // Clear existing options except "All Zones"
+                        while (zoneFilter.children.length > 1) {
+                            zoneFilter.removeChild(zoneFilter.lastChild);
+                        }
+                        // Add zone options
+                        Array.from(uniqueZones).sort().forEach(zone => {
+                            const option = document.createElement('option');
+                            option.value = zone;
+                            option.textContent = zone;
+                            zoneFilter.appendChild(option);
+                        });
+                    }
                     
                     // Create stats cards
                     createStatsCards(
@@ -3426,6 +3492,9 @@
             // Setup dashboard swipe and pagination dots
             setupDashboardSwipe();
             
+            // Setup zone filter
+            setupZoneFilter();
+            
             // Setup sidebar navigation
             setupSidebarNavigation();
             
@@ -3442,6 +3511,31 @@
         
         // Flag to prevent multiple event listeners
         let dailySummaryListenerAdded = false;
+        
+        function setupZoneFilter() {
+            const zoneFilter = document.getElementById('zoneFilter');
+            if (!zoneFilter) return;
+            
+            zoneFilter.addEventListener('change', function() {
+                currentSelectedZone = this.value;
+                // Reload the CSV data with zone filter
+                // We need to reload from the original source
+                const csvInput = document.getElementById('csvInput');
+                if (csvInput && csvInput.files && csvInput.files.length > 0) {
+                    const file = csvInput.files[0];
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        processDataStream(e.target.result, currentSelectedZone);
+                    };
+                    reader.readAsText(file);
+                } else {
+                    // If no file input, try to get from stored CSV text
+                    if (window.lastCsvText) {
+                        processDataStream(window.lastCsvText, currentSelectedZone);
+                    }
+                }
+            });
+        }
         
         function setupDailySummary() {
             // Use event delegation on the document to handle clicks even if button is in hidden section
