@@ -2845,9 +2845,16 @@
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('dashboard-section').style.display = 'block';
                     document.getElementById('dashboard').style.display = 'block';
-                    document.getElementById('refreshInfo').style.display = 'block';
+                    // Update refresh info if element exists (header was removed)
+                    const refreshInfo = document.getElementById('refreshInfo');
+                    if (refreshInfo) {
+                        refreshInfo.style.display = 'block';
+                    }
                     const lastUpdateDate = latestResultDate ? latestResultDate.toLocaleString() : new Date().toLocaleString();
-                    document.getElementById('lastUpdate').textContent = lastUpdateDate;
+                    const lastUpdate = document.getElementById('lastUpdate');
+                    if (lastUpdate) {
+                        lastUpdate.textContent = lastUpdateDate;
+                    }
                     // Update sidebar last update
                     const sidebarUpdate = document.getElementById('sidebarLastUpdate');
                     if (sidebarUpdate) {
