@@ -1149,8 +1149,8 @@
         }
         
         /* Hide pagination dots when dashboard section is not visible */
-        #overview-section:not([style*="display: block"]) .dashboard-pagination,
-        #overview-section[style*="display: none"] .dashboard-pagination {
+        #dashboard-section:not([style*="display: block"]) .dashboard-pagination,
+        #dashboard-section[style*="display: none"] .dashboard-pagination {
             display: none !important;
         }
         
@@ -1193,7 +1193,7 @@
                 grid-template-columns: none !important;
                 gap: 0 !important;
             }
-            #overview-section {
+            #dashboard-section {
                 padding-bottom: 60px;
             }
             
@@ -1268,8 +1268,8 @@
             }
             
             /* Hide pagination dots when dashboard section is not visible */
-            #overview-section:not([style*="display: block"]) .dashboard-pagination,
-            #overview-section[style*="display: none"] .dashboard-pagination {
+            #dashboard-section:not([style*="display: block"]) .dashboard-pagination,
+            #dashboard-section[style*="display: none"] .dashboard-pagination {
                 display: none !important;
             }
             
@@ -1932,6 +1932,7 @@
         <aside class="sidebar">
             <h2>Navigation</h2>
             <ul class="sidebar-menu">
+                <li><a href="#dashboard" class="sidebar-link" data-section="dashboard">Dashboard</a></li>
                 <li><a href="#overview" class="sidebar-link" data-section="overview">Overview</a></li>
                 <li><a href="#dm-patients" class="sidebar-link" data-section="dm-patients">KPIs</a></li>
                 <li><a href="#pre-dm-patients" class="sidebar-link" data-section="pre-dm-patients">Goals</a></li>
@@ -1951,6 +1952,13 @@
             <div id="loadingArabic"></div>
         </div>
         <div id="error" class="error" style="display: none;"></div>
+
+            <!-- Dashboard Section (default) -->
+            <div id="dashboard-section" class="content-section" style="display: none;">
+                <div id="dashboard">
+                    <div id="mainCardsContainer"></div>
+                </div>
+            </div>
 
             <!-- DM Patients Section (Daily KPI) -->
             <div id="dm-patients-section" class="content-section" style="display: none;">
@@ -2024,8 +2032,7 @@
             </div>
 
             <!-- Overview Section (Same cards as Dashboard) -->
-            <!-- Overview Section (Main section with cards) -->
-            <div id="overview-section" class="content-section" style="display: block;">
+            <div id="overview-section" class="content-section" style="display: none;">
                 <div id="overview">
                     <div id="overviewCardsContainer"></div>
                 </div>
@@ -2037,7 +2044,8 @@
     <!-- Mobile bottom tab bar (words instead of icons) -->
     <nav class="mobile-tab-bar">
         <div class="mobile-tab-pill">
-            <button class="mobile-tab-link active" data-section="overview">Overview</button>
+            <button class="mobile-tab-link active" data-section="dashboard">Dashboard</button>
+            <button class="mobile-tab-link" data-section="overview">Overview</button>
             <button class="mobile-tab-link" data-section="dm-patients">KPIs</button>
             <button class="mobile-tab-link" data-section="pre-dm-patients">Goals</button>
             <button class="mobile-tab-link" data-section="screening-target">Target</button>
@@ -2127,7 +2135,7 @@
             try {
                 document.getElementById('loading').style.display = 'block';
                 document.getElementById('error').style.display = 'none';
-                // Dashboard section removed, using overview instead
+                document.getElementById('dashboard').style.display = 'none';
                 // Start typing animation when loading
                 startTypingAnimation();
 
@@ -2949,13 +2957,12 @@
                         screenedFrom20241001Pct
                     );
                     
-                    // Create zone charts
-                    createTargetZoneChart(zoneScreened);
-                    createTargetOrgByZoneChart(zoneOrgScreened);
+                    // Charts removed - Dashboard now matches Overview
                     
                     // Show dashboard
                     document.getElementById('loading').style.display = 'none';
-                    document.getElementById('overview-section').style.display = 'block';
+                    document.getElementById('dashboard-section').style.display = 'block';
+                    document.getElementById('dashboard').style.display = 'block';
                     // Update refresh info if element exists (header was removed)
                     const refreshInfo = document.getElementById('refreshInfo');
                     if (refreshInfo) {
@@ -2983,7 +2990,7 @@
         }
 
         function createStatsCards(dmPatientCount, controlledCount, uncontrolledCount, predmPatientCount, improvedCount, needFollowupCount, zoneControlled, zoneUncontrolled, zoneOrgCounts, zonePredmOrgCounts, zonePredmImproved, zonePredmNeedFollowup, totalTarget, screenedCount, remainingToTarget, targetProgress, zoneScreened, zoneOrgScreened, screenedFrom20241001Count, screenedFrom20241001Pct) {
-            // Dashboard section removed - cards are now in Overview section via populateOverviewCards
+            const mainCardsContainer = document.getElementById('mainCardsContainer');
             const controlledPct = dmPatientCount > 0 ? ((controlledCount / dmPatientCount) * 100).toFixed(1) : 0;
             const uncontrolledPct = dmPatientCount > 0 ? ((uncontrolledCount / dmPatientCount) * 100).toFixed(1) : 0;
             const needFollowupPct = predmPatientCount > 0 ? ((needFollowupCount / predmPatientCount) * 100).toFixed(1) : 0;
@@ -3281,9 +3288,149 @@
                 );
             }
             
-            // Dashboard cards are now populated via populateOverviewCards function
-            // Skip mainCardsContainer population since dashboard section was removed
-            // All card HTML is now in populateOverviewCards function
+            mainCardsContainer.innerHTML = `
+            <div class="main-cards-container">
+                <div class="stat-card active" data-card-index="0" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
+                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Total DM</div>
+                            </div>
+                    <div style="text-align: center; margin-bottom: 12px;">
+                        <div style="font-size: 1.5em; font-weight: 700; color: rgba(255, 255, 255, 0.98); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(dmPatientCount || 0).toLocaleString()}</div>
+                                                    </div>
+                    <div class="sub-sub-cards-container" style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <div class="sub-sub-card success-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
+                                                <div class="sub-sub-card-inner">
+                                <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.12) 100%); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
+                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(controlledCount || 0).toLocaleString()}</div>
+                                        <div style="font-size: 0.65rem; color: rgba(147, 197, 253, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Controlled (${controlledPct}%)</div>
+                                                        </div>
+                                                    </div>
+                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.12) 100%); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    HbA1c ≤8.0%<br>or Fasting ≤9.0<br>(Latest result)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-sub-card alert-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
+                            <div class="sub-sub-card-inner">
+                                <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.12) 100%); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
+                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(uncontrolledCount || 0).toLocaleString()}</div>
+                                        <div style="font-size: 0.65rem; color: rgba(252, 165, 165, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Uncontrolled (${uncontrolledPct}%)</div>
+                                        </div>
+                                        </div>
+                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.12) 100%); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    HbA1c >8.0%<br>or Fasting >9.0<br>(Latest result)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75); text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
+                        <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
+                        <div style="text-align: left; padding-left: 16px;">
+                            HbA1c ≥6.5% or Fasting ≥7.0<br>
+                            First after 2025-06-01<br>
+                            Age > 34
+                            </div>
+                        </div>
+                            </div>
+                <div class="stat-card" data-card-index="1" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
+                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Total Pre-DM</div>
+                            </div>
+                    <div style="text-align: center; margin-bottom: 12px;">
+                        <div style="font-size: 1.5em; font-weight: 700; color: rgba(255, 255, 255, 0.98); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(predmPatientCount || 0).toLocaleString()}</div>
+                        </div>
+                    <div class="sub-sub-cards-container" style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <div class="sub-sub-card success-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
+                                                <div class="sub-sub-card-inner">
+                                                    <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.12) 100%); border: 1px solid rgba(34, 197, 94, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
+                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(improvedCount || 0).toLocaleString()}</div>
+                                        <div style="font-size: 0.65rem; color: rgba(134, 239, 172, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Improved (${improvedPct}%)</div>
+                                                        </div>
+                                                    </div>
+                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.12) 100%); border: 1px solid rgba(34, 197, 94, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    Normal result<br>after 2025-06-01<br>(HbA1c <5.7%<br>or Fasting <5.6)
+                            </div>
+                        </div>
+                            </div>
+                        <div class="sub-sub-card alert-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
+                                                <div class="sub-sub-card-inner">
+                                                    <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.12) 100%); border: 1px solid rgba(251, 191, 36, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
+                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(needFollowupCount || 0).toLocaleString()}</div>
+                                        <div style="font-size: 0.65rem; color: rgba(253, 224, 71, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Need Follow-up (${needFollowupPct}%)</div>
+                        </div>
+                                                    </div>
+                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.12) 100%); border: 1px solid rgba(251, 191, 36, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                    No visit within<br>last 3 months<br>(or no visit<br>recorded)
+                            </div>
+                        </div>
+                    </div>
+                                        </div>
+                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75); text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
+                        <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
+                        <div style="text-align: left; padding-left: 16px;">
+                            HbA1c: 5.7-6.4% or Fasting: 5.6-6.9<br>
+                            Result ≥ 2025-01-01<br>
+                            Age > 34<br>
+                            Excludes DM
+                                        </div>
+                                    </div>
+                                </div>
+                <div class="stat-card" data-card-index="2" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
+                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Screened</div>
+                            </div>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5em; font-weight: 700; margin-bottom: 8px; color: rgba(255, 255, 255, 0.98);">${(screenedCount || 0).toLocaleString()}</div>
+                            <div style="font-size: 0.75rem; opacity: 0.85; color: rgba(255, 255, 255, 0.8); margin-bottom: 12px;">Screened (${screenedPct}%)</div>
+                        </div>
+                        <div style="margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75);">
+                            <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
+                            <div style="text-align: left; padding-left: 16px;">
+                                • Age above 34<br>
+                                • Not pregnant
+                        </div>
+                    </div>
+                        </div>
+                            </div>
+                        </div>
+                <div class="stat-card" data-card-index="3" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
+                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Screened (from 2024-10-01)</div>
+                            </div>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5em; font-weight: 700; margin-bottom: 8px; color: rgba(255, 255, 255, 0.98);">${(screenedFrom20241001Count || 0).toLocaleString()}</div>
+                            <div style="font-size: 0.75rem; opacity: 0.85; color: rgba(255, 255, 255, 0.8); margin-bottom: 12px;">Screened (${screenedFrom20241001Pct || '0.0'}%)</div>
+                        </div>
+                        <div style="margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75);">
+                            <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
+                            <div style="text-align: left; padding-left: 16px;">
+                                • Age above 34<br>
+                                • Not pregnant
+                        </div>
+                    </div>
+                        </div>
+                            </div>
+                        </div>
+            </div>
+            <div class="dashboard-pagination">
+                <div class="dashboard-dot active" data-card-index="0"></div>
+                <div class="dashboard-dot" data-card-index="1"></div>
+                <div class="dashboard-dot" data-card-index="2"></div>
+                <div class="dashboard-dot" data-card-index="3"></div>
+            </div>
+            `;
+            
+            // Setup click handlers for stat sub-cards
+            setupStatSubCardHandlers();
+            
+            // Setup dashboard swipe and pagination dots
+            setupDashboardSwipe();
             
             // Populate overview section with same cards
             populateOverviewCards(dmPatientCount, controlledCount, uncontrolledCount, predmPatientCount, improvedCount, needFollowupCount, totalTarget, screenedCount, screenedPct, screenedFrom20241001Count, screenedFrom20241001Pct);
@@ -4039,7 +4186,9 @@
                     
                     // Show selected section
                     let targetSection = null;
-                    if (section === 'overview') {
+                    if (section === 'dashboard') {
+                        targetSection = document.getElementById('dashboard-section');
+                    } else if (section === 'overview') {
                         targetSection = document.getElementById('overview-section');
                     } else if (section === 'dm-patients') {
                         targetSection = document.getElementById('dm-patients-section');
@@ -4064,15 +4213,8 @@
                 });
             });
             
-            // Set overview as default active
-            const overviewLink = document.querySelector('[data-section="overview"]');
-            if (overviewLink) {
-                overviewLink.classList.add('active');
-                const overviewSection = document.getElementById('overview-section');
-                if (overviewSection) {
-                    overviewSection.style.display = 'block';
-                }
-            } else if (navLinks.length > 0) {
+            // Set dashboard as default active
+            if (navLinks.length > 0) {
                 navLinks[0].classList.add('active');
             }
         }
