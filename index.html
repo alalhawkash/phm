@@ -711,12 +711,14 @@
             overflow-x: hidden;
             min-height: 0;
             padding-bottom: 70px; /* Space for mobile footer (58px + safe area) */
+            position: relative;
         }
         
         .zone-list {
             display: flex;
             flex-direction: column;
             gap: 8px;
+            position: relative;
         }
         
         .zone-item {
@@ -769,22 +771,28 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
+        .zone-item.expanded {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+        }
+        
         .zone-item.expanded .zone-details {
             display: block;
         }
         
-        .zone-details-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        .zone-detail-row {
+            display: flex;
+            align-items: flex-start;
             gap: 12px;
-            margin-top: 8px;
+            margin-bottom: 16px;
         }
         
-        .zone-detail-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
+        .zone-detail-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .zone-detail-main {
+            flex-shrink: 0;
+            min-width: 100px;
         }
         
         .zone-detail-label {
@@ -794,9 +802,75 @@
         }
         
         .zone-detail-value {
-            font-size: 1.1rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: rgba(255, 255, 255, 0.95);
+        }
+        
+        .zone-detail-sub-boxes {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .zone-sub-box {
+            flex: 1;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            min-width: 0;
+        }
+        
+        .zone-sub-box.controlled-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.12) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+        }
+        
+        .zone-sub-box.uncontrolled-box {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.12) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+        
+        .zone-sub-box.improved-box {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.12) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+        }
+        
+        .zone-sub-box.need-followup-box {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.12) 100%);
+            border: 1px solid rgba(251, 191, 36, 0.25);
+        }
+        
+        .zone-sub-box-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 4px;
+        }
+        
+        .zone-sub-box-label {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .zone-screened-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        
+        .zone-screened-percent {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 4px;
+        }
+        
+        .zone-remaining {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
         }
         
         @media (max-width: 768px) {
@@ -805,8 +879,22 @@
                 padding-bottom: 70px; /* Space for mobile footer */
             }
             
-            .zone-details-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .zone-detail-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .zone-detail-main {
+                min-width: auto;
+            }
+            
+            .zone-detail-sub-boxes {
+                width: 100%;
+            }
+            
+            .zone-screened-info {
+                align-items: flex-start;
+                margin-top: 8px;
             }
         }
         
@@ -3250,38 +3338,46 @@
                             <div class="zone-expand-icon">▼</div>
                                                     </div>
                         <div class="zone-details">
-                            <div class="zone-details-grid">
-                                <div class="zone-detail-item">
+                            <div class="zone-detail-row">
+                                <div class="zone-detail-main">
                                     <div class="zone-detail-label">Total DM</div>
                                     <div class="zone-detail-value">${dmTotal.toLocaleString()}</div>
                             </div>
-                                <div class="zone-detail-item">
-                                    <div class="zone-detail-label">Controlled</div>
-                                    <div class="zone-detail-value">${dmControlled.toLocaleString()} (${controlledPct}%)</div>
+                                <div class="zone-detail-sub-boxes">
+                                    <div class="zone-sub-box controlled-box">
+                                        <div class="zone-sub-box-value">${dmControlled.toLocaleString()}</div>
+                                        <div class="zone-sub-box-label">Controlled (${controlledPct}%)</div>
                         </div>
-                                <div class="zone-detail-item">
-                                    <div class="zone-detail-label">Uncontrolled</div>
-                                    <div class="zone-detail-value">${dmUncontrolled.toLocaleString()}</div>
+                                    <div class="zone-sub-box uncontrolled-box">
+                                        <div class="zone-sub-box-value">${dmUncontrolled.toLocaleString()}</div>
+                                        <div class="zone-sub-box-label">Uncontrolled</div>
                     </div>
-                                <div class="zone-detail-item">
+                                        </div>
+                                        </div>
+                            <div class="zone-detail-row">
+                                <div class="zone-detail-main">
                                     <div class="zone-detail-label">Total Pre-DM</div>
                                     <div class="zone-detail-value">${predmTotal.toLocaleString()}</div>
-                                        </div>
-                                <div class="zone-detail-item">
-                                    <div class="zone-detail-label">Improved</div>
-                                    <div class="zone-detail-value">${predmImproved.toLocaleString()} (${improvedPct}%)</div>
-                                        </div>
-                                <div class="zone-detail-item">
-                                    <div class="zone-detail-label">Need Follow-up</div>
-                                    <div class="zone-detail-value">${predmNeedFollowup.toLocaleString()}</div>
                                     </div>
-                                <div class="zone-detail-item">
-                                    <div class="zone-detail-label">Screened</div>
-                                    <div class="zone-detail-value">${screened.toLocaleString()} (${screenedPct}%)</div>
+                                <div class="zone-detail-sub-boxes">
+                                    <div class="zone-sub-box improved-box">
+                                        <div class="zone-sub-box-value">${predmImproved.toLocaleString()}</div>
+                                        <div class="zone-sub-box-label">Improved (${improvedPct}%)</div>
                                 </div>
-                                <div class="zone-detail-item">
-                                    <div class="zone-detail-label">Remaining</div>
-                                    <div class="zone-detail-value">${Math.max(0, target - screened).toLocaleString()}</div>
+                                    <div class="zone-sub-box need-followup-box">
+                                        <div class="zone-sub-box-value">${predmNeedFollowup.toLocaleString()}</div>
+                                        <div class="zone-sub-box-label">Need Follow-up</div>
+                            </div>
+                        </div>
+                        </div>
+                            <div class="zone-detail-row">
+                                <div class="zone-detail-main">
+                                    <div class="zone-detail-label">Screened</div>
+                                    <div class="zone-detail-value">${screened.toLocaleString()}</div>
+                    </div>
+                                <div class="zone-screened-info">
+                                    <div class="zone-screened-percent">${screenedPct}%</div>
+                                    <div class="zone-remaining">Remaining: ${Math.max(0, target - screened).toLocaleString()}</div>
                         </div>
                     </div>
                 </div>
@@ -3293,9 +3389,46 @@
             
             // Setup click handlers for expand/collapse
             const zoneItemsElements = zoneListContainer.querySelectorAll('.zone-item');
+            let expandedZone = null;
+            
             zoneItemsElements.forEach(item => {
-                item.addEventListener('click', function() {
-                    this.classList.toggle('expanded');
+                item.addEventListener('click', function(e) {
+                    // Only toggle if clicking on the header (not the details)
+                    if (e.target.closest('.zone-header') || e.target.closest('.zone-expand-icon')) {
+                        const wasExpanded = this.classList.contains('expanded');
+                        
+                        // Collapse all other zones
+                        zoneItemsElements.forEach(zone => {
+                            if (zone !== this && zone.classList.contains('expanded')) {
+                                zone.classList.remove('expanded');
+                            }
+                        });
+                        
+                        // Toggle current zone
+                        if (wasExpanded) {
+                            this.classList.remove('expanded');
+                            expandedZone = null;
+                        } else {
+                            this.classList.add('expanded');
+                            expandedZone = this;
+                            
+                            // Smooth scroll the expanded zone into view if needed
+                            setTimeout(() => {
+                                const containerRect = zoneListContainer.getBoundingClientRect();
+                                const itemRect = this.getBoundingClientRect();
+                                
+                                // Only scroll if the item is not fully visible
+                                if (itemRect.top < containerRect.top || itemRect.bottom > containerRect.bottom) {
+                                    const scrollTop = zoneListContainer.scrollTop;
+                                    const targetScroll = scrollTop + (itemRect.top - containerRect.top) - 10;
+                                    zoneListContainer.scrollTo({
+                                        top: Math.max(0, targetScroll),
+                                        behavior: 'smooth'
+                                    });
+                                }
+                            }, 50);
+                        }
+                    }
                 });
             });
         }
