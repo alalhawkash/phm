@@ -17,6 +17,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
             padding: 20px;
+            padding-top: 44px;
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
@@ -402,8 +403,10 @@
             pointer-events: auto;
             width: 100%;
             max-width: 100%;
-            margin: 0;
-            padding: 8px 12px;
+            margin: 8px 0 0 0;
+            height: 58px;
+            min-height: 58px;
+            padding: 8px 24px;
             padding-bottom: calc(8px + env(safe-area-inset-bottom, 0));
             border-radius: 0;
             border-top-left-radius: 16px;
@@ -416,6 +419,7 @@
             justify-content: space-between;
             align-items: center;
             gap: 4px;
+            box-sizing: border-box;
         }
         
         .mobile-tab-link {
@@ -1063,6 +1067,26 @@
         .header {
             display: none;
         }
+        .app-header {
+            font-size: 35px;
+            font-weight: 700;
+            color: #60a5fa;
+            text-align: center;
+            margin: 16px auto 24px auto;
+            padding: 0 20px;
+            height: 48px;
+            line-height: 48px;
+            text-shadow: 0 2px 8px rgba(96, 165, 250, 0.5);
+            display: block !important;
+            position: relative;
+            z-index: 100;
+            width: 100%;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(96, 165, 250, 0.2);
+        }
         .loading {
             text-align: center;
             color: white;
@@ -1108,10 +1132,23 @@
             margin-bottom: 30px;
         }
         .main-cards-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            display: flex;
+            gap: 12px;
             margin-bottom: 30px;
+            overflow-x: auto;
+            padding: 4px 0 8px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .main-cards-container::-webkit-scrollbar {
+            display: none;
+        }
+        .main-cards-container .stat-card {
+            flex: 0 0 80%;
+            scroll-snap-align: center;
+            height: 144px;
         }
         
         /* Dashboard pagination dots - desktop */
@@ -1165,6 +1202,7 @@
             /* Ensure body fits in viewport */
             body {
                 padding: 10px;
+                padding-top: 44px;
                 overflow-x: hidden;
                 overflow-y: auto;
                 height: 100vh;
@@ -1175,6 +1213,22 @@
             .header {
                 display: none;
             }
+            
+            /* App header styling for mobile */
+            .app-header {
+                font-size: 35px;
+                margin-top: 16px;
+                margin-bottom: 24px;
+                margin-left: 10px;
+                margin-right: 10px;
+                display: block;
+                width: calc(100% - 20px);
+                position: relative;
+                z-index: 10;
+                padding: 0 16px;
+                height: 48px;
+                line-height: 48px;
+            }
             .refresh-info {
                 font-size: 0.7em;
                 padding: 6px;
@@ -1182,25 +1236,21 @@
             }
             
             /* Overlapping cards on mobile */
-            .main-cards-container {
-                position: relative !important;
-                height: auto !important;
-                min-height: auto !important;
-                max-height: none !important;
-                display: block !important;
-                margin-bottom: 10px !important;
-                overflow: hidden !important;
-                grid-template-columns: none !important;
-                gap: 0 !important;
-            }
             #dashboard-section {
                 padding-bottom: 60px;
             }
             
             .main-cards-container {
+                position: relative !important;
+                height: auto !important;
+                min-height: auto !important;
+                max-height: none !important;
                 display: flex !important;
+                flex-wrap: nowrap !important;
                 gap: 12px !important;
+                margin-bottom: 10px !important;
                 overflow-x: auto !important;
+                overflow-y: visible !important;
                 padding: 4px 0 8px !important;
                 scroll-snap-type: x mandatory !important;
                 -webkit-overflow-scrolling: touch !important;
@@ -1220,6 +1270,7 @@
                 overflow-y: visible !important;
                 overflow-x: hidden !important;
                 -webkit-overflow-scrolling: touch !important;
+                height: 144px !important;
                 max-height: none !important;
                 height: auto !important;
                 min-height: auto !important;
@@ -1476,9 +1527,9 @@
             /* Adjust card padding on mobile - more compact */
             .stat-card {
                 padding: 10px !important;
-                min-height: auto !important;
-                height: auto !important;
-                max-height: none !important;
+                min-height: 144px !important;
+                height: 144px !important;
+                max-height: 144px !important;
             }
             
             /* Ensure all cards have consistent sizing - smaller width */
@@ -1558,8 +1609,11 @@
             }
             
             /* Reduce chart heights by 15% total */
+            .main-cards-container .stat-card [style*="height: 144px"] {
+                height: 122px !important;
+            }
             .main-cards-container .stat-card [style*="height: 200px"] {
-                height: 171px !important;
+                height: 122px !important;
             }
             .main-cards-container .stat-card [style*="height: 250px"] {
                 height: 214px !important;
@@ -1668,7 +1722,6 @@
             border-radius: 15px;
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
             text-align: center;
-            transition: transform 0.3s;
             border: 1px solid rgba(255, 255, 255, 0.18);
         }
         
@@ -1693,9 +1746,6 @@
             right: 0;
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
         }
         .stat-card h3 {
             color: rgba(255, 255, 255, 0.9);
@@ -1812,8 +1862,8 @@
         /* No-flip card styling - prevents flipping */
         .stat-sub-card.no-flip-card {
             cursor: default;
-            height: 200px !important;
-            min-height: 200px !important;
+            height: 144px !important;
+            min-height: 144px !important;
         }
         .stat-sub-card.no-flip-card .stat-sub-card-inner {
             transform: none !important;
@@ -1928,12 +1978,13 @@
     <div class="sphere-rays" style="display: none;"></div>
     <div class="lens-flare" style="display: none;"></div>
     
+    <h1 class="app-header">Najran PHM</h1>
+    
     <div class="container">
         <aside class="sidebar">
             <h2>Navigation</h2>
             <ul class="sidebar-menu">
                 <li><a href="#dashboard" class="sidebar-link" data-section="dashboard">Dashboard</a></li>
-                <li><a href="#overview" class="sidebar-link" data-section="overview">Overview</a></li>
                 <li><a href="#dm-patients" class="sidebar-link" data-section="dm-patients">KPIs</a></li>
                 <li><a href="#pre-dm-patients" class="sidebar-link" data-section="pre-dm-patients">Goals</a></li>
                 <li><a href="#screening-target" class="sidebar-link" data-section="screening-target">Target</a></li>
@@ -2031,13 +2082,6 @@
                 </div>
             </div>
 
-            <!-- Overview Section (Same cards as Dashboard) -->
-            <div id="overview-section" class="content-section" style="display: none;">
-                <div id="overview">
-                    <div id="overviewCardsContainer"></div>
-                </div>
-            </div>
-
         </div>
     </div>
     
@@ -2045,7 +2089,6 @@
     <nav class="mobile-tab-bar">
         <div class="mobile-tab-pill">
             <button class="mobile-tab-link active" data-section="dashboard">Dashboard</button>
-            <button class="mobile-tab-link" data-section="overview">Overview</button>
             <button class="mobile-tab-link" data-section="dm-patients">KPIs</button>
             <button class="mobile-tab-link" data-section="pre-dm-patients">Goals</button>
             <button class="mobile-tab-link" data-section="screening-target">Target</button>
@@ -2770,80 +2813,43 @@
                     
                     const predmPatientCount = Object.keys(predmPatients).length;
                     
-                    // Count patients with normal results (screened but normal)
-                    const normalPatients = new Set();
-                    const predmPatientIds = new Set(Object.keys(predmPatients));
-                    
-                    // Track screened patients by zone and organization
+                    // Track first-time screenings by zone and organization (age > 34)
                     const zoneScreened = {}; // zone -> Set of patient IDs
                     const zoneOrgScreened = {}; // zone -> {org -> Set of patient IDs}
+                    const firstScreeningInfo = {}; // patientId -> {date, zone, organization}
+                    const PROGRAM_START_DATE = new Date('2025-01-01');
+                    PROGRAM_START_DATE.setHours(0, 0, 0, 0);
+                    const SCREENING_SINCE_2024 = new Date('2024-10-01');
+                    SCREENING_SINCE_2024.setHours(0, 0, 0, 0);
+                    const screenedSince2024Set = new Set();
                     
                     for (const [patientId, records] of Object.entries(patientRecords)) {
-                        // Skip if already DM or Pre-DM
-                        if (dmPatientIds.has(patientId) || predmPatientIds.has(patientId)) continue;
-                        
                         const age = records[0]?.age || 0;
                         if (age <= 34) continue;
                         
-                        // Check if patient has normal screening results after cutoff date
-                        for (const record of records) {
-                            if (!record.resultDate || isNaN(record.resultDate.getTime())) continue;
-                            if (record.resultDate < PRE_DM_DATE_CUTOFF) continue;
-                            
-                            const resultName = (record.resultName || '').toLowerCase();
-                            const resultValue = record.resultValue;
-                            
-                            // Check if it's a screening test with normal result
-                            let isNormal = false;
-                            if (resultName.includes('a1c')) {
-                                const [low] = PRE_DM_RANGES.HBA1C;
-                                if (resultValue < low) {
-                                    isNormal = true;
-                                }
-                            } else if (resultName.includes('fast')) {
-                                const [low] = PRE_DM_RANGES.FASTING;
-                                if (resultValue < low) {
-                                    isNormal = true;
-                                }
-                            }
-                            
-                            if (isNormal) {
-                                normalPatients.add(patientId);
-                                // Track by zone and organization
-                                const org = patientOrganizations[patientId] || '';
-                                const zone = inferZone(org);
-                                if (!zoneScreened[zone]) zoneScreened[zone] = new Set();
-                                zoneScreened[zone].add(patientId);
-                                
-                                if (org) {
-                                    if (!zoneOrgScreened[zone]) zoneOrgScreened[zone] = {};
-                                    if (!zoneOrgScreened[zone][org]) zoneOrgScreened[zone][org] = new Set();
-                                    zoneOrgScreened[zone][org].add(patientId);
-                                }
-                                break; // Found normal result, count as screened
-                            }
-                        }
-                    }
-                    
-                    const normalPatientCount = normalPatients.size;
-                    
-                    // Add DM and Pre-DM patients to zone and organization tracking
-                    for (const patientId of Object.keys(dmPatients)) {
-                        const org = patientOrganizations[patientId] || '';
-                        const zone = inferZone(org);
-                        if (!zoneScreened[zone]) zoneScreened[zone] = new Set();
-                        zoneScreened[zone].add(patientId);
+                        const sortedRecords = records
+                            .filter(r => r.resultDate && !isNaN(r.resultDate.getTime()))
+                            .sort((a, b) => a.resultDate - b.resultDate);
                         
-                        if (org) {
-                            if (!zoneOrgScreened[zone]) zoneOrgScreened[zone] = {};
-                            if (!zoneOrgScreened[zone][org]) zoneOrgScreened[zone][org] = new Set();
-                            zoneOrgScreened[zone][org].add(patientId);
+                        if (sortedRecords.length === 0) continue;
+                        
+                        const firstAfter2024 = sortedRecords.find(r => r.resultDate >= SCREENING_SINCE_2024);
+                        if (firstAfter2024) {
+                            screenedSince2024Set.add(patientId);
                         }
-                    }
-                    
-                    for (const patientId of Object.keys(predmPatients)) {
+                        
+                        const firstAfter2025 = sortedRecords.find(r => r.resultDate >= PROGRAM_START_DATE);
+                        if (!firstAfter2025) continue;
+                        
                         const org = patientOrganizations[patientId] || '';
                         const zone = inferZone(org);
+                        
+                        firstScreeningInfo[patientId] = {
+                            date: firstAfter2025.resultDate,
+                            zone,
+                            organization: org
+                        };
+                        
                         if (!zoneScreened[zone]) zoneScreened[zone] = new Set();
                         zoneScreened[zone].add(patientId);
                         
@@ -2857,72 +2863,10 @@
                     // Calculate total target (sum of all zone targets derived from PHC table)
                     const totalTarget = Object.values(TOTAL_CUMULATIVE_TARGETS).reduce((sum, target) => sum + target, 0);
                     
-                    // Total screened (unique patients: DM + Pre-DM + Normal results)
-                    const screenedCount = dmPatientCount + predmPatientCount + normalPatientCount;
-                    
-                    // Calculate screened count from 2024-10-01 onwards
-                    const dateFrom20241001 = new Date('2024-10-01');
-                    dateFrom20241001.setHours(0, 0, 0, 0);
-                    const screenedFrom20241001Set = new Set();
-                    
-                    // Count DM patients with results from 2024-10-01
-                    for (const [patientId, records] of Object.entries(patientRecords)) {
-                        if (!dmPatientIds.has(patientId)) continue;
-                        for (const record of records) {
-                            if (!record.resultDate || isNaN(record.resultDate.getTime())) continue;
-                            if (record.resultDate >= dateFrom20241001) {
-                                screenedFrom20241001Set.add(patientId);
-                                break;
-                            }
-                        }
-                    }
-                    
-                    // Count Pre-DM patients with results from 2024-10-01
-                    for (const [patientId, records] of Object.entries(patientRecords)) {
-                        if (!predmPatientIds.has(patientId)) continue;
-                        for (const record of records) {
-                            if (!record.resultDate || isNaN(record.resultDate.getTime())) continue;
-                            if (record.resultDate >= dateFrom20241001) {
-                                screenedFrom20241001Set.add(patientId);
-                                break;
-                            }
-                        }
-                    }
-                    
-                    // Count normal patients with results from 2024-10-01
-                    for (const [patientId, records] of Object.entries(patientRecords)) {
-                        if (dmPatientIds.has(patientId) || predmPatientIds.has(patientId)) continue;
-                        const age = records[0]?.age || 0;
-                        if (age <= 34) continue;
-                        
-                        for (const record of records) {
-                            if (!record.resultDate || isNaN(record.resultDate.getTime())) continue;
-                            if (record.resultDate < dateFrom20241001) continue;
-                            
-                            const resultName = (record.resultName || '').toLowerCase();
-                            const resultValue = record.resultValue;
-                            
-                            let isNormal = false;
-                            if (resultName.includes('a1c')) {
-                                const [low] = PRE_DM_RANGES.HBA1C;
-                                if (resultValue < low) {
-                                    isNormal = true;
-                                }
-                            } else if (resultName.includes('fast')) {
-                                const [low] = PRE_DM_RANGES.FASTING;
-                                if (resultValue < low) {
-                                    isNormal = true;
-                                }
-                            }
-                            
-                            if (isNormal) {
-                                screenedFrom20241001Set.add(patientId);
-                                break;
-                            }
-                        }
-                    }
-                    
-                    const screenedFrom20241001Count = screenedFrom20241001Set.size;
+                    // Total screened (first-time screenings per patient after program start)
+                    const screenedEntries = Object.values(firstScreeningInfo);
+                    const screenedCount = screenedEntries.length;
+                    const screenedFrom20241001Count = screenedSince2024Set.size;
                     const screenedFrom20241001Pct = (totalTarget && totalTarget > 0) ? ((screenedFrom20241001Count / totalTarget) * 100).toFixed(1) : '0.0';
                     
                     // Remaining to reach target
@@ -2956,8 +2900,6 @@
                         screenedFrom20241001Count,
                         screenedFrom20241001Pct
                     );
-                    
-                    // Charts removed - Dashboard now matches Overview
                     
                     // Show dashboard
                     document.getElementById('loading').style.display = 'none';
@@ -3393,11 +3335,10 @@
                             <div style="text-align: left; padding-left: 16px;">
                                 • Age above 34<br>
                                 • Not pregnant
-                        </div>
-                    </div>
-                        </div>
                             </div>
                         </div>
+                    </div>
+                </div>
                 <div class="stat-card" data-card-index="3" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
                     <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
                         <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Screened (from 2024-10-01)</div>
@@ -3412,11 +3353,10 @@
                             <div style="text-align: left; padding-left: 16px;">
                                 • Age above 34<br>
                                 • Not pregnant
-                        </div>
-                    </div>
-                        </div>
                             </div>
                         </div>
+                    </div>
+                </div>
             </div>
             <div class="dashboard-pagination">
                 <div class="dashboard-dot active" data-card-index="0"></div>
@@ -3432,9 +3372,6 @@
             // Setup dashboard swipe and pagination dots
             setupDashboardSwipe();
             
-            // Populate overview section with same cards
-            populateOverviewCards(dmPatientCount, controlledCount, uncontrolledCount, predmPatientCount, improvedCount, needFollowupCount, totalTarget, screenedCount, screenedPct, screenedFrom20241001Count, screenedFrom20241001Pct);
-            
             // Setup sidebar navigation
             setupSidebarNavigation();
             
@@ -3442,163 +3379,6 @@
             setupDailySummary();
         }
         
-        // Function to populate overview section with same cards as dashboard
-        function populateOverviewCards(dmPatientCount, controlledCount, uncontrolledCount, predmPatientCount, improvedCount, needFollowupCount, totalTarget, screenedCount, screenedPct, screenedFrom20241001Count, screenedFrom20241001Pct) {
-            const overviewCardsContainer = document.getElementById('overviewCardsContainer');
-            if (!overviewCardsContainer) return;
-            
-            const controlledPct = dmPatientCount > 0 ? ((controlledCount / dmPatientCount) * 100).toFixed(1) : 0;
-            const uncontrolledPct = dmPatientCount > 0 ? ((uncontrolledCount / dmPatientCount) * 100).toFixed(1) : 0;
-            const needFollowupPct = predmPatientCount > 0 ? ((needFollowupCount / predmPatientCount) * 100).toFixed(1) : 0;
-            const improvedPct = predmPatientCount > 0 ? ((improvedCount / predmPatientCount) * 100).toFixed(1) : 0;
-            
-            overviewCardsContainer.innerHTML = `
-            <div class="main-cards-container">
-                <div class="stat-card active" data-card-index="0" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
-                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Total DM</div>
-                            </div>
-                    <div style="text-align: center; margin-bottom: 12px;">
-                        <div style="font-size: 1.5em; font-weight: 700; color: rgba(255, 255, 255, 0.98); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(dmPatientCount || 0).toLocaleString()}</div>
-                                                    </div>
-                    <div class="sub-sub-cards-container" style="display: flex; gap: 8px; margin-bottom: 12px;">
-                        <div class="sub-sub-card success-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
-                                                <div class="sub-sub-card-inner">
-                                <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.12) 100%); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
-                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(controlledCount || 0).toLocaleString()}</div>
-                                        <div style="font-size: 0.65rem; color: rgba(147, 197, 253, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Controlled (${controlledPct}%)</div>
-                                                        </div>
-                                                    </div>
-                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.12) 100%); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    HbA1c ≤8.0%<br>or Fasting ≤9.0<br>(Latest result)
-                                </div>
-                            </div>
-                        </div>
-                        <div class="sub-sub-card alert-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
-                            <div class="sub-sub-card-inner">
-                                <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.12) 100%); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
-                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(uncontrolledCount || 0).toLocaleString()}</div>
-                                        <div style="font-size: 0.65rem; color: rgba(252, 165, 165, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Uncontrolled (${uncontrolledPct}%)</div>
-                                        </div>
-                                        </div>
-                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.12) 100%); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    HbA1c >8.0%<br>or Fasting >9.0<br>(Latest result)
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75); text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
-                        <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
-                        <div style="text-align: left; padding-left: 16px;">
-                            HbA1c ≥6.5% or Fasting ≥7.0<br>
-                            First after 2025-06-01<br>
-                            Age > 34
-                            </div>
-                        </div>
-                            </div>
-                <div class="stat-card" data-card-index="1" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
-                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Total Pre-DM</div>
-                            </div>
-                    <div style="text-align: center; margin-bottom: 12px;">
-                        <div style="font-size: 1.5em; font-weight: 700; color: rgba(255, 255, 255, 0.98); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(predmPatientCount || 0).toLocaleString()}</div>
-                        </div>
-                    <div class="sub-sub-cards-container" style="display: flex; gap: 8px; margin-bottom: 12px;">
-                        <div class="sub-sub-card success-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
-                                                <div class="sub-sub-card-inner">
-                                                    <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.12) 100%); border: 1px solid rgba(34, 197, 94, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
-                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(improvedCount || 0).toLocaleString()}</div>
-                                        <div style="font-size: 0.65rem; color: rgba(134, 239, 172, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Improved (${improvedPct}%)</div>
-                                                        </div>
-                                                    </div>
-                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.12) 100%); border: 1px solid rgba(34, 197, 94, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    Normal result after 2025-06-01<br>(HbA1c <5.7% or Fasting <5.6)
-                                </div>
-                            </div>
-                        </div>
-                        <div class="sub-sub-card alert-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
-                            <div class="sub-sub-card-inner">
-                                <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.12) 100%); border: 1px solid rgba(251, 191, 36, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
-                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(needFollowupCount || 0).toLocaleString()}</div>
-                                        <div style="font-size: 0.65rem; color: rgba(253, 230, 138, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Need Follow-up (${needFollowupPct}%)</div>
-                                        </div>
-                                        </div>
-                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.12) 100%); border: 1px solid rgba(251, 191, 36, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    No visit within last 3 months<br>(or no visit recorded)
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75); text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
-                        <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
-                        <div style="text-align: left; padding-left: 16px;">
-                            HbA1c: 5.7-6.4% or Fasting: 5.6-6.9<br>
-                            Result ≥ 2025-01-01<br>
-                            Age > 34<br>
-                            Excludes DM
-                                        </div>
-                                    </div>
-                                </div>
-                <div class="stat-card" data-card-index="2" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
-                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Screened</div>
-                            </div>
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <div style="text-align: center;">
-                            <div style="font-size: 1.5em; font-weight: 700; margin-bottom: 8px; color: rgba(255, 255, 255, 0.98);">${(screenedCount || 0).toLocaleString()}</div>
-                            <div style="font-size: 0.75rem; opacity: 0.85; color: rgba(255, 255, 255, 0.8); margin-bottom: 12px;">Screened (${screenedPct}%)</div>
-                        </div>
-                        <div style="margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75);">
-                            <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
-                            <div style="text-align: left; padding-left: 16px;">
-                                • Age above 34<br>
-                                • Not pregnant
-                        </div>
-                    </div>
-                        </div>
-                            </div>
-                <div class="stat-card" data-card-index="3" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
-                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Screened (from 2024-10-01)</div>
-                            </div>
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <div style="text-align: center;">
-                            <div style="font-size: 1.5em; font-weight: 700; margin-bottom: 8px; color: rgba(255, 255, 255, 0.98);">${(screenedFrom20241001Count || 0).toLocaleString()}</div>
-                            <div style="font-size: 0.75rem; opacity: 0.85; color: rgba(255, 255, 255, 0.8); margin-bottom: 12px;">Screened (${screenedFrom20241001Pct || '0.0'}%)</div>
-                        </div>
-                        <div style="margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75);">
-                            <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
-                            <div style="text-align: left; padding-left: 16px;">
-                                • Age above 34<br>
-                                • Not pregnant
-                        </div>
-                    </div>
-                        </div>
-                            </div>
-                        </div>
-            <div class="dashboard-pagination">
-                <div class="dashboard-dot active" data-card-index="0"></div>
-                <div class="dashboard-dot" data-card-index="1"></div>
-                <div class="dashboard-dot" data-card-index="2"></div>
-                <div class="dashboard-dot" data-card-index="3"></div>
-            </div>
-            `;
-            
-            // Setup swipe functionality for overview cards
-            setTimeout(() => {
-                const overviewContainer = document.querySelector('#overview-section .main-cards-container');
-                if (overviewContainer) {
-                    setupDashboardSwipe();
-                }
-            }, 100);
-            
-            // Setup click handlers for stat sub-cards
-            setupStatSubCardHandlers();
-        }
         
         // Store global data for daily summary and DM raw data export
         let globalAllPatientData = [];
@@ -4188,8 +3968,6 @@
                     let targetSection = null;
                     if (section === 'dashboard') {
                         targetSection = document.getElementById('dashboard-section');
-                    } else if (section === 'overview') {
-                        targetSection = document.getElementById('overview-section');
                     } else if (section === 'dm-patients') {
                         targetSection = document.getElementById('dm-patients-section');
                     } else if (section === 'pre-dm-patients') {
@@ -5971,4 +5749,3 @@
     </script>
 </body>
 </html>
-
