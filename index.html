@@ -101,7 +101,7 @@
             border-top-left-radius: 16px;
             border-top-right-radius: 16px;
             background: linear-gradient(135deg, rgba(15, 27, 46, 0.98), rgba(24, 45, 73, 0.98));
-            box-shadow:
+            box-shadow: 
                 0 -4px 20px rgba(0, 0, 0, 0.3),
                 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
             display: flex;
@@ -652,6 +652,164 @@
             animation: fadeIn 0.3s ease-in;
         }
         
+        /* Dashboard section - fixed to one screen, no scrolling */
+        body.dashboard-active {
+            overflow: hidden !important;
+            height: 100vh !important;
+        }
+        
+        #dashboard-section {
+            height: calc(100vh - 44px - 40px); /* 100vh minus header (44px) minus body padding (20px top + 20px bottom) */
+            max-height: calc(100vh - 44px - 40px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #dashboard {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        #mainCardsContainer {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: fit-content;
+        }
+        
+        #dashboard-section .main-cards-container {
+            height: 150px;
+            flex-shrink: 0;
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            margin-bottom: 0;
+        }
+        
+        #dashboard-section .dashboard-pagination {
+            flex-shrink: 0;
+            margin-top: 8px;
+            margin-bottom: 18px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        #dashboard-section .dashboard-pagination.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* Zone List Container */
+        #zoneListContainer {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            min-height: 0;
+            padding-bottom: 70px; /* Space for mobile footer (58px + safe area) */
+        }
+        
+        .zone-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .zone-item {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .zone-item:hover {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border-color: rgba(148, 163, 184, 0.3);
+        }
+        
+        .zone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        
+        .zone-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        .zone-target {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .zone-expand-icon {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            transition: transform 0.3s ease;
+        }
+        
+        .zone-item.expanded .zone-expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .zone-details {
+            display: none;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .zone-item.expanded .zone-details {
+            display: block;
+        }
+        
+        .zone-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 8px;
+        }
+        
+        .zone-detail-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .zone-detail-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 4px;
+        }
+        
+        .zone-detail-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        @media (max-width: 768px) {
+            #zoneListContainer {
+                max-height: calc(100vh - 48px - 20px - 150px - 18px - 40px - 70px); /* Subtract footer height */
+                padding-bottom: 70px; /* Space for mobile footer */
+            }
+            
+            .zone-details-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -837,7 +995,9 @@
         .main-cards-container .stat-card {
             flex: 0 0 80%;
             scroll-snap-align: center;
-            height: 144px;
+            height: 150px;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
         
         /* Dashboard pagination dots - desktop */
@@ -846,8 +1006,8 @@
             justify-content: center;
             align-items: center;
             gap: 6px;
-            margin-top: 20px;
-            margin-bottom: 20px;
+            margin-top: 8px;
+            margin-bottom: 0;
             padding: 8px 16px;
             background: rgba(30, 41, 59, 0.6);
             backdrop-filter: blur(10px);
@@ -924,22 +1084,43 @@
                 margin-top: 8px;
             }
             
-            /* Overlapping cards on mobile */
+            /* Dashboard section - fixed to one screen on mobile, no scrolling */
             #dashboard-section {
-                padding-bottom: 60px;
+                height: calc(100vh - 48px - 20px - 20px - 70px) !important; /* 100vh minus header (48px) minus margins (20px top + 20px bottom) minus footer (70px) */
+                max-height: calc(100vh - 48px - 20px - 20px - 70px) !important;
+                overflow: hidden !important;
+                padding-bottom: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+            }
+            
+            #dashboard {
+                height: 100% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                overflow: hidden !important;
+            }
+            
+            #mainCardsContainer {
+                flex-shrink: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                overflow: hidden !important;
+                height: fit-content !important;
             }
             
             .main-cards-container {
                 position: relative !important;
-                height: auto !important;
-                min-height: auto !important;
-                max-height: none !important;
+                height: 150px !important;
+                flex-shrink: 0 !important;
+                min-height: 150px !important;
+                max-height: 150px !important;
                 display: flex !important;
                 flex-wrap: nowrap !important;
                 gap: 12px !important;
-                margin-bottom: 10px !important;
+                margin-bottom: 0 !important;
                 overflow-x: auto !important;
-                overflow-y: visible !important;
+                overflow-y: hidden !important;
                 padding: 4px 0 8px !important;
                 scroll-snap-type: x mandatory !important;
                 -webkit-overflow-scrolling: touch !important;
@@ -956,13 +1137,10 @@
                 opacity: 1 !important;
                 visibility: visible !important;
                 pointer-events: auto !important;
-                overflow-y: visible !important;
+                overflow-y: auto !important;
                 overflow-x: hidden !important;
                 -webkit-overflow-scrolling: touch !important;
-                height: 144px !important;
-                max-height: none !important;
-                height: auto !important;
-                min-height: auto !important;
+                height: 150px !important;
                 display: flex !important;
                 flex-direction: column !important;
                 align-self: stretch !important;
@@ -979,8 +1157,8 @@
                 justify-content: center;
                 align-items: center;
                 gap: 6px;
-                margin-top: 16px;
-                margin-bottom: 12px;
+                margin-top: 8px !important;
+                margin-bottom: 18px !important;
                 padding: 8px 16px;
                 background: rgba(30, 41, 59, 0.6);
                 backdrop-filter: blur(10px);
@@ -989,6 +1167,14 @@
                 width: fit-content;
                 margin-left: auto;
                 margin-right: auto;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+            }
+            
+            .dashboard-pagination.visible {
+                opacity: 1 !important;
+                pointer-events: auto !important;
             }
             
             .dashboard-dot {
@@ -1662,9 +1848,10 @@
             <!-- Dashboard Section (default) -->
             <div id="dashboard-section" class="content-section" style="display: none;">
                 <div id="dashboard">
-                    <div id="mainCardsContainer"></div>
-                </div>
-            </div>
+            <div id="mainCardsContainer"></div>
+                    <div id="zoneListContainer"></div>
+        </div>
+    </div>
 
             <!-- DM Patients Section (Daily KPI) -->
             <div id="dm-patients-section" class="content-section" style="display: none;">
@@ -2885,7 +3072,7 @@
                 <div class="stat-card active" data-card-index="0" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
                     <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
                         <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Total DM</div>
-                            </div>
+                                </div>
                     <div style="text-align: center; margin-bottom: 12px;">
                         <div style="font-size: 1.5em; font-weight: 700; color: rgba(255, 255, 255, 0.98); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(dmPatientCount || 0).toLocaleString()}</div>
                                                     </div>
@@ -2896,36 +3083,36 @@
                                     <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
                                         <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(controlledCount || 0).toLocaleString()}</div>
                                         <div style="font-size: 0.65rem; color: rgba(147, 197, 253, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Controlled (${controlledPct}%)</div>
-                                                        </div>
+                            </div>
                                                     </div>
                                 <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.12) 100%); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
                                     HbA1c ≤8.0%<br>or Fasting ≤9.0<br>(Latest result)
                                 </div>
                             </div>
-                        </div>
+                                            </div>
                         <div class="sub-sub-card alert-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
-                            <div class="sub-sub-card-inner">
+                                                <div class="sub-sub-card-inner">
                                 <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.12) 100%); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
                                     <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
                                         <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(uncontrolledCount || 0).toLocaleString()}</div>
                                         <div style="font-size: 0.65rem; color: rgba(252, 165, 165, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Uncontrolled (${uncontrolledPct}%)</div>
-                                        </div>
-                                        </div>
+                                                        </div>
+                                                    </div>
                                 <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.12) 100%); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
                                     HbA1c >8.0%<br>or Fasting >9.0<br>(Latest result)
-                                    </div>
                                 </div>
                             </div>
                         </div>
+                                        </div>
                     <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75); text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
                         <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
                         <div style="text-align: left; padding-left: 16px;">
-                            HbA1c ≥6.5% or Fasting ≥7.0<br>
-                            First after 2025-06-01<br>
-                            Age > 34
-                            </div>
-                        </div>
-                            </div>
+                                            HbA1c ≥6.5% or Fasting ≥7.0<br>
+                                            First after 2025-06-01<br>
+                                            Age > 34
+                                        </div>
+                                    </div>
+                                </div>
                 <div class="stat-card" data-card-index="1" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
                     <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
                         <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Total Pre-DM</div>
@@ -2940,34 +3127,34 @@
                                     <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
                                         <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(improvedCount || 0).toLocaleString()}</div>
                                         <div style="font-size: 0.65rem; color: rgba(134, 239, 172, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Improved (${improvedPct}%)</div>
-                                                        </div>
+                            </div>
                                                     </div>
                                 <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.12) 100%); border: 1px solid rgba(34, 197, 94, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
                                     Normal result<br>after 2025-06-01<br>(HbA1c <5.7%<br>or Fasting <5.6)
+                                </div>
                             </div>
-                        </div>
-                            </div>
+                                            </div>
                         <div class="sub-sub-card alert-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
                                                 <div class="sub-sub-card-inner">
                                                     <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.12) 100%); border: 1px solid rgba(251, 191, 36, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
                                     <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
                                         <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(needFollowupCount || 0).toLocaleString()}</div>
                                         <div style="font-size: 0.65rem; color: rgba(253, 224, 71, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Need Follow-up (${needFollowupPct}%)</div>
-                        </div>
+                                                        </div>
                                                     </div>
                                 <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.12) 100%); border: 1px solid rgba(251, 191, 36, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
                                     No visit within<br>last 3 months<br>(or no visit<br>recorded)
+                                </div>
                             </div>
                         </div>
-                    </div>
                                         </div>
                     <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75); text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
                         <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
                         <div style="text-align: left; padding-left: 16px;">
-                            HbA1c: 5.7-6.4% or Fasting: 5.6-6.9<br>
-                            Result ≥ 2025-01-01<br>
-                            Age > 34<br>
-                            Excludes DM
+                                            HbA1c: 5.7-6.4% or Fasting: 5.6-6.9<br>
+                                            Result ≥ 2025-01-01<br>
+                                            Age > 34<br>
+                                            Excludes DM
                                         </div>
                                     </div>
                                 </div>
@@ -2987,33 +3174,33 @@
                                 • Not pregnant
                             </div>
                         </div>
-                    </div>
-                </div>
+                            </div>
+                            </div>
                 <div class="stat-card" data-card-index="3" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
                     <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
                         <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Screened (from 2024-10-01)</div>
-                            </div>
+                        </div>
                     <div style="display: flex; flex-direction: column; gap: 12px;">
                         <div style="text-align: center;">
                             <div style="font-size: 1.5em; font-weight: 700; margin-bottom: 8px; color: rgba(255, 255, 255, 0.98);">${(screenedFrom20241001Count || 0).toLocaleString()}</div>
                             <div style="font-size: 0.75rem; opacity: 0.85; color: rgba(255, 255, 255, 0.8); margin-bottom: 12px;">Screened (${screenedFrom20241001Pct || '0.0'}%)</div>
-                        </div>
+                    </div>
                         <div style="margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75);">
                             <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
                             <div style="text-align: left; padding-left: 16px;">
                                 • Age above 34<br>
                                 • Not pregnant
-                            </div>
-                        </div>
-                    </div>
                 </div>
-            </div>
+                                        </div>
+                                                        </div>
+                                                    </div>
+                            </div>
             <div class="dashboard-pagination">
                 <div class="dashboard-dot active" data-card-index="0"></div>
                 <div class="dashboard-dot" data-card-index="1"></div>
                 <div class="dashboard-dot" data-card-index="2"></div>
                 <div class="dashboard-dot" data-card-index="3"></div>
-            </div>
+                        </div>
             `;
             
             // Setup click handlers for stat sub-cards
@@ -3022,11 +3209,95 @@
             // Setup dashboard swipe and pagination dots
             setupDashboardSwipe();
             
+            // Create zone list
+            createZoneList(TOTAL_CUMULATIVE_TARGETS, zoneControlled, zoneUncontrolled, zonePredmImproved, zonePredmNeedFollowup, zoneScreened);
+            
             // Setup sidebar navigation
             setupSidebarNavigation();
             
             // Setup daily summary button
             setupDailySummary();
+        }
+        
+        // Function to create expandable zone list
+        function createZoneList(totalTargets, zoneControlled, zoneUncontrolled, zonePredmImproved, zonePredmNeedFollowup, zoneScreened) {
+            const zoneListContainer = document.getElementById('zoneListContainer');
+            if (!zoneListContainer) return;
+            
+            // Get all zones and sort them
+            const allZones = Object.keys(totalTargets).sort();
+            
+            const zoneItems = allZones.map(zone => {
+                const target = totalTargets[zone] || 0;
+                const dmControlled = zoneControlled[zone] || 0;
+                const dmUncontrolled = zoneUncontrolled[zone] || 0;
+                const dmTotal = dmControlled + dmUncontrolled;
+                const predmImproved = zonePredmImproved[zone] || 0;
+                const predmNeedFollowup = zonePredmNeedFollowup[zone] || 0;
+                const predmTotal = predmImproved + predmNeedFollowup;
+                const screened = zoneScreened[zone] ? zoneScreened[zone].size : 0;
+                const screenedPct = target > 0 ? ((screened / target) * 100).toFixed(1) : '0.0';
+                const controlledPct = dmTotal > 0 ? ((dmControlled / dmTotal) * 100).toFixed(1) : '0.0';
+                const improvedPct = predmTotal > 0 ? ((predmImproved / predmTotal) * 100).toFixed(1) : '0.0';
+                
+                return `
+                    <div class="zone-item" data-zone="${zone}">
+                        <div class="zone-header">
+                                                        <div>
+                                <div class="zone-name">${zone}</div>
+                                <div class="zone-target">Target: ${target.toLocaleString()}</div>
+                        </div>
+                            <div class="zone-expand-icon">▼</div>
+                                                    </div>
+                        <div class="zone-details">
+                            <div class="zone-details-grid">
+                                <div class="zone-detail-item">
+                                    <div class="zone-detail-label">Total DM</div>
+                                    <div class="zone-detail-value">${dmTotal.toLocaleString()}</div>
+                            </div>
+                                <div class="zone-detail-item">
+                                    <div class="zone-detail-label">Controlled</div>
+                                    <div class="zone-detail-value">${dmControlled.toLocaleString()} (${controlledPct}%)</div>
+                        </div>
+                                <div class="zone-detail-item">
+                                    <div class="zone-detail-label">Uncontrolled</div>
+                                    <div class="zone-detail-value">${dmUncontrolled.toLocaleString()}</div>
+                    </div>
+                                <div class="zone-detail-item">
+                                    <div class="zone-detail-label">Total Pre-DM</div>
+                                    <div class="zone-detail-value">${predmTotal.toLocaleString()}</div>
+                                        </div>
+                                <div class="zone-detail-item">
+                                    <div class="zone-detail-label">Improved</div>
+                                    <div class="zone-detail-value">${predmImproved.toLocaleString()} (${improvedPct}%)</div>
+                                        </div>
+                                <div class="zone-detail-item">
+                                    <div class="zone-detail-label">Need Follow-up</div>
+                                    <div class="zone-detail-value">${predmNeedFollowup.toLocaleString()}</div>
+                                    </div>
+                                <div class="zone-detail-item">
+                                    <div class="zone-detail-label">Screened</div>
+                                    <div class="zone-detail-value">${screened.toLocaleString()} (${screenedPct}%)</div>
+                                </div>
+                                <div class="zone-detail-item">
+                                    <div class="zone-detail-label">Remaining</div>
+                                    <div class="zone-detail-value">${Math.max(0, target - screened).toLocaleString()}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+            }).join('');
+            
+            zoneListContainer.innerHTML = `<div class="zone-list">${zoneItems}</div>`;
+            
+            // Setup click handlers for expand/collapse
+            const zoneItemsElements = zoneListContainer.querySelectorAll('.zone-item');
+            zoneItemsElements.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.toggle('expanded');
+                });
+            });
         }
         
         
@@ -3536,8 +3807,28 @@
             const cardsContainer = document.querySelector('.main-cards-container');
             const cards = document.querySelectorAll('.main-cards-container .stat-card');
             const dots = document.querySelectorAll('.dashboard-dot');
+            const pagination = document.querySelector('.dashboard-pagination');
+            const zoneListContainer = document.getElementById('zoneListContainer');
             
             if (!cardsContainer || cards.length === 0) return;
+            
+            let interactionTimeout;
+            
+            function showPagination() {
+                if (pagination) {
+                    pagination.classList.add('visible');
+                }
+                clearTimeout(interactionTimeout);
+                interactionTimeout = setTimeout(() => {
+                    hidePagination();
+                }, 2000); // Hide after 2 seconds of no interaction
+            }
+            
+            function hidePagination() {
+                if (pagination) {
+                    pagination.classList.remove('visible');
+                }
+            }
             
             function updateActiveDot() {
                 const scrollLeft = cardsContainer.scrollLeft;
@@ -3566,21 +3857,37 @@
                         left: scrollTo,
                         behavior: 'smooth'
                     });
+                    showPagination();
                 });
             });
             
-            // Update on scroll
-            let scrollTimeout;
+            // Show pagination on card interaction
             cardsContainer.addEventListener('scroll', () => {
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(updateActiveDot, 50);
+                showPagination();
+                updateActiveDot();
             });
+            
+            cardsContainer.addEventListener('touchstart', showPagination);
+            cardsContainer.addEventListener('mousedown', showPagination);
+            
+            // Hide pagination when scrolling zone list
+            if (zoneListContainer) {
+                zoneListContainer.addEventListener('scroll', hidePagination);
+                zoneListContainer.addEventListener('touchstart', hidePagination);
+                zoneListContainer.addEventListener('mousedown', hidePagination);
+            }
             
             // Update on resize
             window.addEventListener('resize', updateActiveDot);
             
             // Initial update
             updateActiveDot();
+            
+            // Show pagination initially, then hide after 3 seconds
+            showPagination();
+            setTimeout(() => {
+                hidePagination();
+            }, 3000);
         }
         
         // Attach click handler for Total DM raw download button (event delegation)
@@ -3614,10 +3921,15 @@
                         sec.style.display = 'none';
                     });
                     
+                    // Remove dashboard-active class from body
+                    document.body.classList.remove('dashboard-active');
+                    
                     // Show selected section
                     let targetSection = null;
                     if (section === 'dashboard') {
                         targetSection = document.getElementById('dashboard-section');
+                        // Add dashboard-active class to body to prevent scrolling
+                        document.body.classList.add('dashboard-active');
                     } else if (section === 'dm-patients') {
                         targetSection = document.getElementById('dm-patients-section');
                     } else if (section === 'pre-dm-patients') {
@@ -3644,6 +3956,11 @@
             // Set dashboard as default active
             if (navLinks.length > 0) {
                 navLinks[0].classList.add('active');
+                // Add dashboard-active class if dashboard is the default section
+                const firstSection = navLinks[0].getAttribute('data-section');
+                if (firstSection === 'dashboard') {
+                    document.body.classList.add('dashboard-active');
+                }
             }
         }
         
@@ -3719,7 +4036,7 @@
                 }
             });
         }
-        
+
         // Download Total DM raw data as CSV
         function downloadTotalDmRawData() {
             if (!globalDmPatientsRaw || globalDmPatientsRaw.length === 0) {
