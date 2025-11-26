@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>منظور | Manthoor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <style>
@@ -13,64 +16,103 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --primary-blue: #4A90C6;
+            --white: #FFFFFF;
+            --spacing-sm: 16px;
+            --spacing-md: 20px;
+            --spacing-lg: 24px;
+            --border-radius: 22px;
+            --touch-target: 44px;
+        }
+        
+        /* Typography System */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            padding: 20px;
-            padding-top: 44px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--white);
+            color: #000000;
+            padding: 0;
+            padding-top: env(safe-area-inset-top, 0);
+            padding-bottom: env(safe-area-inset-bottom, 0);
             min-height: 100vh;
+            min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
             position: relative;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 1.5;
         }
         
-        /* Professional Background - Clean Gradient */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%),
-                radial-gradient(ellipse at top left, rgba(30, 58, 138, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at bottom right, rgba(30, 64, 175, 0.1) 0%, transparent 50%);
-            background-size: 100% 100%, 800px 800px, 800px 800px;
-            background-position: center, -200px -200px, calc(100% + 200px) calc(100% + 200px);
-            z-index: 0;
-            pointer-events: none;
+        /* H1 / Title (App title) */
+        h1, .app-header {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            font-weight: 700;
+            font-size: 32px;
+            letter-spacing: -1px;
+            line-height: 1.2;
         }
         
+        /* H2 / Section Title */
+        h2, .section-title {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 1.3;
+        }
+        
+        /* Metric Number (Big KPIs) */
+        .metric-number, .kpi-value {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            font-weight: 700;
+            font-size: 32px;
+            line-height: 100%;
+        }
+        
+        /* Label / Card title */
+        .card-title, .label-text {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Body text */
+        body, p, .body-text {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* Percentage pills */
+        .percentage-pill, .percent-text {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        
+        body::before,
         body::after {
             display: none;
         }
         
         .container {
-            max-width: 1400px;
-            margin: 0 auto;
+            max-width: 100%;
+            width: 100%;
+            margin: 0;
             position: relative;
             z-index: 1;
-            display: flex;
-            gap: 20px;
+            display: block;
+            padding: 0 var(--spacing-lg);
+            padding-bottom: calc(80px + env(safe-area-inset-bottom, 0));
         }
         
-        /* Sidebar */
+        /* Sidebar - Hidden on mobile */
         .sidebar {
-            width: 250px;
-            min-width: 250px;
-            background: linear-gradient(135deg, rgba(90, 90, 90, 0.25) 0%, rgba(107, 107, 107, 0.25) 30%, rgba(74, 74, 74, 0.25) 100%);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            padding: 20px;
-            position: sticky;
-            top: 20px;
-            height: fit-content;
-            max-height: calc(100vh - 40px);
-            overflow-y: auto;
-            z-index: 2;
+            display: none;
         }
 
         /* Mobile bottom tab bar (hidden by default, shown in mobile media query) */
@@ -92,22 +134,21 @@
             pointer-events: auto;
             width: 100%;
             max-width: 100%;
-            margin: 8px 0 0 0;
-            height: 58px;
-            min-height: 58px;
-            padding: 8px 24px;
+            margin: 0;
+            height: calc(var(--touch-target) + 8px);
+            min-height: calc(var(--touch-target) + 8px);
+            padding: 8px var(--spacing-lg);
             padding-bottom: calc(8px + env(safe-area-inset-bottom, 0));
             border-radius: 0;
-            border-top-left-radius: 16px;
-            border-top-right-radius: 16px;
-            background: linear-gradient(135deg, rgba(15, 27, 46, 0.98), rgba(24, 45, 73, 0.98));
-            box-shadow: 
-                0 -4px 20px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            background: var(--white);
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+            border-top: 1px solid rgba(74, 144, 198, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 4px;
+            gap: 8px;
             box-sizing: border-box;
         }
         
@@ -115,23 +156,22 @@
             flex: 1;
             border: none;
             background: transparent;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.7rem;
-            padding: 6px 4px;
-            border-radius: 999px;
-            cursor: pointer;
-            transition: all 0.25s ease;
+            color: #666666;
+            font-size: 14px;
             font-weight: 500;
+            padding: 12px 8px;
+            min-height: var(--touch-target);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
             text-align: center;
             white-space: nowrap;
         }
         
         .mobile-tab-link.active {
-            color: rgba(255, 255, 255, 0.98);
-            background: radial-gradient(circle at top left, rgba(70, 130, 180, 0.95), rgba(40, 80, 140, 0.95));
-            box-shadow:
-                0 8px 18px rgba(0, 0, 0, 0.6),
-                0 0 0 1px rgba(255, 255, 255, 0.25);
+            color: var(--primary-blue);
+            background: rgba(74, 144, 198, 0.1);
+            font-weight: 600;
         }
         
         /* Goals mobile stacked cards + metric toggle */
@@ -293,7 +333,7 @@
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            background:
+            background: 
                 conic-gradient(
                     #4A90E2 var(--pct, 0%),
                     rgba(255, 255, 255, 0.12) 0
@@ -662,8 +702,13 @@
             height: calc(100vh - 44px - 40px); /* 100vh minus header (44px) minus body padding (20px top + 20px bottom) */
             max-height: calc(100vh - 44px - 40px);
             overflow: hidden;
-            display: flex;
+            display: none !important; /* Default to hidden, will be overridden when shown */
             flex-direction: column;
+        }
+        
+        #dashboard-section[style*="display: block"],
+        #dashboard-section[style*="display:flex"] {
+            display: flex !important;
         }
         
         #dashboard {
@@ -682,12 +727,23 @@
         }
         
         #dashboard-section .main-cards-container {
-            height: 150px;
+            height: auto;
+            min-height: 200px;
             flex-shrink: 0;
             display: flex;
+            gap: var(--spacing-lg);
             overflow-x: auto;
             overflow-y: hidden;
             margin-bottom: 0;
+            padding: var(--spacing-lg) 0;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        #dashboard-section .main-cards-container::-webkit-scrollbar {
+            display: none;
         }
         
         #dashboard-section .dashboard-pagination {
@@ -717,47 +773,58 @@
         .zone-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: var(--spacing-sm);
             position: relative;
         }
         
         .zone-item {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(148, 163, 184, 0.15);
-            border-radius: 12px;
-            padding: 12px 16px;
+            background: var(--white);
+            border: 1px solid rgba(74, 144, 198, 0.2);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md) var(--spacing-lg);
+            margin-bottom: var(--spacing-sm);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
         }
         
-        .zone-item:hover {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
-            border-color: rgba(148, 163, 184, 0.3);
+        .zone-item:hover,
+        .zone-item.expanded {
+            border-color: var(--primary-blue);
+            box-shadow: 0 4px 12px rgba(74, 144, 198, 0.15);
         }
         
         .zone-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: white;
+            color: #000000;
         }
         
         .zone-name {
-            font-size: 1rem;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.95);
+            font-size: 20px;
+            color: #000000;
         }
         
         .zone-target {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            font-weight: 400;
+            font-size: 14px;
+            color: #666666;
+            margin-top: 4px;
         }
         
         .zone-expand-icon {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.7);
+            font-size: 20px;
+            color: var(--primary-blue);
             transition: transform 0.3s ease;
+            min-width: var(--touch-target);
+            min-height: var(--touch-target);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .zone-item.expanded .zone-expand-icon {
@@ -766,13 +833,13 @@
         
         .zone-details {
             display: none;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid rgba(74, 144, 198, 0.2);
         }
         
         .zone-item.expanded {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            background: var(--white);
         }
         
         .zone-item.expanded .zone-details {
@@ -796,61 +863,73 @@
         }
         
         .zone-detail-label {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666666;
             margin-bottom: 4px;
         }
         
         .zone-detail-value {
-            font-size: 1.5rem;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             font-weight: 700;
-            color: rgba(255, 255, 255, 0.95);
+            font-size: 32px;
+            line-height: 100%;
+            color: #000000;
         }
         
         .zone-detail-sub-boxes {
             display: flex;
-            gap: 8px;
+            gap: var(--spacing-sm);
             flex: 1;
         }
         
         .zone-sub-box {
             flex: 1;
-            border-radius: 8px;
-            padding: 10px;
+            border-radius: 12px;
+            padding: var(--spacing-sm);
             text-align: center;
             min-width: 0;
+            background: rgba(74, 144, 198, 0.08);
+            border: 1px solid rgba(74, 144, 198, 0.2);
         }
         
         .zone-sub-box.controlled-box {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.12) 100%);
-            border: 1px solid rgba(59, 130, 246, 0.25);
+            background: rgba(74, 144, 198, 0.1);
+            border: 1px solid rgba(74, 144, 198, 0.3);
         }
         
         .zone-sub-box.uncontrolled-box {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.12) 100%);
-            border: 1px solid rgba(239, 68, 68, 0.25);
+            background: rgba(74, 144, 198, 0.05);
+            border: 1px solid rgba(74, 144, 198, 0.15);
         }
         
         .zone-sub-box.improved-box {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.12) 100%);
-            border: 1px solid rgba(34, 197, 94, 0.25);
+            background: rgba(74, 144, 198, 0.1);
+            border: 1px solid rgba(74, 144, 198, 0.3);
         }
         
         .zone-sub-box.need-followup-box {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.12) 100%);
-            border: 1px solid rgba(251, 191, 36, 0.25);
+            background: rgba(74, 144, 198, 0.05);
+            border: 1px solid rgba(74, 144, 198, 0.15);
         }
         
         .zone-sub-box-value {
-            font-size: 1rem;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.95);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            font-weight: 700;
+            font-size: 32px;
+            line-height: 100%;
+            color: #000000;
             margin-bottom: 4px;
         }
         
         .zone-sub-box-label {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            font-size: 12px;
+            color: #666666;
         }
         
         .zone-screened-info {
@@ -862,15 +941,18 @@
         }
         
         .zone-screened-percent {
-            font-size: 1.1rem;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
+            font-size: 12px;
+            color: var(--primary-blue);
             margin-bottom: 4px;
         }
         
         .zone-remaining {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            font-weight: 400;
+            font-size: 14px;
+            color: #666666;
         }
         
         @media (max-width: 768px) {
@@ -933,10 +1015,12 @@
         }
         
         .placeholder-sheet h2 {
-            color: rgba(255, 255, 255, 0.95);
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 1.3;
+            color: #000000;
+            margin-bottom: var(--spacing-md);
         }
         
         .placeholder-sheet p {
@@ -1003,24 +1087,26 @@
             display: none;
         }
         .app-header {
-            font-size: 35px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             font-weight: 700;
-            color: #60a5fa;
+            font-size: 32px;
+            letter-spacing: -1px;
+            line-height: 1.2;
+            color: var(--primary-blue);
             text-align: center;
-            margin: 16px auto 24px auto;
-            padding: 0 20px;
-            height: 48px;
-            line-height: 48px;
-            text-shadow: 0 2px 8px rgba(96, 165, 250, 0.5);
+            margin: 0;
+            padding: var(--spacing-md) var(--spacing-lg);
+            padding-top: calc(var(--spacing-md) + env(safe-area-inset-top, 0));
+            height: auto;
+            min-height: 60px;
+            background: var(--white);
+            border-bottom: 1px solid rgba(74, 144, 198, 0.1);
             display: block !important;
-            position: relative;
+            position: sticky;
+            top: 0;
             z-index: 100;
             width: 100%;
             box-sizing: border-box;
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            border: 1px solid rgba(96, 165, 250, 0.2);
         }
         .loading {
             text-align: center;
@@ -1081,11 +1167,26 @@
             display: none;
         }
         .main-cards-container .stat-card {
-            flex: 0 0 80%;
+            flex: 0 0 calc(100% - var(--spacing-lg) * 2);
             scroll-snap-align: center;
-            height: 150px;
+            min-width: 280px;
+            max-width: 100%;
+            height: auto;
+            min-height: 200px;
             overflow-y: auto;
             overflow-x: hidden;
+        }
+        
+        @media (min-width: 768px) {
+            .main-cards-container .stat-card {
+                flex: 0 0 45%;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .main-cards-container .stat-card {
+                flex: 0 0 30%;
+            }
         }
         
         /* Dashboard pagination dots - desktop */
@@ -1093,33 +1194,37 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 6px;
-            margin-top: 8px;
-            margin-bottom: 0;
+            gap: 8px;
+            margin-top: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
             padding: 8px 16px;
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(10px);
+            background: var(--white);
             border-radius: 20px;
-            border: 1px solid rgba(148, 163, 184, 0.15);
+            border: 1px solid rgba(74, 144, 198, 0.2);
             width: fit-content;
             margin-left: auto;
             margin-right: auto;
         }
         
         .dashboard-dot {
-            width: 6px;
-            height: 6px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(74, 144, 198, 0.3);
             transition: all 0.3s ease;
             cursor: pointer;
+            min-width: var(--touch-target);
+            min-height: var(--touch-target);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .dashboard-dot.active {
-            width: 20px;
-            height: 6px;
-            border-radius: 3px;
-            background: rgba(255, 255, 255, 0.9);
+            width: 24px;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--primary-blue);
         }
         
         /* Hide pagination dots when dashboard section is not visible */
@@ -1138,12 +1243,18 @@
         @media (max-width: 768px) {
             /* Ensure body fits in viewport */
             body {
-                padding: 10px;
-                padding-top: 44px;
+                padding: 0;
+                padding-top: env(safe-area-inset-top, 0);
+                padding-bottom: env(safe-area-inset-bottom, 0);
                 overflow-x: hidden;
                 overflow-y: auto;
                 height: 100vh;
                 height: 100dvh; /* Dynamic viewport height for mobile */
+            }
+            
+            .container {
+                padding: 0 var(--spacing-lg);
+                padding-bottom: calc(80px + env(safe-area-inset-bottom, 0));
             }
             
             /* Header hidden on mobile */
@@ -1153,18 +1264,23 @@
             
             /* App header styling for mobile */
             .app-header {
-                font-size: 35px;
-                margin-top: 16px;
-                margin-bottom: 24px;
-                margin-left: 10px;
-                margin-right: 10px;
+                font-size: 24px;
+                margin: 0;
+                padding: var(--spacing-md) var(--spacing-lg);
+                padding-top: calc(var(--spacing-md) + env(safe-area-inset-top, 0));
                 display: block;
-                width: calc(100% - 20px);
-                position: relative;
-                z-index: 10;
-                padding: 0 16px;
-                height: 48px;
-                line-height: 48px;
+                width: 100%;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                height: auto;
+                min-height: 60px;
+                line-height: 1.2;
+            }
+            
+            /* Show mobile tab bar */
+            .mobile-tab-bar {
+                display: flex;
             }
             .refresh-info {
                 font-size: 0.7em;
@@ -1337,8 +1453,11 @@
             }
             
             #dm-patients-section .placeholder-sheet h2 {
-                font-size: 1.5em;
-                margin-bottom: 16px;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+                font-weight: 600;
+                font-size: 20px;
+                line-height: 1.3;
+                margin-bottom: var(--spacing-sm);
             }
             
             /* Toggle buttons container */
@@ -1449,9 +1568,11 @@
             }
             
             .placeholder-sheet h2 {
-                font-size: 1.25rem;
-                margin-bottom: 12px;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
                 font-weight: 600;
+                font-size: 20px;
+                line-height: 1.3;
+                margin-bottom: var(--spacing-sm);
             }
             
             .placeholder-sheet p {
@@ -1914,9 +2035,8 @@
             <h2>Navigation</h2>
             <ul class="sidebar-menu">
                 <li><a href="#dashboard" class="sidebar-link" data-section="dashboard">Dashboard</a></li>
-                <li><a href="#dm-patients" class="sidebar-link" data-section="dm-patients">KPIs</a></li>
+                <li><a href="#dm-patients" class="sidebar-link" data-section="dm-patients">Reports</a></li>
                 <li><a href="#pre-dm-patients" class="sidebar-link" data-section="pre-dm-patients">Goals</a></li>
-                <li><a href="#screening-target" class="sidebar-link" data-section="screening-target">Target</a></li>
             </ul>
             <div class="sidebar-info">
                 <p><strong>منظور | Manthoor</strong></p>
@@ -1944,7 +2064,7 @@
             <!-- DM Patients Section (Daily KPI) -->
             <div id="dm-patients-section" class="content-section" style="display: none;">
                 <div class="placeholder-sheet" style="margin-top: 0;">
-                    <h2>Daily KPI</h2>
+                    <h2>Reports</h2>
                     
                     <!-- Toggle buttons -->
                     <div class="kpi-toggle-container" style="margin-bottom: 30px; text-align: center;">
@@ -1981,6 +2101,33 @@
                             <p style="color: rgba(255, 255, 255, 0.7); font-style: italic; font-size: 0.9em;">Please select a date range (From - To) and click "Generate Summary" to view the weekly screening summary.</p>
                         </div>
                     </div>
+                    
+                    <!-- Reports Card -->
+                    <div class="kpi-card" style="margin-top: 30px;">
+                        <h3 style="margin-bottom: 16px;">Data Export Reports</h3>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label for="reportExcludedZones" class="kpi-label" style="color: rgba(255, 255, 255, 0.9); font-size: 0.95em; display: block; margin-bottom: 6px;">
+                                Exclude Zones (comma separated), e.g. BGH, HGH:
+                            </label>
+                            <input type="text" id="reportExcludedZones" class="kpi-date-input" style="width: 100%; padding: 8px 10px; border-radius: 8px; border: 2px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.95); font-size: 0.9em;" placeholder="Leave empty to include all zones">
+                        </div>
+                        
+                        <div class="report-buttons-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+                            <button id="downloadDmReport" class="kpi-generate-btn" style="padding: 10px 12px; font-size: 0.9em;">
+                                1) Total DM raw data (with zone & category)
+                            </button>
+                            <button id="downloadPredmReport" class="kpi-generate-btn" style="padding: 10px 12px; font-size: 0.9em;">
+                                2) Total Pre‑DM (Improved / Need follow‑up / Null)
+                            </button>
+                            <button id="downloadImprovedPredmReport" class="kpi-generate-btn" style="padding: 10px 12px; font-size: 0.9em;">
+                                3) Improved Pre‑DM patients only
+                            </button>
+                            <button id="downloadScreenedReport" class="kpi-generate-btn" style="padding: 10px 12px; font-size: 0.9em;">
+                                4) Screened patients (Screened card)
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1998,20 +2145,6 @@
                 </div>
             </div>
 
-            <!-- Screening Target Section -->
-            <div id="screening-target-section" class="content-section" style="display: none;">
-                <div class="placeholder-sheet">
-                    <h2>Placeholder 3</h2>
-                    <p>This section will display screening target information and progress.</p>
-                    <div class="placeholder-content">
-                        <div class="placeholder-item">Target Overview</div>
-                        <div class="placeholder-item">Progress by Zone</div>
-                        <div class="placeholder-item">Progress by PHC</div>
-                        <div class="placeholder-item">Remaining Targets</div>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
     
@@ -2019,9 +2152,8 @@
     <nav class="mobile-tab-bar">
         <div class="mobile-tab-pill">
             <button class="mobile-tab-link active" data-section="dashboard">Dashboard</button>
-            <button class="mobile-tab-link" data-section="dm-patients">KPIs</button>
+            <button class="mobile-tab-link" data-section="dm-patients">Reports</button>
             <button class="mobile-tab-link" data-section="pre-dm-patients">Goals</button>
-            <button class="mobile-tab-link" data-section="screening-target">Target</button>
         </div>
     </nav>
 
@@ -2695,6 +2827,9 @@
                         }
                     }
                     
+                    // Reset Pre-DM raw array
+                    globalPredmPatientsRaw = [];
+                    
                     // Count improved and need follow-up (with zone breakdown)
                     let improvedCount = 0;
                     let needFollowupCount = 0;
@@ -2728,6 +2863,18 @@
                             needsFollowup = false;
                         }
                         
+                        // Push enriched Pre-DM record for export
+                        globalPredmPatientsRaw.push({
+                            patientId,
+                            zone,
+                            organization: org,
+                            age: (patientData.age || null), // age is stored in patient records; may be null
+                            firstPredmDate: patientData.firstPredmDate,
+                            lastVisitDate: patientData.lastVisitDate,
+                            isImproved,
+                            needsFollowup
+                        });
+                        
                         if (isImproved) {
                             improvedCount++;
                             zonePredmImproved[zone]++;
@@ -2753,6 +2900,9 @@
                     SCREENING_SINCE_2024.setHours(0, 0, 0, 0);
                     const screenedSince2024Set = new Set();
                     
+                    // Reset screened patients raw array
+                    globalScreenedPatientsRaw = [];
+                    
                     for (const [patientId, records] of Object.entries(patientRecords)) {
                         const age = records[0]?.age || 0;
                         if (age <= 34) continue;
@@ -2771,14 +2921,23 @@
                         const firstAfter2025 = sortedRecords.find(r => r.resultDate >= PROGRAM_START_DATE);
                         if (!firstAfter2025) continue;
                         
-                        const org = patientOrganizations[patientId] || '';
-                        const zone = inferZone(org);
+                                const org = patientOrganizations[patientId] || '';
+                                const zone = inferZone(org);
                         
+                        const firstDate = firstAfter2025.resultDate;
                         firstScreeningInfo[patientId] = {
-                            date: firstAfter2025.resultDate,
+                            date: firstDate,
                             zone,
                             organization: org
                         };
+                        
+                        // Push enriched screened record for export
+                        globalScreenedPatientsRaw.push({
+                            patientId,
+                            zone,
+                            organization: org,
+                            firstScreeningDate: firstDate
+                        });
                         
                         if (!zoneScreened[zone]) zoneScreened[zone] = new Set();
                         zoneScreened[zone].add(patientId);
@@ -2831,10 +2990,22 @@
                         screenedFrom20241001Pct
                     );
                     
-                    // Show dashboard
+                    // Show dashboard (only if it's the active section)
                     document.getElementById('loading').style.display = 'none';
-                    document.getElementById('dashboard-section').style.display = 'block';
-                    document.getElementById('dashboard').style.display = 'block';
+                    // Don't force show dashboard - let navigation handle it
+                    // Check if dashboard is the active section before showing
+                    const activeNavLink = document.querySelector('.sidebar-link.active, .mobile-tab-link.active');
+                    const dashboardSection = document.getElementById('dashboard-section');
+                    if (activeNavLink && activeNavLink.getAttribute('data-section') === 'dashboard' && dashboardSection) {
+                        dashboardSection.style.setProperty('display', 'flex', 'important');
+                        const dashboard = document.getElementById('dashboard');
+                        if (dashboard) {
+                            dashboard.style.display = 'block';
+                        }
+                    } else if (dashboardSection) {
+                        // Ensure dashboard is hidden if not active
+                        dashboardSection.style.setProperty('display', 'none', 'important');
+                    }
                     const lastUpdateDate = latestResultDate ? latestResultDate.toLocaleString() : new Date().toLocaleString();
                     const lastUpdate = document.getElementById('lastUpdate');
                     if (lastUpdate) {
@@ -3157,43 +3328,43 @@
             
             mainCardsContainer.innerHTML = `
             <div class="main-cards-container">
-                <div class="stat-card active" data-card-index="0" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
-                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Total DM</div>
+                <div class="stat-card active" data-card-index="0" style="border-radius: 22px; padding: 20px; background: #FFFFFF; border: 1px solid rgba(74, 144, 198, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); color: #000000; overflow: hidden; position: relative; width: 100%; min-width: 280px;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 16px;">
+                        <div class="goal-mobile-title card-title" style="color: #4A90C6;">Total DM</div>
                                 </div>
-                    <div style="text-align: center; margin-bottom: 12px;">
-                        <div style="font-size: 1.5em; font-weight: 700; color: rgba(255, 255, 255, 0.98); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(dmPatientCount || 0).toLocaleString()}</div>
+                    <div style="text-align: center; margin-bottom: 16px;">
+                        <div class="metric-number" style="color: #000000; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(dmPatientCount || 0).toLocaleString()}</div>
                                                     </div>
-                    <div class="sub-sub-cards-container" style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    <div class="sub-sub-cards-container" style="display: flex; gap: 12px; margin-bottom: 16px;">
                         <div class="sub-sub-card success-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
                                                 <div class="sub-sub-card-inner">
-                                <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.12) 100%); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                <div class="sub-sub-card-front" style="background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.3); border-radius: 12px; padding: 12px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
                                     <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
-                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(controlledCount || 0).toLocaleString()}</div>
-                                        <div style="font-size: 0.65rem; color: rgba(147, 197, 253, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Controlled (${controlledPct}%)</div>
+                                        <div class="metric-number" style="font-size: 20px; margin-bottom: 4px; color: #000000; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(controlledCount || 0).toLocaleString()}</div>
+                                        <div class="percentage-pill" style="color: #4A90C6; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Controlled (${controlledPct}%)</div>
                             </div>
                                                     </div>
-                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.12) 100%); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                <div class="sub-sub-card-back body-text" style="background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.3); border-radius: 12px; padding: 12px; text-align: center; color: #666666; line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
                                     HbA1c ≤8.0%<br>or Fasting ≤9.0<br>(Latest result)
                                 </div>
                             </div>
                                             </div>
                         <div class="sub-sub-card alert-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
                                                 <div class="sub-sub-card-inner">
-                                <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.12) 100%); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                <div class="sub-sub-card-front" style="background: rgba(74, 144, 198, 0.05); border: 1px solid rgba(74, 144, 198, 0.15); border-radius: 12px; padding: 12px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
                                     <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
-                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(uncontrolledCount || 0).toLocaleString()}</div>
-                                        <div style="font-size: 0.65rem; color: rgba(252, 165, 165, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Uncontrolled (${uncontrolledPct}%)</div>
+                                        <div class="metric-number" style="font-size: 20px; margin-bottom: 4px; color: #000000; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(uncontrolledCount || 0).toLocaleString()}</div>
+                                        <div class="percentage-pill" style="color: #666666; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Uncontrolled (${uncontrolledPct}%)</div>
                                                         </div>
                                                     </div>
-                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.12) 100%); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                <div class="sub-sub-card-back body-text" style="background: rgba(74, 144, 198, 0.05); border: 1px solid rgba(74, 144, 198, 0.15); border-radius: 12px; padding: 12px; text-align: center; color: #666666; line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
                                     HbA1c >8.0%<br>or Fasting >9.0<br>(Latest result)
                                 </div>
                             </div>
                         </div>
                                         </div>
-                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75); text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
-                        <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); font-size: 12px; line-height: 1.5; color: #666666; text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
+                        <strong style="color: #000000; display: block; margin-bottom: 8px;">Criteria:</strong>
                         <div style="text-align: left; padding-left: 16px;">
                                             HbA1c ≥6.5% or Fasting ≥7.0<br>
                                             First after 2025-06-01<br>
@@ -3201,43 +3372,43 @@
                                         </div>
                                     </div>
                                 </div>
-                <div class="stat-card" data-card-index="1" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
-                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Total Pre-DM</div>
+                <div class="stat-card" data-card-index="1" style="border-radius: 22px; padding: 20px; background: #FFFFFF; border: 1px solid rgba(74, 144, 198, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); color: #000000; overflow: hidden; position: relative; width: 100%; min-width: 280px;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 16px;">
+                        <div class="goal-mobile-title card-title" style="color: #4A90C6;">Total Pre-DM</div>
                             </div>
-                    <div style="text-align: center; margin-bottom: 12px;">
-                        <div style="font-size: 1.5em; font-weight: 700; color: rgba(255, 255, 255, 0.98); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(predmPatientCount || 0).toLocaleString()}</div>
+                    <div style="text-align: center; margin-bottom: 16px;">
+                        <div class="metric-number" style="color: #000000; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(predmPatientCount || 0).toLocaleString()}</div>
                         </div>
-                    <div class="sub-sub-cards-container" style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    <div class="sub-sub-cards-container" style="display: flex; gap: 12px; margin-bottom: 16px;">
                         <div class="sub-sub-card success-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
                                                 <div class="sub-sub-card-inner">
-                                                    <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.12) 100%); border: 1px solid rgba(34, 197, 94, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                                    <div class="sub-sub-card-front" style="background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.3); border-radius: 12px; padding: 12px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
                                     <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
-                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(improvedCount || 0).toLocaleString()}</div>
-                                        <div style="font-size: 0.65rem; color: rgba(134, 239, 172, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Improved (${improvedPct}%)</div>
+                                        <div class="metric-number" style="font-size: 20px; margin-bottom: 4px; color: #000000; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(improvedCount || 0).toLocaleString()}</div>
+                                        <div class="percentage-pill" style="color: #4A90C6; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Improved (${improvedPct}%)</div>
                             </div>
                                                     </div>
-                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.12) 100%); border: 1px solid rgba(34, 197, 94, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                <div class="sub-sub-card-back body-text" style="background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.3); border-radius: 12px; padding: 12px; text-align: center; color: #666666; line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
                                     Normal result<br>after 2025-06-01<br>(HbA1c <5.7%<br>or Fasting <5.6)
                                 </div>
                             </div>
                                             </div>
                         <div class="sub-sub-card alert-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
                                                 <div class="sub-sub-card-inner">
-                                                    <div class="sub-sub-card-front" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.12) 100%); border: 1px solid rgba(251, 191, 36, 0.25); border-radius: 10px; padding: 10px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                                    <div class="sub-sub-card-front" style="background: rgba(74, 144, 198, 0.05); border: 1px solid rgba(74, 144, 198, 0.15); border-radius: 12px; padding: 12px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
                                     <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
-                                        <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 4px; color: rgba(255, 255, 255, 0.95); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(needFollowupCount || 0).toLocaleString()}</div>
-                                        <div style="font-size: 0.65rem; color: rgba(253, 224, 71, 0.9); word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Need Follow-up (${needFollowupPct}%)</div>
+                                        <div class="metric-number" style="font-size: 20px; margin-bottom: 4px; color: #000000; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(needFollowupCount || 0).toLocaleString()}</div>
+                                        <div class="percentage-pill" style="color: #666666; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Need Follow-up (${needFollowupPct}%)</div>
                                                         </div>
                                                     </div>
-                                <div class="sub-sub-card-back" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.12) 100%); border: 1px solid rgba(251, 191, 36, 0.25); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
+                                <div class="sub-sub-card-back body-text" style="background: rgba(74, 144, 198, 0.05); border: 1px solid rgba(74, 144, 198, 0.15); border-radius: 12px; padding: 12px; text-align: center; color: #666666; line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
                                     No visit within<br>last 3 months<br>(or no visit<br>recorded)
                                 </div>
                             </div>
                         </div>
                                         </div>
-                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75); text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
-                        <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
+                    <div class="body-text" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); color: #666666; text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
+                        <strong style="color: #000000; display: block; margin-bottom: 8px;">Criteria:</strong>
                         <div style="text-align: left; padding-left: 16px;">
                                             HbA1c: 5.7-6.4% or Fasting: 5.6-6.9<br>
                                             Result ≥ 2025-01-01<br>
@@ -3246,17 +3417,17 @@
                                         </div>
                                     </div>
                                 </div>
-                <div class="stat-card" data-card-index="2" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
-                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Screened</div>
+                <div class="stat-card" data-card-index="2" style="border-radius: 22px; padding: 20px; background: #FFFFFF; border: 1px solid rgba(74, 144, 198, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); color: #000000; overflow: hidden; position: relative; width: 100%; min-width: 280px;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 16px;">
+                        <div class="goal-mobile-title card-title" style="color: #4A90C6;">Screened</div>
                             </div>
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
                         <div style="text-align: center;">
-                            <div style="font-size: 1.5em; font-weight: 700; margin-bottom: 8px; color: rgba(255, 255, 255, 0.98);">${(screenedCount || 0).toLocaleString()}</div>
-                            <div style="font-size: 0.75rem; opacity: 0.85; color: rgba(255, 255, 255, 0.8); margin-bottom: 12px;">Screened (${screenedPct}%)</div>
+                            <div class="metric-number" style="margin-bottom: 8px; color: #000000;">${(screenedCount || 0).toLocaleString()}</div>
+                            <div class="percentage-pill" style="color: #4A90C6; margin-bottom: 16px;">Screened (${screenedPct}%)</div>
                         </div>
-                        <div style="margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75);">
-                            <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
+                        <div class="body-text" style="margin-top: 8px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); color: #666666;">
+                            <strong style="color: #000000; display: block; margin-bottom: 8px;">Criteria:</strong>
                             <div style="text-align: left; padding-left: 16px;">
                                 • Age above 34<br>
                                 • Not pregnant
@@ -3264,17 +3435,17 @@
                         </div>
                             </div>
                             </div>
-                <div class="stat-card" data-card-index="3" style="border-radius: 16px; padding: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.7) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.15); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2); color: white; overflow: hidden; position: relative;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 12px;">
-                        <div class="goal-mobile-title" style="font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.98);">Screened (from 2024-10-01)</div>
+                <div class="stat-card" data-card-index="3" style="border-radius: 22px; padding: 20px; background: #FFFFFF; border: 1px solid rgba(74, 144, 198, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); color: #000000; overflow: hidden; position: relative; width: 100%; min-width: 280px;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 16px;">
+                        <div class="goal-mobile-title card-title" style="color: #4A90C6;">Screened (from 2024-10-01)</div>
                         </div>
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
                         <div style="text-align: center;">
-                            <div style="font-size: 1.5em; font-weight: 700; margin-bottom: 8px; color: rgba(255, 255, 255, 0.98);">${(screenedFrom20241001Count || 0).toLocaleString()}</div>
-                            <div style="font-size: 0.75rem; opacity: 0.85; color: rgba(255, 255, 255, 0.8); margin-bottom: 12px;">Screened (${screenedFrom20241001Pct || '0.0'}%)</div>
+                            <div class="metric-number" style="margin-bottom: 8px; color: #000000;">${(screenedFrom20241001Count || 0).toLocaleString()}</div>
+                            <div class="percentage-pill" style="color: #4A90C6; margin-bottom: 16px;">Screened (${screenedFrom20241001Pct || '0.0'}%)</div>
                     </div>
-                        <div style="margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.7rem; line-height: 1.5; color: rgba(255, 255, 255, 0.75);">
-                            <strong style="color: rgba(255, 255, 255, 0.9); display: block; margin-bottom: 6px;">Criteria:</strong>
+                        <div class="body-text" style="margin-top: 8px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); color: #666666;">
+                            <strong style="color: #000000; display: block; margin-bottom: 8px;">Criteria:</strong>
                             <div style="text-align: left; padding-left: 16px;">
                                 • Age above 34<br>
                                 • Not pregnant
@@ -3305,6 +3476,37 @@
             
             // Setup daily summary button
             setupDailySummary();
+            
+            // Setup report buttons
+            const dmReportBtn = document.getElementById('downloadDmReport');
+            const predmReportBtn = document.getElementById('downloadPredmReport');
+            const improvedPredmReportBtn = document.getElementById('downloadImprovedPredmReport');
+            const screenedReportBtn = document.getElementById('downloadScreenedReport');
+            
+            if (dmReportBtn) {
+                dmReportBtn.addEventListener('click', () => {
+                    const excludedZones = getExcludedZonesSet();
+                    downloadTotalDmRawData(excludedZones);
+                });
+            }
+            if (predmReportBtn) {
+                predmReportBtn.addEventListener('click', () => {
+                    const excludedZones = getExcludedZonesSet();
+                    downloadPredmReport(excludedZones);
+                });
+            }
+            if (improvedPredmReportBtn) {
+                improvedPredmReportBtn.addEventListener('click', () => {
+                    const excludedZones = getExcludedZonesSet();
+                    downloadImprovedPredmReport(excludedZones);
+                });
+            }
+            if (screenedReportBtn) {
+                screenedReportBtn.addEventListener('click', () => {
+                    const excludedZones = getExcludedZonesSet();
+                    downloadScreenedReport(excludedZones);
+                });
+            }
         }
         
         // Function to create expandable zone list
@@ -3439,7 +3641,9 @@
         let globalHasDmIds = new Set();
         let globalOrgZoneMap = {};
         let globalZoneLookup = {};
-        let globalDmPatientsRaw = []; // Array of enriched DM patient records for export
+        let globalDmPatientsRaw = [];      // Enriched DM patient records for export
+        let globalPredmPatientsRaw = [];   // Enriched Pre-DM patient records for export
+        let globalScreenedPatientsRaw = []; // Enriched screened patient records for export
         
         // Flag to prevent multiple event listeners
         let dailySummaryListenerAdded = false;
@@ -4049,9 +4253,9 @@
                     
                     const section = this.getAttribute('data-section');
                     
-                    // Hide all content sections
+                    // Hide all content sections FIRST - use !important to override any CSS
                     contentSections.forEach(sec => {
-                        sec.style.display = 'none';
+                        sec.style.setProperty('display', 'none', 'important');
                     });
                     
                     // Remove dashboard-active class from body
@@ -4067,14 +4271,16 @@
                         targetSection = document.getElementById('dm-patients-section');
                     } else if (section === 'pre-dm-patients') {
                         targetSection = document.getElementById('pre-dm-patients-section');
-                    } else if (section === 'screening-target') {
-                        targetSection = document.getElementById('screening-target-section');
                     }
                     
                     // Building visualization removed
                     
                     if (targetSection) {
-                        targetSection.style.display = 'block';
+                        if (section === 'dashboard') {
+                            targetSection.style.setProperty('display', 'flex', 'important'); // Use flex directly for dashboard
+                        } else {
+                            targetSection.style.setProperty('display', 'block', 'important');
+                        }
                         // Scroll to top of main content
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                         
@@ -4093,6 +4299,17 @@
                 const firstSection = navLinks[0].getAttribute('data-section');
                 if (firstSection === 'dashboard') {
                     document.body.classList.add('dashboard-active');
+                    // Show dashboard section if it's the default
+                    const dashboardSection = document.getElementById('dashboard-section');
+                    if (dashboardSection) {
+                        dashboardSection.style.display = 'block';
+                    }
+                } else {
+                    // Hide dashboard if it's not the default
+                    const dashboardSection = document.getElementById('dashboard-section');
+                    if (dashboardSection) {
+                        dashboardSection.style.display = 'none';
+                    }
                 }
             }
         }
@@ -4171,7 +4388,7 @@
         }
 
         // Download Total DM raw data as CSV
-        function downloadTotalDmRawData() {
+        function downloadTotalDmRawData(excludedZonesSet) {
             if (!globalDmPatientsRaw || globalDmPatientsRaw.length === 0) {
                 alert('Total DM raw data is not available yet. Please ensure the data has finished loading.');
                 return;
@@ -4185,24 +4402,29 @@
                 'First_DM_Date',
                 'Latest_Result_Type',
                 'Latest_Result_Value',
-                'Is_Controlled'
+                'Category'
             ];
             
-            const rows = globalDmPatientsRaw.map(rec => {
-                const firstDate = rec.firstDMDate && !isNaN(new Date(rec.firstDMDate).getTime())
-                    ? new Date(rec.firstDMDate).toISOString().split('T')[0]
-                    : '';
-                return [
-                    `"${rec.patientId || ''}"`,
-                    `"${rec.zone || ''}"`,
-                    `"${(rec.organization || '').replace(/"/g, '""')}"`,
-                    rec.age != null ? rec.age : '',
-                    `"${firstDate}"`,
-                    `"${rec.resultType || ''}"`,
-                    rec.resultValue != null ? rec.resultValue : '',
-                    rec.isControlled === null || rec.isControlled === undefined ? '' : (rec.isControlled ? 'Controlled' : 'Uncontrolled')
-                ].join(',');
-            });
+            const rows = globalDmPatientsRaw
+                .filter(rec => !excludedZonesSet || !excludedZonesSet.has(rec.zone))
+                .map(rec => {
+                    const firstDate = rec.firstDMDate && !isNaN(new Date(rec.firstDMDate).getTime())
+                        ? new Date(rec.firstDMDate).toISOString().split('T')[0]
+                        : '';
+                    const category = rec.isControlled === null || rec.isControlled === undefined
+                        ? ''
+                        : (rec.isControlled ? 'Controlled' : 'Uncontrolled');
+                    return [
+                        `"${rec.patientId || ''}"`,
+                        `"${rec.zone || ''}"`,
+                        `"${(rec.organization || '').replace(/"/g, '""')}"`,
+                        rec.age != null ? rec.age : '',
+                        `"${firstDate}"`,
+                        `"${rec.resultType || ''}"`,
+                        rec.resultValue != null ? rec.resultValue : '',
+                        `"${category}"`
+                    ].join(',');
+                });
             
             const csvContent = [header.join(','), ...rows].join('\n');
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -4211,7 +4433,7 @@
             const link = document.createElement('a');
             link.href = url;
             const timestamp = new Date().toISOString().split('T')[0];
-            link.download = `total_dm_raw_${timestamp}.csv`;
+            link.download = `report_total_dm_${timestamp}.csv`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -4380,6 +4602,161 @@
                     detailRow.style.display = 'table-row';
                 });
             });
+        }
+        
+        // Helper: get excluded zones from input
+        function getExcludedZonesSet() {
+            const input = document.getElementById('reportExcludedZones');
+            if (!input || !input.value) return null;
+            const zones = input.value.split(',').map(z => z.trim()).filter(Boolean);
+            return new Set(zones);
+        }
+        
+        // Download Pre-DM report (all categories)
+        function downloadPredmReport(excludedZonesSet) {
+            if (!globalPredmPatientsRaw || globalPredmPatientsRaw.length === 0) {
+                alert('Pre‑DM raw data is not available yet. Please ensure the data has finished loading.');
+                return;
+            }
+            
+            const header = [
+                'Patient_ID',
+                'Zone',
+                'Organization',
+                'Age',
+                'First_Predm_Date',
+                'Last_Visit_Date',
+                'Category'
+            ];
+            
+            const rows = globalPredmPatientsRaw
+                .filter(rec => !excludedZonesSet || !excludedZonesSet.has(rec.zone))
+                .map(rec => {
+                    const firstDate = rec.firstPredmDate && !isNaN(new Date(rec.firstPredmDate).getTime())
+                        ? new Date(rec.firstPredmDate).toISOString().split('T')[0]
+                        : '';
+                    const lastDate = rec.lastVisitDate && !isNaN(new Date(rec.lastVisitDate).getTime())
+                        ? new Date(rec.lastVisitDate).toISOString().split('T')[0]
+                        : '';
+                    let category = 'Null';
+                    if (rec.isImproved) category = 'Improved';
+                    else if (rec.needsFollowup) category = 'Need follow-up';
+                    
+                    return [
+                        `"${rec.patientId || ''}"`,
+                        `"${rec.zone || ''}"`,
+                        `"${(rec.organization || '').replace(/"/g, '""')}"`,
+                        rec.age != null ? rec.age : '',
+                        `"${firstDate}"`,
+                        `"${lastDate}"`,
+                        `"${category}"`
+                    ].join(',');
+                });
+            
+            const csvContent = [header.join(','), ...rows].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            const timestamp = new Date().toISOString().split('T')[0];
+            link.download = `report_total_predm_${timestamp}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Download improved Pre-DM only
+        function downloadImprovedPredmReport(excludedZonesSet) {
+            if (!globalPredmPatientsRaw || globalPredmPatientsRaw.length === 0) {
+                alert('Pre‑DM raw data is not available yet. Please ensure the data has finished loading.');
+                return;
+            }
+            
+            const header = [
+                'Patient_ID',
+                'Zone',
+                'Organization',
+                'Age',
+                'First_Predm_Date',
+                'Last_Visit_Date'
+            ];
+            
+            const rows = globalPredmPatientsRaw
+                .filter(rec => rec.isImproved)
+                .filter(rec => !excludedZonesSet || !excludedZonesSet.has(rec.zone))
+                .map(rec => {
+                    const firstDate = rec.firstPredmDate && !isNaN(new Date(rec.firstPredmDate).getTime())
+                        ? new Date(rec.firstPredmDate).toISOString().split('T')[0]
+                        : '';
+                    const lastDate = rec.lastVisitDate && !isNaN(new Date(rec.lastVisitDate).getTime())
+                        ? new Date(rec.lastVisitDate).toISOString().split('T')[0]
+                        : '';
+                    return [
+                        `"${rec.patientId || ''}"`,
+                        `"${rec.zone || ''}"`,
+                        `"${(rec.organization || '').replace(/"/g, '""')}"`,
+                        rec.age != null ? rec.age : '',
+                        `"${firstDate}"`,
+                        `"${lastDate}"`
+                    ].join(',');
+                });
+            
+            const csvContent = [header.join(','), ...rows].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            const timestamp = new Date().toISOString().split('T')[0];
+            link.download = `report_predm_improved_${timestamp}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Download screened patients
+        function downloadScreenedReport(excludedZonesSet) {
+            if (!globalScreenedPatientsRaw || globalScreenedPatientsRaw.length === 0) {
+                alert('Screened patient raw data is not available yet. Please ensure the data has finished loading.');
+                return;
+            }
+            
+            const header = [
+                'Patient_ID',
+                'Zone',
+                'Organization',
+                'First_Screening_Date'
+            ];
+            
+            const rows = globalScreenedPatientsRaw
+                .filter(rec => !excludedZonesSet || !excludedZonesSet.has(rec.zone))
+                .map(rec => {
+                    const firstDate = rec.firstScreeningDate && !isNaN(new Date(rec.firstScreeningDate).getTime())
+                        ? new Date(rec.firstScreeningDate).toISOString().split('T')[0]
+                        : '';
+                    return [
+                        `"${rec.patientId || ''}"`,
+                        `"${rec.zone || ''}"`,
+                        `"${(rec.organization || '').replace(/"/g, '""')}"`,
+                        `"${firstDate}"`
+                    ].join(',');
+                });
+            
+            const csvContent = [header.join(','), ...rows].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            const timestamp = new Date().toISOString().split('T')[0];
+            link.download = `report_screened_${timestamp}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         }
 
 
