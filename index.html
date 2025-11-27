@@ -410,9 +410,9 @@
         .stat-card[data-card-index="2"],
         .stat-card[data-card-index="3"] {
             padding: 12px !important;
-            min-height: 280px !important;
             overflow: hidden !important;
         }
+        
         
         .stat-card[data-card-index="0"] .goal-mobile-card-header,
         .stat-card[data-card-index="1"] .goal-mobile-card-header,
@@ -608,6 +608,33 @@
             .stat-card[data-card-index="2"] .metric-number:not([style*="font-size"]),
             .stat-card[data-card-index="3"] .metric-number:not([style*="font-size"]) {
                 font-size: 20px !important;
+            }
+
+            /* Mobile sub-metric boxes styling */
+            #mainCardsContainer .stat-sub-metrics {
+                gap: 6px;
+                margin-top: 6px;
+                margin-bottom: 6px;
+                flex-wrap: nowrap;
+            }
+
+            #mainCardsContainer .stat-sub-metric {
+                padding: 6px 8px;
+                flex: 1 1 0;
+                min-width: 0;
+            }
+
+            #mainCardsContainer .stat-sub-metric-label {
+                font-size: 10px;
+                margin-bottom: 4px;
+            }
+
+            #mainCardsContainer .stat-sub-metric-value {
+                font-size: 16px;
+            }
+
+            #mainCardsContainer .stat-sub-metric-normal {
+                min-width: 100%;
             }
             
             .stat-card[data-card-index="0"] .percentage-pill,
@@ -982,6 +1009,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            gap: 0;
         }
         
         #mainCardsContainer {
@@ -990,6 +1018,7 @@
             flex-direction: column;
             overflow: hidden;
             height: fit-content;
+            margin-bottom: var(--spacing-md); /* 20px spacing after cards */
         }
         
         #dashboard-section .main-cards-container {
@@ -1012,18 +1041,57 @@
             display: none;
         }
         
-        #dashboard-section .dashboard-pagination {
+        /* Show pagination on card interaction */
+        #dashboard-section .main-cards-container:hover + #dashboard-pagination,
+        #dashboard-section .main-cards-container:focus-within + #dashboard-pagination {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        #dashboard-pagination {
             flex-shrink: 0;
-            margin-top: 8px;
-            margin-bottom: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 0;
+            margin-bottom: var(--spacing-md); /* 20px spacing before zones */
+            padding: 8px 16px;
+            background: var(--white);
+            border-radius: 20px;
+            border: 1px solid rgba(74, 144, 198, 0.2);
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
         }
         
-        #dashboard-section .dashboard-pagination.visible {
+        #dashboard-pagination.visible {
             opacity: 1;
             pointer-events: auto;
+        }
+        
+        #dashboard .dashboard-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(74, 144, 198, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-width: var(--touch-target);
+            min-height: var(--touch-target);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #dashboard .dashboard-dot.active {
+            width: 24px;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--primary-blue);
         }
         
         /* Zone List Container */
@@ -1034,7 +1102,7 @@
             min-height: 0;
             padding-bottom: 70px; /* Space for mobile footer (58px + safe area) */
             position: relative;
-            margin-top: 12px;
+            margin-top: 0;
         }
         
         .zone-list {
@@ -1046,71 +1114,42 @@
         
         .zone-item {
             background: var(--white);
-            border: 1px solid rgba(74, 144, 198, 0.2);
-            border-radius: var(--border-radius);
-            padding: var(--spacing-md) var(--spacing-lg);
-            margin-bottom: var(--spacing-sm);
+            border: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 0;
+            padding: 16px 20px;
+            margin-bottom: 0;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-        }
-        
-        .zone-item:hover,
-        .zone-item.expanded {
-            border-color: var(--primary-blue);
-            box-shadow: 0 4px 12px rgba(74, 144, 198, 0.15);
-        }
-        
-        .zone-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            color: #000000;
+            justify-content: space-between;
+            box-shadow: none;
+        }
+        
+        .zone-item:first-child {
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .zone-item:hover {
+            background: rgba(0,0,0,0.02);
         }
         
         .zone-name {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-            font-weight: 600;
-            font-size: 20px;
+            font-weight: 500;
+            font-size: 16px;
             color: #000000;
         }
         
-        .zone-target {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-            font-weight: 400;
+        .zone-arrow {
+            color: #C7C7CC;
             font-size: 14px;
-            color: #666666;
-            margin-top: 4px;
+            font-weight: 600;
         }
         
-        .zone-expand-icon {
-            font-size: 20px;
-            color: var(--primary-blue);
-            transition: transform 0.3s ease;
-            min-width: var(--touch-target);
-            min-height: var(--touch-target);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .zone-item.expanded .zone-expand-icon {
-            transform: rotate(180deg);
-        }
-        
-        .zone-details {
+        /* Hide unused zone accordion styles */
+        .zone-header, .zone-target, .zone-expand-icon, .zone-details {
             display: none;
-            margin-top: var(--spacing-md);
-            padding-top: var(--spacing-md);
-            border-top: 1px solid rgba(74, 144, 198, 0.2);
-        }
-        
-        .zone-item.expanded {
-            background: var(--white);
-        }
-        
-        .zone-item.expanded .zone-details {
-            display: block;
         }
         
         .zone-detail-row {
@@ -1582,10 +1621,10 @@
             
             .main-cards-container {
                 position: relative !important;
-                height: 150px !important;
+                height: 200px !important;
                 flex-shrink: 0 !important;
-                min-height: 150px !important;
-                max-height: 150px !important;
+                min-height: 200px !important;
+                max-height: 200px !important;
                 display: flex !important;
                 flex-wrap: nowrap !important;
                 gap: 12px !important;
@@ -1608,13 +1647,16 @@
                 opacity: 1 !important;
                 visibility: visible !important;
                 pointer-events: auto !important;
-                overflow-y: auto !important;
-                overflow-x: hidden !important;
+                overflow: hidden !important;
                 -webkit-overflow-scrolling: touch !important;
-                height: 150px !important;
+                height: 200px !important;
+                min-height: 200px !important;
+                max-height: 200px !important;
                 display: flex !important;
                 flex-direction: column !important;
                 align-self: stretch !important;
+                box-sizing: border-box !important;
+                padding: 12px 16px !important;
             }
             
             /* Mobile card navigation buttons - hidden, using swipe instead */
@@ -2291,6 +2333,272 @@
             background: linear-gradient(135deg, rgba(244, 67, 54, 0.45) 0%, rgba(220, 53, 69, 0.4) 50%, rgba(198, 40, 40, 0.35) 100%) !important;
             border: 2px solid rgba(244, 67, 54, 0.55);
         }
+
+        /* Dashboard KPI refresh overrides */
+        #mainCardsContainer .main-cards-container {
+            display: flex;
+            gap: var(--spacing-md);
+            height: 200px;
+            min-height: 200px;
+            max-height: 200px;
+            padding: 0;
+            margin-bottom: 8px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #mainCardsContainer .main-cards-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Card container - optimized for 200px height */
+        #mainCardsContainer .main-cards-container .stat-card {
+            flex: 0 0 calc(100% - 32px);
+            min-width: 260px;
+            height: 200px;
+            min-height: 200px;
+            max-height: 200px;
+            background: var(--primary-blue);
+            border: none;
+            border-radius: 24px;
+            box-shadow: 0 8px 24px rgba(74, 144, 198, 0.3);
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        /* Abstract shape decoration */
+        #mainCardsContainer .main-cards-container .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 70%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 40%;
+            transform: rotate(15deg);
+            pointer-events: none;
+        }
+
+        #mainCardsContainer .stat-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0;
+            padding: 0;
+            z-index: 1;
+            flex-shrink: 0;
+            min-height: 0;
+            height: auto;
+        }
+
+        #mainCardsContainer .card-title {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        #mainCardsContainer .criteria-info-icon {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        #mainCardsContainer .criteria-info-icon:hover {
+            color: white;
+        }
+
+        #mainCardsContainer .stat-card-metric {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 8px 0 0 0;
+            padding: 0;
+            z-index: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        #mainCardsContainer .stat-card-metric .metric-number {
+            color: white;
+            font-size: clamp(32px, 8vw, 42px);
+            font-weight: 700;
+            letter-spacing: -1px;
+            line-height: 1;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Sub-metric boxes styling */
+        #mainCardsContainer .stat-sub-metrics {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: 8px;
+            margin-bottom: 8px;
+            flex-wrap: nowrap;
+        }
+
+        #mainCardsContainer .stat-sub-metric {
+            flex: 1 1 0;
+            min-width: 0;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 12px;
+            padding: 8px 10px;
+            text-align: center;
+            backdrop-filter: blur(4px);
+        }
+
+        #mainCardsContainer .stat-sub-metric-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+
+        #mainCardsContainer .stat-sub-metric-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            line-height: 1;
+        }
+
+        /* Specific colors for sub-metrics */
+        #mainCardsContainer .stat-sub-metric-controlled {
+            background: rgba(74, 144, 198, 0.25);
+            border-color: rgba(74, 144, 198, 0.4);
+        }
+
+        #mainCardsContainer .stat-sub-metric-uncontrolled {
+            background: rgba(255, 59, 48, 0.25);
+            border-color: rgba(255, 59, 48, 0.4);
+        }
+
+        #mainCardsContainer .stat-sub-metric-improved {
+            background: rgba(74, 144, 198, 0.25);
+            border-color: rgba(74, 144, 198, 0.4);
+        }
+
+        #mainCardsContainer .stat-sub-metric-need-followup {
+            background: rgba(255, 59, 48, 0.25);
+            border-color: rgba(255, 59, 48, 0.4);
+        }
+
+        #mainCardsContainer .stat-sub-metric-normal {
+            background: rgba(76, 217, 100, 0.25);
+            border-color: rgba(76, 217, 100, 0.4);
+            min-width: 100%;
+        }
+
+        #mainCardsContainer .sub-sub-cards-container {
+            display: none; /* Hide sub-metrics to match image - only show main number */
+        }
+
+        #mainCardsContainer .sub-sub-card {
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            min-height: auto !important;
+            height: auto !important;
+        }
+        
+        #mainCardsContainer .sub-sub-card-inner,
+        #mainCardsContainer .sub-sub-card-front {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        #mainCardsContainer .metric-number.sub-metric {
+            font-size: 16px !important;
+            color: white !important;
+            font-weight: 600;
+        }
+
+        #mainCardsContainer .percentage-pill {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 12px;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        /* Dots for sub-metrics */
+        .sub-metric-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .dot-green { background-color: #4CD964; }
+        .dot-red { background-color: #FF3B30; }
+        .dot-yellow { background-color: #FFCC00; }
+
+
+        #mainCardsContainer .criteria-section {
+            display: none;
+        }
+        
+        /* Update Zone List Styles for simple list */
+        .zone-item {
+            background: var(--white);
+            border: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 0;
+            padding: 16px 20px;
+            margin-bottom: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: none;
+        }
+        
+        .zone-item:first-child {
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .zone-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #000000;
+        }
+        
+        .zone-arrow {
+            color: #C7C7CC;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        /* Hide old accordion details styles if not needed in list view */
+        .zone-details, .zone-expand-icon, .zone-target {
+            display: none;
+        }
+        
+        /* Zone List Container Spacing */
+        #zoneListContainer {
+            margin-top: 18px;
+            background: white;
+        }
     </style>
 </head>
 <body>
@@ -2324,9 +2632,21 @@
             <div id="dashboard-section" class="content-section" style="display: none;">
                 <div id="dashboard">
             <div id="mainCardsContainer"></div>
+                    <div id="dashboard-pagination" class="dashboard-pagination"></div>
                     <div id="zoneListContainer"></div>
         </div>
     </div>
+
+            <!-- Zone Detail Section -->
+            <div id="zone-detail-section" class="content-section" style="display: none; background: var(--white); height: 100%;">
+                <div class="zone-detail-header" style="padding: 16px; border-bottom: 1px solid rgba(74, 144, 198, 0.1); display: flex; align-items: center; gap: 16px;">
+                    <button id="backToDashboard" style="background: none; border: none; font-size: 24px; color: var(--primary-blue); cursor: pointer; padding: 0 8px;">&lt;</button>
+                    <h2 id="zoneDetailTitle" style="margin: 0; font-size: 20px; color: #000000;">Zone Details</h2>
+                </div>
+                <div id="zoneDetailContent" style="padding: 16px; overflow-y: auto; height: calc(100% - 60px);">
+                    <!-- Zone details will be populated here -->
+                </div>
+            </div>
 
             <!-- DM Patients Section (Daily KPI) -->
             <div id="dm-patients-section" class="content-section" style="display: none;">
@@ -3593,145 +3913,124 @@
                 );
             }
             
+            // Calculate normal/healthy count (screened patients who don't have DM or Pre-DM)
+            const normalHealthyCount = Math.max(0, (screenedCount || 0) - (dmPatientCount || 0) - (predmPatientCount || 0));
+            const normalHealthyFrom20241001Count = Math.max(0, (screenedFrom20241001Count || 0) - (dmPatientCount || 0) - (predmPatientCount || 0));
+            
             mainCardsContainer.innerHTML = `
             <div class="main-cards-container">
-                <div class="stat-card active" data-card-index="0" style="border-radius: 22px; padding: 20px; background: #FFFFFF; border: 1px solid rgba(74, 144, 198, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); color: #000000; overflow: hidden; position: relative; width: 100%; min-width: 280px;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
-                        <div class="goal-mobile-title card-title" style="color: #4A90C6;">Total DM</div>
+                <div class="stat-card active" data-card-index="0">
+                    <div class="goal-mobile-card-header stat-card-header">
+                        <div class="goal-mobile-title card-title">Total DM</div>
                         <span class="criteria-info-icon" data-card-index="0">(i)</span>
-                                </div>
-                    <div style="text-align: center; margin-bottom: 16px;">
-                        <div class="metric-number" style="color: #000000; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(dmPatientCount || 0).toLocaleString()}</div>
-                                                    </div>
-                    <div class="sub-sub-cards-container" style="display: flex; gap: 12px; margin-bottom: 16px;">
-                        <div class="sub-sub-card success-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
-                                                <div class="sub-sub-card-inner">
-                                <div class="sub-sub-card-front" style="background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.3); border-radius: 12px; padding: 12px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
-                                        <div class="metric-number" style="font-size: 20px; margin-bottom: 4px; color: #000000; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(controlledCount || 0).toLocaleString()}</div>
-                                        <div class="percentage-pill" style="color: #4A90C6; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Controlled (${controlledPct}%)</div>
-                            </div>
-                                                    </div>
-                                <div class="sub-sub-card-back body-text" style="background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.3); border-radius: 12px; padding: 12px; text-align: center; color: #666666; line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    HbA1c ≤8.0%<br>or Fasting ≤9.0<br>(Latest result)
-                                </div>
-                            </div>
-                                            </div>
-                        <div class="sub-sub-card alert-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
-                                                <div class="sub-sub-card-inner">
-                                <div class="sub-sub-card-front" style="background: rgba(74, 144, 198, 0.05); border: 1px solid rgba(74, 144, 198, 0.15); border-radius: 12px; padding: 12px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
-                                        <div class="metric-number" style="font-size: 20px; margin-bottom: 4px; color: #000000; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(uncontrolledCount || 0).toLocaleString()}</div>
-                                        <div class="percentage-pill" style="color: #666666; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Uncontrolled (${uncontrolledPct}%)</div>
-                                                        </div>
-                                                    </div>
-                                <div class="sub-sub-card-back body-text" style="background: rgba(74, 144, 198, 0.05); border: 1px solid rgba(74, 144, 198, 0.15); border-radius: 12px; padding: 12px; text-align: center; color: #666666; line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    HbA1c >8.0%<br>or Fasting >9.0<br>(Latest result)
-                                </div>
-                            </div>
-                        </div>
-                                        </div>
-                    <div class="criteria-section" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); font-size: 12px; line-height: 1.5; color: #666666; text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
-                        <strong style="color: #000000; display: block; margin-bottom: 8px;">Criteria:</strong>
-                        <div style="text-align: left; padding-left: 16px;">
-                                            HbA1c ≥6.5% or Fasting ≥7.0<br>
-                                            First after 2025-06-01<br>
-                                            Age > 34
-                                        </div>
-                                    </div>
-                                </div>
-                <div class="stat-card" data-card-index="1" style="border-radius: 22px; padding: 20px; background: #FFFFFF; border: 1px solid rgba(74, 144, 198, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); color: #000000; overflow: hidden; position: relative; width: 100%; min-width: 280px;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
-                        <div class="goal-mobile-title card-title" style="color: #4A90C6;">Total Pre-DM</div>
-                        <span class="criteria-info-icon" data-card-index="1">(i)</span>
-                            </div>
-                    <div style="text-align: center; margin-bottom: 16px;">
-                        <div class="metric-number" style="color: #000000; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(predmPatientCount || 0).toLocaleString()}</div>
-                        </div>
-                    <div class="sub-sub-cards-container" style="display: flex; gap: 12px; margin-bottom: 16px;">
-                        <div class="sub-sub-card success-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
-                                                <div class="sub-sub-card-inner">
-                                                    <div class="sub-sub-card-front" style="background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.3); border-radius: 12px; padding: 12px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
-                                        <div class="metric-number" style="font-size: 20px; margin-bottom: 4px; color: #000000; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(improvedCount || 0).toLocaleString()}</div>
-                                        <div class="percentage-pill" style="color: #4A90C6; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Improved (${improvedPct}%)</div>
-                            </div>
-                                                    </div>
-                                <div class="sub-sub-card-back body-text" style="background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.3); border-radius: 12px; padding: 12px; text-align: center; color: #666666; line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    Normal result<br>after 2025-06-01<br>(HbA1c <5.7%<br>or Fasting <5.6)
-                                </div>
-                            </div>
-                                            </div>
-                        <div class="sub-sub-card alert-card" style="flex: 1; word-wrap: break-word; overflow-wrap: break-word;">
-                                                <div class="sub-sub-card-inner">
-                                                    <div class="sub-sub-card-front" style="background: rgba(74, 144, 198, 0.05); border: 1px solid rgba(74, 144, 198, 0.15); border-radius: 12px; padding: 12px; text-align: center; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    <div style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
-                                        <div class="metric-number" style="font-size: 20px; margin-bottom: 4px; color: #000000; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(needFollowupCount || 0).toLocaleString()}</div>
-                                        <div class="percentage-pill" style="color: #666666; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">Need Follow-up (${needFollowupPct}%)</div>
-                                                        </div>
-                                                    </div>
-                                <div class="sub-sub-card-back body-text" style="background: rgba(74, 144, 198, 0.05); border: 1px solid rgba(74, 144, 198, 0.15); border-radius: 12px; padding: 12px; text-align: center; color: #666666; line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word; overflow: hidden;">
-                                    No visit within<br>last 3 months<br>(or no visit<br>recorded)
-                                </div>
-                            </div>
-                        </div>
-                                        </div>
-                    <div class="criteria-section body-text" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); color: #666666; text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
-                        <strong style="color: #000000; display: block; margin-bottom: 8px;">Criteria:</strong>
-                        <div style="text-align: left; padding-left: 16px;">
-                                            HbA1c: 5.7-6.4% or Fasting: 5.6-6.9<br>
-                                            Result ≥ 2025-01-01<br>
-                                            Age > 34<br>
-                                            Excludes DM
-                                        </div>
-                                    </div>
-                                </div>
-                <div class="stat-card" data-card-index="2" style="border-radius: 22px; padding: 20px; background: #FFFFFF; border: 1px solid rgba(74, 144, 198, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); color: #000000; overflow: hidden; position: relative; width: 100%; min-width: 280px;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
-                        <div class="goal-mobile-title card-title" style="color: #4A90C6;">Screened</div>
-                        <span class="criteria-info-icon" data-card-index="2">(i)</span>
-                            </div>
-                    <div style="display: flex; flex-direction: column; gap: 16px;">
-                        <div style="text-align: center;">
-                            <div class="metric-number" style="margin-bottom: 8px; color: #000000;">${(screenedCount || 0).toLocaleString()}</div>
-                            <div class="percentage-pill" style="color: #4A90C6; margin-bottom: 16px;">Screened (${screenedPct}%)</div>
-                        </div>
-                        <div class="criteria-section body-text" style="margin-top: 8px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); color: #666666;">
-                            <strong style="color: #000000; display: block; margin-bottom: 8px;">Criteria:</strong>
-                            <div style="text-align: left; padding-left: 16px;">
-                                • Age above 34<br>
-                                • Not pregnant
-                            </div>
-                        </div>
-                            </div>
-                            </div>
-                <div class="stat-card" data-card-index="3" style="border-radius: 22px; padding: 20px; background: #FFFFFF; border: 1px solid rgba(74, 144, 198, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); color: #000000; overflow: hidden; position: relative; width: 100%; min-width: 280px;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
-                        <div class="goal-mobile-title card-title" style="color: #4A90C6;">Screened (from 2024-10-01)</div>
-                        <span class="criteria-info-icon" data-card-index="3">(i)</span>
-                        </div>
-                    <div style="display: flex; flex-direction: column; gap: 16px;">
-                        <div style="text-align: center;">
-                            <div class="metric-number" style="margin-bottom: 8px; color: #000000;">${(screenedFrom20241001Count || 0).toLocaleString()}</div>
-                            <div class="percentage-pill" style="color: #4A90C6; margin-bottom: 16px;">Screened (${screenedFrom20241001Pct || '0.0'}%)</div>
                     </div>
-                        <div class="criteria-section body-text" style="margin-top: 8px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); color: #666666;">
-                            <strong style="color: #000000; display: block; margin-bottom: 8px;">Criteria:</strong>
-                            <div style="text-align: left; padding-left: 16px;">
-                                • Age above 34<br>
-                                • Not pregnant
-                </div>
-                                        </div>
-                                                        </div>
-                                                    </div>
-                            </div>
-            <div class="dashboard-pagination">
-                <div class="dashboard-dot active" data-card-index="0"></div>
-                <div class="dashboard-dot" data-card-index="1"></div>
-                <div class="dashboard-dot" data-card-index="2"></div>
-                <div class="dashboard-dot" data-card-index="3"></div>
+                    <div class="stat-card-metric">
+                        <div class="metric-number">${(dmPatientCount || 0).toLocaleString()}</div>
+                    </div>
+                    <div class="stat-sub-metrics">
+                        <div class="stat-sub-metric stat-sub-metric-controlled">
+                            <div class="stat-sub-metric-label">Controlled</div>
+                            <div class="stat-sub-metric-value">${(controlledCount || 0).toLocaleString()}</div>
                         </div>
+                        <div class="stat-sub-metric stat-sub-metric-uncontrolled">
+                            <div class="stat-sub-metric-label">Uncontrolled</div>
+                            <div class="stat-sub-metric-value">${(uncontrolledCount || 0).toLocaleString()}</div>
+                        </div>
+                    </div>
+                    <div class="criteria-section">
+                        <strong>Criteria:</strong>
+                        <div class="criteria-list">
+                            HbA1c ≥6.5% or Fasting ≥7.0<br>
+                            First after 2025-06-01<br>
+                            Age > 34
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card" data-card-index="1">
+                    <div class="goal-mobile-card-header stat-card-header">
+                        <div class="goal-mobile-title card-title">Total Pre-DM</div>
+                        <span class="criteria-info-icon" data-card-index="1">(i)</span>
+                    </div>
+                    <div class="stat-card-metric">
+                        <div class="metric-number">${(predmPatientCount || 0).toLocaleString()}</div>
+                    </div>
+                    <div class="stat-sub-metrics">
+                        <div class="stat-sub-metric stat-sub-metric-improved">
+                            <div class="stat-sub-metric-label">Improved</div>
+                            <div class="stat-sub-metric-value">${(improvedCount || 0).toLocaleString()}</div>
+                        </div>
+                        <div class="stat-sub-metric stat-sub-metric-need-followup">
+                            <div class="stat-sub-metric-label">Need Follow-up</div>
+                            <div class="stat-sub-metric-value">${(needFollowupCount || 0).toLocaleString()}</div>
+                        </div>
+                    </div>
+                    <div class="criteria-section">
+                        <strong>Criteria:</strong>
+                        <div class="criteria-list">
+                            HbA1c: 5.7-6.4% or Fasting: 5.6-6.9<br>
+                            Result ≥ 2025-01-01<br>
+                            Age > 34<br>
+                            Excludes DM
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card" data-card-index="2">
+                    <div class="goal-mobile-card-header stat-card-header">
+                        <div class="goal-mobile-title card-title">Screened</div>
+                        <span class="criteria-info-icon" data-card-index="2">(i)</span>
+                    </div>
+                    <div class="stat-card-metric">
+                        <div class="metric-number">${(screenedCount || 0).toLocaleString()}</div>
+                    </div>
+                    <div class="stat-sub-metrics">
+                        <div class="stat-sub-metric stat-sub-metric-normal">
+                            <div class="stat-sub-metric-label">Normal/Healthy</div>
+                            <div class="stat-sub-metric-value">${normalHealthyCount.toLocaleString()}</div>
+                        </div>
+                    </div>
+                    <div class="criteria-section">
+                        <strong>Criteria:</strong>
+                        <div class="criteria-list">
+                            • Age above 34<br>
+                            • Not pregnant
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card" data-card-index="3">
+                    <div class="goal-mobile-card-header stat-card-header">
+                        <div class="goal-mobile-title card-title">Screened (from 2024-10-01)</div>
+                        <span class="criteria-info-icon" data-card-index="3">(i)</span>
+                    </div>
+                    <div class="stat-card-metric">
+                        <div class="metric-number">${(screenedFrom20241001Count || 0).toLocaleString()}</div>
+                    </div>
+                    <div class="stat-sub-metrics">
+                        <div class="stat-sub-metric stat-sub-metric-normal">
+                            <div class="stat-sub-metric-label">Normal/Healthy</div>
+                            <div class="stat-sub-metric-value">${normalHealthyFrom20241001Count.toLocaleString()}</div>
+                        </div>
+                    </div>
+                    <div class="criteria-section">
+                        <strong>Criteria:</strong>
+                        <div class="criteria-list">
+                            • Age above 34<br>
+                            • Not pregnant
+                        </div>
+                    </div>
+                </div>
+            </div>
             `;
+            
+            // Set up pagination dots separately
+            const paginationContainer = document.getElementById('dashboard-pagination');
+            if (paginationContainer) {
+                paginationContainer.innerHTML = `
+                    <div class="dashboard-dot active" data-card-index="0"></div>
+                    <div class="dashboard-dot" data-card-index="1"></div>
+                    <div class="dashboard-dot" data-card-index="2"></div>
+                    <div class="dashboard-dot" data-card-index="3"></div>
+                `;
+            }
             
             // Setup click handlers for stat sub-cards
             setupStatSubCardHandlers();
@@ -3804,108 +4103,124 @@
                 const controlledPct = dmTotal > 0 ? ((dmControlled / dmTotal) * 100).toFixed(1) : '0.0';
                 const improvedPct = predmTotal > 0 ? ((predmImproved / predmTotal) * 100).toFixed(1) : '0.0';
                 
+                // Store data for zone detail view
+                const zoneData = JSON.stringify({
+                    zone, target, dmTotal, dmControlled, dmUncontrolled, controlledPct,
+                    predmTotal, predmImproved, predmNeedFollowup, improvedPct,
+                    screened, screenedPct
+                });
+                const escapedZoneData = zoneData.replace(/'/g, "&#39;");
+
                 return `
-                    <div class="zone-item" data-zone="${zone}">
-                        <div class="zone-header">
-                                                        <div>
-                                <div class="zone-name">${zone}</div>
-                                <div class="zone-target">Target: ${target.toLocaleString()}</div>
-                        </div>
-                            <div class="zone-expand-icon">▼</div>
+                    <div class="zone-item" data-zone="${zone}" data-details='${escapedZoneData}'>
+                        <div class="zone-name">${zone}</div>
+                        <div class="zone-arrow">&gt;</div>
                                                     </div>
-                        <div class="zone-details">
-                            <div class="zone-detail-row">
-                                <div class="zone-detail-main">
-                                    <div class="zone-detail-label">Total DM</div>
-                                    <div class="zone-detail-value">${dmTotal.toLocaleString()}</div>
-                            </div>
-                                <div class="zone-detail-sub-boxes">
-                                    <div class="zone-sub-box controlled-box">
-                                        <div class="zone-sub-box-value">${dmControlled.toLocaleString()}</div>
-                                        <div class="zone-sub-box-label">Controlled (${controlledPct}%)</div>
-                        </div>
-                                    <div class="zone-sub-box uncontrolled-box">
-                                        <div class="zone-sub-box-value">${dmUncontrolled.toLocaleString()}</div>
-                                        <div class="zone-sub-box-label">Uncontrolled</div>
-                    </div>
-                                        </div>
-                                        </div>
-                            <div class="zone-detail-row">
-                                <div class="zone-detail-main">
-                                    <div class="zone-detail-label">Total Pre-DM</div>
-                                    <div class="zone-detail-value">${predmTotal.toLocaleString()}</div>
-                                    </div>
-                                <div class="zone-detail-sub-boxes">
-                                    <div class="zone-sub-box improved-box">
-                                        <div class="zone-sub-box-value">${predmImproved.toLocaleString()}</div>
-                                        <div class="zone-sub-box-label">Improved (${improvedPct}%)</div>
-                                </div>
-                                    <div class="zone-sub-box need-followup-box">
-                                        <div class="zone-sub-box-value">${predmNeedFollowup.toLocaleString()}</div>
-                                        <div class="zone-sub-box-label">Need Follow-up</div>
-                            </div>
-                        </div>
-                        </div>
-                            <div class="zone-detail-row">
-                                <div class="zone-detail-main">
-                                    <div class="zone-detail-label">Screened</div>
-                                    <div class="zone-detail-value">${screened.toLocaleString()}</div>
-                    </div>
-                                <div class="zone-screened-info">
-                                    <div class="zone-screened-percent">${screenedPct}%</div>
-                                    <div class="zone-remaining">Remaining: ${Math.max(0, target - screened).toLocaleString()}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            `;
+                `;
             }).join('');
             
             zoneListContainer.innerHTML = `<div class="zone-list">${zoneItems}</div>`;
             
-            // Setup click handlers for expand/collapse
+            // Setup click handlers for navigation
             const zoneItemsElements = zoneListContainer.querySelectorAll('.zone-item');
-            let expandedZone = null;
             
             zoneItemsElements.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    // Only toggle if clicking on the header (not the details)
-                    if (e.target.closest('.zone-header') || e.target.closest('.zone-expand-icon')) {
-                        const wasExpanded = this.classList.contains('expanded');
-                        
-                        // Collapse all other zones
-                        zoneItemsElements.forEach(zone => {
-                            if (zone !== this && zone.classList.contains('expanded')) {
-                                zone.classList.remove('expanded');
-                            }
-                        });
-                        
-                        // Toggle current zone
-                        if (wasExpanded) {
-                            this.classList.remove('expanded');
-                            expandedZone = null;
-                        } else {
-                            this.classList.add('expanded');
-                            expandedZone = this;
-                            
-                            // Smooth scroll the expanded zone into view if needed
-                            setTimeout(() => {
-                                const containerRect = zoneListContainer.getBoundingClientRect();
-                                const itemRect = this.getBoundingClientRect();
-                                
-                                // Only scroll if the item is not fully visible
-                                if (itemRect.top < containerRect.top || itemRect.bottom > containerRect.bottom) {
-                                    const scrollTop = zoneListContainer.scrollTop;
-                                    const targetScroll = scrollTop + (itemRect.top - containerRect.top) - 10;
-                                    zoneListContainer.scrollTo({
-                                        top: Math.max(0, targetScroll),
-                                        behavior: 'smooth'
-                                    });
-                                }
-                            }, 50);
-                        }
+                item.addEventListener('click', function() {
+                    const zoneName = this.getAttribute('data-zone');
+                    const zoneDataStr = this.getAttribute('data-details');
+                    try {
+                        const zoneData = JSON.parse(zoneDataStr);
+                        showZoneDetail(zoneName, zoneData);
+                    } catch (e) {
+                        console.error('Error parsing zone data', e);
+                        showZoneDetail(zoneName, null);
                     }
                 });
+            });
+        }
+
+        // Show Zone Detail View
+        function showZoneDetail(zoneName, data) {
+            const dashboardSection = document.getElementById('dashboard-section');
+            const zoneDetailSection = document.getElementById('zone-detail-section');
+            const zoneDetailTitle = document.getElementById('zoneDetailTitle');
+            const zoneDetailContent = document.getElementById('zoneDetailContent');
+            
+            if (!dashboardSection || !zoneDetailSection) return;
+            
+            // Hide dashboard, show detail
+            dashboardSection.style.setProperty('display', 'none', 'important');
+            zoneDetailSection.style.setProperty('display', 'block', 'important');
+            
+            // Set title
+            zoneDetailTitle.textContent = zoneName;
+            
+            // Populate Content
+            if (data) {
+                zoneDetailContent.innerHTML = `
+                    <div style="display: flex; flex-direction: column; gap: var(--spacing-md); padding: var(--spacing-md);">
+                        <!-- TOTAL DM Card -->
+                        <div style="background: var(--white); border: 1px solid rgba(74, 144, 198, 0.2); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="font-size: 14px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">TOTAL DM</div>
+                            <div style="font-size: 48px; font-weight: 700; color: #000; margin-bottom: 16px; text-align: center; line-height: 1;">${data.dmTotal.toLocaleString()}</div>
+                            <div style="display: flex; gap: var(--spacing-sm);">
+                                <div style="flex: 1; background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.2); padding: 12px; border-radius: 12px; text-align: center;">
+                                    <div style="font-size: 12px; color: var(--primary-blue); font-weight: 600; margin-bottom: 8px; text-transform: uppercase;">Controlled</div>
+                                    <div style="font-size: 24px; font-weight: 700; color: #000; line-height: 1;">${data.dmControlled.toLocaleString()}</div>
+                            </div>
+                                <div style="flex: 1; background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.2); padding: 12px; border-radius: 12px; text-align: center;">
+                                    <div style="font-size: 12px; color: #FF3B30; font-weight: 600; margin-bottom: 8px; text-transform: uppercase;">Uncontrolled</div>
+                                    <div style="font-size: 24px; font-weight: 700; color: #000; line-height: 1;">${data.dmUncontrolled.toLocaleString()}</div>
+                        </div>
+                            </div>
+                        </div>
+
+                        <!-- TOTAL PRE-DM Card -->
+                        <div style="background: var(--white); border: 1px solid rgba(74, 144, 198, 0.2); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="font-size: 14px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">TOTAL PRE-DM</div>
+                            <div style="font-size: 48px; font-weight: 700; color: #000; margin-bottom: 16px; text-align: center; line-height: 1;">${data.predmTotal.toLocaleString()}</div>
+                            <div style="display: flex; gap: var(--spacing-sm);">
+                                <div style="flex: 1; background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.2); padding: 12px; border-radius: 12px; text-align: center;">
+                                    <div style="font-size: 12px; color: var(--primary-blue); font-weight: 600; margin-bottom: 8px; text-transform: uppercase;">Improved</div>
+                                    <div style="font-size: 24px; font-weight: 700; color: #000; line-height: 1;">${data.predmImproved.toLocaleString()}</div>
+                                                    </div>
+                                <div style="flex: 1; background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.2); padding: 12px; border-radius: 12px; text-align: center;">
+                                    <div style="font-size: 12px; color: #FF3B30; font-weight: 600; margin-bottom: 8px; text-transform: uppercase;">Need Follow-up</div>
+                                    <div style="font-size: 24px; font-weight: 700; color: #000; line-height: 1;">${data.predmNeedFollowup.toLocaleString()}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <!-- SCREENING Card -->
+                        <div style="background: var(--white); border: 1px solid rgba(74, 144, 198, 0.2); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            <div style="font-size: 14px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">SCREENING</div>
+                            <div style="font-size: 48px; font-weight: 700; color: #000; margin-bottom: 16px; text-align: center; line-height: 1;">${data.screened.toLocaleString()}</div>
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                <div style="font-size: 14px; color: #666; font-weight: 400;">Target</div>
+                                <div style="flex: 1; background: #f5f5f5; height: 8px; border-radius: 4px; overflow: hidden; position: relative;">
+                                    <div style="background: var(--primary-blue); height: 100%; width: ${Math.min(100, parseFloat(data.screenedPct))}%; transition: width 0.3s ease;"></div>
+                                        </div>
+                                <div style="font-size: 14px; font-weight: 700; color: #000; min-width: 60px; text-align: right;">${data.target.toLocaleString()}</div>
+                                        </div>
+                            <div style="text-align: right; font-size: 14px; color: var(--primary-blue); font-weight: 600; margin-top: 4px;">${data.screenedPct}%</div>
+                </div>
+            </div>
+            `;
+            } else {
+                zoneDetailContent.innerHTML = '<p>No data available for this zone.</p>';
+            }
+        }
+        
+        // Back button handler - setup after DOM is ready
+        if (document.getElementById('backToDashboard')) {
+            document.getElementById('backToDashboard').addEventListener('click', function() {
+                const dashboardSection = document.getElementById('dashboard-section');
+                const zoneDetailSection = document.getElementById('zone-detail-section');
+                
+                if (dashboardSection && zoneDetailSection) {
+                    zoneDetailSection.style.setProperty('display', 'none', 'important');
+                    dashboardSection.style.setProperty('display', 'block', 'important');
+                }
             });
         }
         
@@ -4417,8 +4732,8 @@
         function setupDashboardSwipe() {
             const cardsContainer = document.querySelector('.main-cards-container');
             const cards = document.querySelectorAll('.main-cards-container .stat-card');
-            const dots = document.querySelectorAll('.dashboard-dot');
-            const pagination = document.querySelector('.dashboard-pagination');
+            const dots = document.querySelectorAll('#dashboard-pagination .dashboard-dot');
+            const pagination = document.getElementById('dashboard-pagination');
             const zoneListContainer = document.getElementById('zoneListContainer');
             
             if (!cardsContainer || cards.length === 0) return;
@@ -4660,7 +4975,7 @@
                 }
             });
         }
-        
+
         function setupCriteriaInfoIcons() {
             const criteriaIcons = document.querySelectorAll('.criteria-info-icon');
             if (criteriaIcons.length === 0) return;
@@ -5906,7 +6221,7 @@
 
                 new Chart(chartCanvas, {
                     type: 'doughnut',
-                    data: {
+                data: {
                         labels: genderLabels,
                         datasets: [{
                             data: genderData,
@@ -5914,12 +6229,12 @@
                             borderColor: 'rgba(255, 255, 255, 0.1)',
                             borderWidth: 1
                         }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
                                 display: false
                             },
                             tooltip: {
