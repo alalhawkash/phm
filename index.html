@@ -384,6 +384,272 @@
             color: rgba(255, 255, 255, 0.9);
         }
         
+        .criteria-info-icon {
+            cursor: pointer;
+            color: #4A90C6;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 8px;
+            transition: color 0.2s ease;
+            user-select: none;
+            display: inline-block;
+            position: relative;
+        }
+        
+        .criteria-info-icon:hover {
+            color: #357ABD;
+        }
+        
+        .stat-card {
+            overflow: visible !important;
+        }
+        
+        /* Make card content more compact to fit without scrolling */
+        .stat-card[data-card-index="0"],
+        .stat-card[data-card-index="1"],
+        .stat-card[data-card-index="2"],
+        .stat-card[data-card-index="3"] {
+            padding: 12px !important;
+            min-height: 280px !important;
+            overflow: hidden !important;
+        }
+        
+        .stat-card[data-card-index="0"] .goal-mobile-card-header,
+        .stat-card[data-card-index="1"] .goal-mobile-card-header,
+        .stat-card[data-card-index="2"] .goal-mobile-card-header,
+        .stat-card[data-card-index="3"] .goal-mobile-card-header {
+            margin-bottom: 8px !important;
+        }
+        
+        .stat-card[data-card-index="0"] .goal-mobile-card-header[style*="margin-bottom"],
+        .stat-card[data-card-index="1"] .goal-mobile-card-header[style*="margin-bottom"],
+        .stat-card[data-card-index="2"] .goal-mobile-card-header[style*="margin-bottom"],
+        .stat-card[data-card-index="3"] .goal-mobile-card-header[style*="margin-bottom"] {
+            margin-bottom: 8px !important;
+        }
+        
+        .stat-card[data-card-index="0"] > div[style*="text-align: center"],
+        .stat-card[data-card-index="1"] > div[style*="text-align: center"] {
+            margin-bottom: 8px !important;
+        }
+        
+        .stat-card[data-card-index="0"] > div[style*="margin-bottom: 16px"],
+        .stat-card[data-card-index="1"] > div[style*="margin-bottom: 16px"] {
+            margin-bottom: 8px !important;
+        }
+        
+        .stat-card[data-card-index="0"] .sub-sub-cards-container,
+        .stat-card[data-card-index="1"] .sub-sub-cards-container {
+            margin-bottom: 8px !important;
+            gap: 6px !important;
+        }
+        
+        .stat-card[data-card-index="0"] .sub-sub-cards-container[style*="margin-bottom"],
+        .stat-card[data-card-index="1"] .sub-sub-cards-container[style*="margin-bottom"] {
+            margin-bottom: 8px !important;
+            gap: 6px !important;
+        }
+        
+        .stat-card[data-card-index="0"] .sub-sub-card-front,
+        .stat-card[data-card-index="1"] .sub-sub-card-front {
+            padding: 6px !important;
+        }
+        
+        .stat-card[data-card-index="0"] .sub-sub-card-front[style*="padding: 12px"],
+        .stat-card[data-card-index="1"] .sub-sub-card-front[style*="padding: 12px"] {
+            padding: 6px !important;
+        }
+        
+        .stat-card[data-card-index="0"] .sub-sub-card .metric-number[style*="font-size: 20px"],
+        .stat-card[data-card-index="1"] .sub-sub-card .metric-number[style*="font-size: 20px"] {
+            font-size: 16px !important;
+            margin-bottom: 2px !important;
+            line-height: 1.2 !important;
+        }
+        
+        .stat-card[data-card-index="0"] .percentage-pill,
+        .stat-card[data-card-index="1"] .percentage-pill {
+            font-size: 10px !important;
+            line-height: 1.2 !important;
+        }
+        
+        .stat-card[data-card-index="0"] .metric-number:not([style*="font-size"]),
+        .stat-card[data-card-index="1"] .metric-number:not([style*="font-size"]),
+        .stat-card[data-card-index="2"] .metric-number:not([style*="font-size"]),
+        .stat-card[data-card-index="3"] .metric-number:not([style*="font-size"]) {
+            font-size: 24px !important;
+            line-height: 1.1 !important;
+        }
+        
+        .stat-card[data-card-index="0"] .sub-sub-card-back,
+        .stat-card[data-card-index="1"] .sub-sub-card-back {
+            padding: 6px !important;
+            font-size: 10px !important;
+            line-height: 1.3 !important;
+        }
+        
+        .stat-card[data-card-index="0"] .sub-sub-card-back[style*="padding: 12px"],
+        .stat-card[data-card-index="1"] .sub-sub-card-back[style*="padding: 12px"] {
+            padding: 6px !important;
+        }
+        
+        .stat-card[data-card-index="0"] .goal-mobile-title,
+        .stat-card[data-card-index="1"] .goal-mobile-title,
+        .stat-card[data-card-index="2"] .goal-mobile-title,
+        .stat-card[data-card-index="3"] .goal-mobile-title {
+            font-size: 12px !important;
+            line-height: 1.2 !important;
+        }
+        
+        .stat-card[data-card-index="0"] .card-title,
+        .stat-card[data-card-index="1"] .card-title,
+        .stat-card[data-card-index="2"] .card-title,
+        .stat-card[data-card-index="3"] .card-title {
+            font-size: 12px !important;
+            line-height: 1.2 !important;
+        }
+        
+        .criteria-tooltip {
+            position: absolute;
+            background: #FFFFFF;
+            border: 1px solid rgba(74, 144, 198, 0.3);
+            border-radius: 6px;
+            padding: 8px 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            z-index: 1000;
+            width: calc(100% - 40px);
+            max-width: calc(100% - 40px);
+            font-size: 10px;
+            line-height: 1.4;
+            color: #666666;
+            display: none;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        
+        .criteria-tooltip.show {
+            display: block;
+        }
+        
+        .criteria-tooltip::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .criteria-tooltip::-webkit-scrollbar-track {
+            background: rgba(74, 144, 198, 0.1);
+            border-radius: 2px;
+        }
+        
+        .criteria-tooltip::-webkit-scrollbar-thumb {
+            background: rgba(74, 144, 198, 0.3);
+            border-radius: 2px;
+        }
+        
+        .criteria-tooltip strong {
+            color: #000000;
+            display: block;
+            margin-bottom: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .criteria-tooltip-content {
+            text-align: left;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+        
+        .criteria-tooltip div {
+            font-size: 10px;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .stat-card[data-card-index="0"],
+            .stat-card[data-card-index="1"],
+            .stat-card[data-card-index="2"],
+            .stat-card[data-card-index="3"] {
+                padding: 10px !important;
+            }
+            
+            .stat-card[data-card-index="0"] .goal-mobile-card-header,
+            .stat-card[data-card-index="1"] .goal-mobile-card-header,
+            .stat-card[data-card-index="2"] .goal-mobile-card-header,
+            .stat-card[data-card-index="3"] .goal-mobile-card-header {
+                margin-bottom: 6px !important;
+            }
+            
+            .stat-card[data-card-index="0"] > div[style*="text-align: center"],
+            .stat-card[data-card-index="1"] > div[style*="text-align: center"] {
+                margin-bottom: 6px !important;
+            }
+            
+            .stat-card[data-card-index="0"] .sub-sub-cards-container,
+            .stat-card[data-card-index="1"] .sub-sub-cards-container {
+                margin-bottom: 6px !important;
+                gap: 4px !important;
+            }
+            
+            .stat-card[data-card-index="0"] .sub-sub-card-front,
+            .stat-card[data-card-index="1"] .sub-sub-card-front {
+                padding: 4px !important;
+            }
+            
+            .stat-card[data-card-index="0"] .sub-sub-card .metric-number[style*="font-size: 20px"],
+            .stat-card[data-card-index="1"] .sub-sub-card .metric-number[style*="font-size: 20px"] {
+                font-size: 14px !important;
+            }
+            
+            .stat-card[data-card-index="0"] .metric-number:not([style*="font-size"]),
+            .stat-card[data-card-index="1"] .metric-number:not([style*="font-size"]),
+            .stat-card[data-card-index="2"] .metric-number:not([style*="font-size"]),
+            .stat-card[data-card-index="3"] .metric-number:not([style*="font-size"]) {
+                font-size: 20px !important;
+            }
+            
+            .stat-card[data-card-index="0"] .percentage-pill,
+            .stat-card[data-card-index="1"] .percentage-pill {
+                font-size: 9px !important;
+            }
+            
+            .stat-card[data-card-index="0"] .sub-sub-card-back,
+            .stat-card[data-card-index="1"] .sub-sub-card-back {
+                padding: 4px !important;
+                font-size: 9px !important;
+            }
+            
+            .criteria-tooltip {
+                width: calc(100% - 24px);
+                max-width: calc(100% - 24px);
+                left: 12px;
+                right: 12px;
+                bottom: 12px;
+                font-size: 9px;
+                padding: 6px 8px;
+                max-height: 100px;
+            }
+            
+            .criteria-tooltip strong {
+                font-size: 10px;
+                margin-bottom: 4px;
+            }
+            
+            .criteria-tooltip div {
+                font-size: 9px;
+            }
+        }
+        
+        .criteria-section {
+            display: none;
+        }
+        
+        .criteria-section.show {
+            display: block;
+        }
+        
         /* Flip functionality for Screened circle */
         .goal-mobile-circle-flip {
             perspective: 1000px;
@@ -768,6 +1034,7 @@
             min-height: 0;
             padding-bottom: 70px; /* Space for mobile footer (58px + safe area) */
             position: relative;
+            margin-top: 12px;
         }
         
         .zone-list {
@@ -1172,7 +1439,7 @@
             min-width: 280px;
             max-width: 100%;
             height: auto;
-            min-height: 200px;
+            min-height: 280px;
             overflow-y: auto;
             overflow-x: hidden;
         }
@@ -3329,8 +3596,9 @@
             mainCardsContainer.innerHTML = `
             <div class="main-cards-container">
                 <div class="stat-card active" data-card-index="0" style="border-radius: 22px; padding: 20px; background: #FFFFFF; border: 1px solid rgba(74, 144, 198, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); color: #000000; overflow: hidden; position: relative; width: 100%; min-width: 280px;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 16px;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
                         <div class="goal-mobile-title card-title" style="color: #4A90C6;">Total DM</div>
+                        <span class="criteria-info-icon" data-card-index="0">(i)</span>
                                 </div>
                     <div style="text-align: center; margin-bottom: 16px;">
                         <div class="metric-number" style="color: #000000; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(dmPatientCount || 0).toLocaleString()}</div>
@@ -3363,7 +3631,7 @@
                             </div>
                         </div>
                                         </div>
-                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); font-size: 12px; line-height: 1.5; color: #666666; text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
+                    <div class="criteria-section" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); font-size: 12px; line-height: 1.5; color: #666666; text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
                         <strong style="color: #000000; display: block; margin-bottom: 8px;">Criteria:</strong>
                         <div style="text-align: left; padding-left: 16px;">
                                             HbA1c ≥6.5% or Fasting ≥7.0<br>
@@ -3373,8 +3641,9 @@
                                     </div>
                                 </div>
                 <div class="stat-card" data-card-index="1" style="border-radius: 22px; padding: 20px; background: #FFFFFF; border: 1px solid rgba(74, 144, 198, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); color: #000000; overflow: hidden; position: relative; width: 100%; min-width: 280px;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 16px;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
                         <div class="goal-mobile-title card-title" style="color: #4A90C6;">Total Pre-DM</div>
+                        <span class="criteria-info-icon" data-card-index="1">(i)</span>
                             </div>
                     <div style="text-align: center; margin-bottom: 16px;">
                         <div class="metric-number" style="color: #000000; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto;">${(predmPatientCount || 0).toLocaleString()}</div>
@@ -3407,7 +3676,7 @@
                             </div>
                         </div>
                                         </div>
-                    <div class="body-text" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); color: #666666; text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
+                    <div class="criteria-section body-text" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); color: #666666; text-align: center; word-wrap: break-word; overflow-wrap: break-word;">
                         <strong style="color: #000000; display: block; margin-bottom: 8px;">Criteria:</strong>
                         <div style="text-align: left; padding-left: 16px;">
                                             HbA1c: 5.7-6.4% or Fasting: 5.6-6.9<br>
@@ -3418,15 +3687,16 @@
                                     </div>
                                 </div>
                 <div class="stat-card" data-card-index="2" style="border-radius: 22px; padding: 20px; background: #FFFFFF; border: 1px solid rgba(74, 144, 198, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); color: #000000; overflow: hidden; position: relative; width: 100%; min-width: 280px;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 16px;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
                         <div class="goal-mobile-title card-title" style="color: #4A90C6;">Screened</div>
+                        <span class="criteria-info-icon" data-card-index="2">(i)</span>
                             </div>
                     <div style="display: flex; flex-direction: column; gap: 16px;">
                         <div style="text-align: center;">
                             <div class="metric-number" style="margin-bottom: 8px; color: #000000;">${(screenedCount || 0).toLocaleString()}</div>
                             <div class="percentage-pill" style="color: #4A90C6; margin-bottom: 16px;">Screened (${screenedPct}%)</div>
                         </div>
-                        <div class="body-text" style="margin-top: 8px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); color: #666666;">
+                        <div class="criteria-section body-text" style="margin-top: 8px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); color: #666666;">
                             <strong style="color: #000000; display: block; margin-bottom: 8px;">Criteria:</strong>
                             <div style="text-align: left; padding-left: 16px;">
                                 • Age above 34<br>
@@ -3436,15 +3706,16 @@
                             </div>
                             </div>
                 <div class="stat-card" data-card-index="3" style="border-radius: 22px; padding: 20px; background: #FFFFFF; border: 1px solid rgba(74, 144, 198, 0.2); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); color: #000000; overflow: hidden; position: relative; width: 100%; min-width: 280px;">
-                    <div class="goal-mobile-card-header" style="margin-bottom: 16px;">
+                    <div class="goal-mobile-card-header" style="margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
                         <div class="goal-mobile-title card-title" style="color: #4A90C6;">Screened (from 2024-10-01)</div>
+                        <span class="criteria-info-icon" data-card-index="3">(i)</span>
                         </div>
                     <div style="display: flex; flex-direction: column; gap: 16px;">
                         <div style="text-align: center;">
                             <div class="metric-number" style="margin-bottom: 8px; color: #000000;">${(screenedFrom20241001Count || 0).toLocaleString()}</div>
                             <div class="percentage-pill" style="color: #4A90C6; margin-bottom: 16px;">Screened (${screenedFrom20241001Pct || '0.0'}%)</div>
                     </div>
-                        <div class="body-text" style="margin-top: 8px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); color: #666666;">
+                        <div class="criteria-section body-text" style="margin-top: 8px; padding-top: 16px; border-top: 1px solid rgba(74, 144, 198, 0.2); color: #666666;">
                             <strong style="color: #000000; display: block; margin-bottom: 8px;">Criteria:</strong>
                             <div style="text-align: left; padding-left: 16px;">
                                 • Age above 34<br>
@@ -3464,6 +3735,9 @@
             
             // Setup click handlers for stat sub-cards
             setupStatSubCardHandlers();
+            
+            // Setup criteria info icon handlers
+            setupCriteriaInfoIcons();
             
             // Setup dashboard swipe and pagination dots
             setupDashboardSwipe();
@@ -4384,6 +4658,55 @@
                         currentlyFlippedSubCard = null;
                     }
                 }
+            });
+        }
+        
+        function setupCriteriaInfoIcons() {
+            const criteriaIcons = document.querySelectorAll('.criteria-info-icon');
+            if (criteriaIcons.length === 0) return;
+            
+            // Close tooltip when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.criteria-info-icon') && !e.target.closest('.criteria-tooltip')) {
+                    document.querySelectorAll('.criteria-tooltip').forEach(tooltip => {
+                        tooltip.classList.remove('show');
+                    });
+                }
+            });
+            
+            criteriaIcons.forEach(icon => {
+                // Get criteria content from the hidden section
+                const cardIndex = icon.getAttribute('data-card-index');
+                const card = document.querySelector(`.stat-card[data-card-index="${cardIndex}"]`);
+                if (!card) return;
+                
+                const criteriaSection = card.querySelector('.criteria-section');
+                if (!criteriaSection) return;
+                
+                // Extract criteria content
+                const criteriaContent = criteriaSection.innerHTML;
+                
+                // Create tooltip element
+                const tooltip = document.createElement('div');
+                tooltip.className = 'criteria-tooltip';
+                tooltip.innerHTML = criteriaContent;
+                // Append to card container for proper positioning within card bounds
+                card.appendChild(tooltip);
+                
+                // Toggle tooltip on click
+                icon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    // Close other tooltips
+                    document.querySelectorAll('.criteria-tooltip').forEach(t => {
+                        if (t !== tooltip) {
+                            t.classList.remove('show');
+                        }
+                    });
+                    
+                    // Toggle this tooltip
+                    tooltip.classList.toggle('show');
+                });
             });
         }
 
