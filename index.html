@@ -1074,23 +1074,19 @@
         }
         
         #dashboard .dashboard-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: rgba(74, 144, 198, 0.3);
             transition: all 0.3s ease;
             cursor: pointer;
-            min-width: var(--touch-target);
-            min-height: var(--touch-target);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-shrink: 0;
         }
-        
+
         #dashboard .dashboard-dot.active {
-            width: 24px;
-            height: 8px;
-            border-radius: 4px;
+            width: 16px;
+            height: 6px;
+            border-radius: 3px;
             background: var(--primary-blue);
         }
         
@@ -1763,19 +1759,20 @@
             }
             
             .dashboard-dot {
-                width: 6px;
-                height: 6px;
+                width: 5px;
+                height: 5px;
                 border-radius: 50%;
-                background: rgba(255, 255, 255, 0.3);
+                background: rgba(74, 144, 198, 0.3);
                 transition: all 0.3s ease;
                 cursor: pointer;
+                flex-shrink: 0;
             }
             
             .dashboard-dot.active {
-                width: 20px;
-                height: 6px;
+                width: 14px;
+                height: 5px;
                 border-radius: 3px;
-                background: rgba(255, 255, 255, 0.9);
+                background: var(--primary-blue);
             }
             
             /* Hide pagination dots when dashboard section is not visible */
@@ -2410,9 +2407,9 @@
         #mainCardsContainer .main-cards-container {
             display: flex;
             gap: var(--spacing-md);
-            height: 200px;
-            min-height: 200px;
-            max-height: 200px;
+            height: 150px;
+            min-height: 150px;
+            max-height: 150px;
             padding: 0;
             margin-bottom: 8px;
             overflow-x: auto;
@@ -2425,13 +2422,13 @@
             display: none;
         }
 
-        /* Card container - optimized for 200px height */
+        /* Card container - optimized for 150px height */
         #mainCardsContainer .main-cards-container .stat-card {
             flex: 0 0 calc(100% - 32px);
             min-width: 260px;
-            height: 200px;
-            min-height: 200px;
-            max-height: 200px;
+            height: 150px;
+            min-height: 150px;
+            max-height: 150px;
             background: var(--primary-blue);
             border: none;
             border-radius: 24px;
@@ -5302,40 +5299,41 @@
                 
                 const scrollLeft = cardsContainer.scrollLeft;
                 const cardAndGap = getCardAndGap();
-                const threshold = cardAndGap * 0.3; // 30% of card width as threshold
                 
                 // Structure: [clone last] [real 1] [real 2] [real 3] [real 4] [clone first]
                 // Array indices: 0           1        2        3        4        5
                 // Scroll positions: 0        1*CG     2*CG     3*CG     4*CG     5*CG
                 
-                // Check if we've scrolled to the cloned first card at the end (scroll position ≈ 5 * cardAndGap)
-                const clonedFirstCardPosition = (TOTAL_CARDS + 1) * cardAndGap;
-                if (scrollLeft >= clonedFirstCardPosition - threshold) {
+                // Check if we've scrolled to or past the cloned first card at the end
+                // Position of cloned first card: TOTAL_CARDS * cardAndGap
+                const clonedFirstCardStart = TOTAL_CARDS * cardAndGap;
+                const threshold = cardAndGap * 0.5; // 50% threshold for detection
+                
+                if (scrollLeft >= clonedFirstCardStart - threshold) {
                     isScrolling = true;
                     // Instantly jump to the real first card (scroll position: 1 * cardAndGap)
-                    cardsContainer.scrollTo({
-                        left: cardAndGap,
-                        behavior: 'auto' // Instant jump, no animation
+                    cardsContainer.scrollLeft = cardAndGap;
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
+                            isScrolling = false;
+                            updateActiveDot();
+                        }, 50);
                     });
-                    setTimeout(() => {
-                        isScrolling = false;
-                        updateActiveDot();
-                    }, 50);
                     return;
                 }
                 
-                // Check if we've scrolled to the cloned last card at the beginning (scroll position ≈ 0)
-                if (scrollLeft <= threshold) {
+                // Check if we've scrolled to or before the cloned last card at the beginning
+                // Position of cloned last card starts at 0, ends around cardAndGap
+                if (scrollLeft <= cardAndGap * 0.5) {
                     isScrolling = true;
                     // Instantly jump to the real last card (scroll position: TOTAL_CARDS * cardAndGap)
-                    cardsContainer.scrollTo({
-                        left: TOTAL_CARDS * cardAndGap,
-                        behavior: 'auto' // Instant jump, no animation
+                    cardsContainer.scrollLeft = clonedFirstCardStart;
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
+                            isScrolling = false;
+                            updateActiveDot();
+                        }, 50);
                     });
-                    setTimeout(() => {
-                        isScrolling = false;
-                        updateActiveDot();
-                    }, 50);
                     return;
                 }
             }
@@ -5353,17 +5351,23 @@
                 });
             });
             
-            // Handle scroll events for looping
+            // Handle scroll events for looping - use requestAnimationFrame for smooth looping
             let scrollTimeout;
+            let rafId;
             cardsContainer.addEventListener('scroll', () => {
                 showPagination();
                 
+                // Call handleLoop immediately using requestAnimationFrame for smooth looping
+                if (rafId) cancelAnimationFrame(rafId);
+                rafId = requestAnimationFrame(() => {
+                    handleLoop();
+                });
+                
                 clearTimeout(scrollTimeout);
                 scrollTimeout = setTimeout(() => {
-                    handleLoop();
                     updateActiveDot();
                 }, 100);
-            });
+            }, { passive: true });
             
             cardsContainer.addEventListener('touchstart', showPagination);
             cardsContainer.addEventListener('mousedown', showPagination);
