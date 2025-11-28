@@ -1261,6 +1261,16 @@
             color: #666666;
         }
         
+        /* Zone cards container styling */
+        .zone-cards-container {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .zone-cards-container::-webkit-scrollbar {
+            display: none;
+        }
+        
         @media (max-width: 768px) {
             #zoneListContainer {
                 max-height: calc(100vh - 48px - 20px - 150px - 18px - 40px - 70px); /* Subtract footer height */
@@ -1283,6 +1293,18 @@
             .zone-screened-info {
                 align-items: flex-start;
                 margin-top: 8px;
+            }
+            
+            .zone-cards-container {
+                height: 240px !important;
+                min-height: 240px !important;
+                max-height: 240px !important;
+            }
+            
+            .zone-card {
+                height: 240px !important;
+                min-height: 240px !important;
+                max-height: 240px !important;
             }
         }
         
@@ -2372,6 +2394,7 @@
             position: relative;
             overflow: hidden;
             box-sizing: border-box;
+            scroll-snap-align: center;
         }
 
         /* Abstract shape decoration */
@@ -2640,11 +2663,22 @@
             <!-- Zone Detail Section -->
             <div id="zone-detail-section" class="content-section" style="display: none; background: var(--white); height: 100%;">
                 <div class="zone-detail-header" style="padding: 16px; border-bottom: 1px solid rgba(74, 144, 198, 0.1); display: flex; align-items: center; gap: 16px;">
-                    <button id="backToDashboard" style="background: none; border: none; font-size: 24px; color: var(--primary-blue); cursor: pointer; padding: 0 8px;">&lt;</button>
+                    <button id="backToDashboard" onclick="hideZoneDetail()" style="background: none; border: none; font-size: 24px; color: var(--primary-blue); cursor: pointer; padding: 0 8px;">&lt;</button>
                     <h2 id="zoneDetailTitle" style="margin: 0; font-size: 20px; color: #000000;">Zone Details</h2>
                 </div>
                 <div id="zoneDetailContent" style="padding: 16px; overflow-y: auto; height: calc(100% - 60px);">
                     <!-- Zone details will be populated here -->
+                </div>
+            </div>
+
+            <!-- PHC Detail Section -->
+            <div id="phc-detail-section" class="content-section" style="display: none; background: var(--white); height: 100%;">
+                <div class="phc-detail-header" style="padding: 16px; border-bottom: 1px solid rgba(74, 144, 198, 0.1); display: flex; align-items: center; gap: 16px;">
+                    <button id="backToZone" onclick="hidePhcDetail()" style="background: none; border: none; font-size: 24px; color: var(--primary-blue); cursor: pointer; padding: 0 8px;">&lt;</button>
+                    <h2 id="phcDetailTitle" style="margin: 0; font-size: 20px; color: #000000;">PHC Details</h2>
+                </div>
+                <div id="phcDetailContent" style="padding: 16px; overflow-y: auto; height: calc(100% - 60px);">
+                    <!-- PHC details will be populated here -->
                 </div>
             </div>
 
@@ -3923,42 +3957,42 @@
                     <div class="goal-mobile-card-header stat-card-header">
                         <div class="goal-mobile-title card-title">Total DM</div>
                         <span class="criteria-info-icon" data-card-index="0">(i)</span>
-                    </div>
+                            </div>
                     <div class="stat-card-metric">
                         <div class="metric-number">${(dmPatientCount || 0).toLocaleString()}</div>
-                    </div>
+                                                    </div>
                     <div class="stat-sub-metrics">
                         <div class="stat-sub-metric stat-sub-metric-controlled">
                             <div class="stat-sub-metric-label">Controlled</div>
                             <div class="stat-sub-metric-value">${(controlledCount || 0).toLocaleString()}</div>
-                        </div>
+                                </div>
                         <div class="stat-sub-metric stat-sub-metric-uncontrolled">
                             <div class="stat-sub-metric-label">Uncontrolled</div>
                             <div class="stat-sub-metric-value">${(uncontrolledCount || 0).toLocaleString()}</div>
-                        </div>
-                    </div>
+                            </div>
+                                            </div>
                     <div class="criteria-section">
                         <strong>Criteria:</strong>
                         <div class="criteria-list">
                             HbA1c ≥6.5% or Fasting ≥7.0<br>
                             First after 2025-06-01<br>
                             Age > 34
-                        </div>
-                    </div>
-                </div>
+                                                        </div>
+                                                    </div>
+                                </div>
                 <div class="stat-card" data-card-index="1">
                     <div class="goal-mobile-card-header stat-card-header">
                         <div class="goal-mobile-title card-title">Total Pre-DM</div>
                         <span class="criteria-info-icon" data-card-index="1">(i)</span>
-                    </div>
+                            </div>
                     <div class="stat-card-metric">
                         <div class="metric-number">${(predmPatientCount || 0).toLocaleString()}</div>
-                    </div>
+                        </div>
                     <div class="stat-sub-metrics">
                         <div class="stat-sub-metric stat-sub-metric-improved">
                             <div class="stat-sub-metric-label">Improved</div>
                             <div class="stat-sub-metric-value">${(improvedCount || 0).toLocaleString()}</div>
-                        </div>
+                                        </div>
                         <div class="stat-sub-metric stat-sub-metric-need-followup">
                             <div class="stat-sub-metric-label">Need Follow-up</div>
                             <div class="stat-sub-metric-value">${(needFollowupCount || 0).toLocaleString()}</div>
@@ -3967,35 +4001,35 @@
                     <div class="criteria-section">
                         <strong>Criteria:</strong>
                         <div class="criteria-list">
-                            HbA1c: 5.7-6.4% or Fasting: 5.6-6.9<br>
-                            Result ≥ 2025-01-01<br>
-                            Age > 34<br>
-                            Excludes DM
-                        </div>
-                    </div>
-                </div>
+                                            HbA1c: 5.7-6.4% or Fasting: 5.6-6.9<br>
+                                            Result ≥ 2025-01-01<br>
+                                            Age > 34<br>
+                                            Excludes DM
+                                        </div>
+                                    </div>
+                                </div>
                 <div class="stat-card" data-card-index="2">
                     <div class="goal-mobile-card-header stat-card-header">
                         <div class="goal-mobile-title card-title">Screened</div>
                         <span class="criteria-info-icon" data-card-index="2">(i)</span>
-                    </div>
+                            </div>
                     <div class="stat-card-metric">
                         <div class="metric-number">${(screenedCount || 0).toLocaleString()}</div>
-                    </div>
+                        </div>
                     <div class="stat-sub-metrics">
                         <div class="stat-sub-metric stat-sub-metric-normal">
                             <div class="stat-sub-metric-label">Normal/Healthy</div>
                             <div class="stat-sub-metric-value">${normalHealthyCount.toLocaleString()}</div>
+                            </div>
                         </div>
-                    </div>
                     <div class="criteria-section">
                         <strong>Criteria:</strong>
                         <div class="criteria-list">
                             • Age above 34<br>
                             • Not pregnant
+                            </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
                 <div class="stat-card" data-card-index="3">
                     <div class="goal-mobile-card-header stat-card-header">
                         <div class="goal-mobile-title card-title">Screened (from 2024-10-01)</div>
@@ -4003,22 +4037,22 @@
                     </div>
                     <div class="stat-card-metric">
                         <div class="metric-number">${(screenedFrom20241001Count || 0).toLocaleString()}</div>
-                    </div>
+                </div>
                     <div class="stat-sub-metrics">
                         <div class="stat-sub-metric stat-sub-metric-normal">
                             <div class="stat-sub-metric-label">Normal/Healthy</div>
                             <div class="stat-sub-metric-value">${normalHealthyFrom20241001Count.toLocaleString()}</div>
-                        </div>
-                    </div>
+                                        </div>
+                                                        </div>
                     <div class="criteria-section">
                         <strong>Criteria:</strong>
                         <div class="criteria-list">
                             • Age above 34<br>
                             • Not pregnant
+                                                    </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
+                            </div>
             `;
             
             // Set up pagination dots separately
@@ -4042,7 +4076,7 @@
             setupDashboardSwipe();
             
             // Create zone list
-            createZoneList(TOTAL_CUMULATIVE_TARGETS, zoneControlled, zoneUncontrolled, zonePredmImproved, zonePredmNeedFollowup, zoneScreened);
+            createZoneList(TOTAL_CUMULATIVE_TARGETS, zoneControlled, zoneUncontrolled, zonePredmImproved, zonePredmNeedFollowup, zoneScreened, zoneOrgCounts, zonePredmOrgCounts, zoneOrgScreened);
             
             // Setup sidebar navigation
             setupSidebarNavigation();
@@ -4083,7 +4117,7 @@
         }
         
         // Function to create expandable zone list
-        function createZoneList(totalTargets, zoneControlled, zoneUncontrolled, zonePredmImproved, zonePredmNeedFollowup, zoneScreened) {
+        function createZoneList(totalTargets, zoneControlled, zoneUncontrolled, zonePredmImproved, zonePredmNeedFollowup, zoneScreened, zoneOrgCounts, zonePredmOrgCounts, zoneOrgScreened) {
             const zoneListContainer = document.getElementById('zoneListContainer');
             if (!zoneListContainer) return;
             
@@ -4115,7 +4149,7 @@
                     <div class="zone-item" data-zone="${zone}" data-details='${escapedZoneData}'>
                         <div class="zone-name">${zone}</div>
                         <div class="zone-arrow">&gt;</div>
-                                                    </div>
+                        </div>
                 `;
             }).join('');
             
@@ -4130,23 +4164,29 @@
                     const zoneDataStr = this.getAttribute('data-details');
                     try {
                         const zoneData = JSON.parse(zoneDataStr);
-                        showZoneDetail(zoneName, zoneData);
+                        showZoneDetail(zoneName, zoneData, zoneOrgCounts, zonePredmOrgCounts, zoneOrgScreened, totalTargets);
                     } catch (e) {
                         console.error('Error parsing zone data', e);
-                        showZoneDetail(zoneName, null);
+                        showZoneDetail(zoneName, null, zoneOrgCounts, zonePredmOrgCounts, zoneOrgScreened, totalTargets);
                     }
                 });
             });
         }
 
+        // Store current zone name for PHC navigation
+        let currentZoneName = '';
+        
         // Show Zone Detail View
-        function showZoneDetail(zoneName, data) {
+        function showZoneDetail(zoneName, data, zoneOrgCounts, zonePredmOrgCounts, zoneOrgScreened, totalTargets) {
             const dashboardSection = document.getElementById('dashboard-section');
             const zoneDetailSection = document.getElementById('zone-detail-section');
             const zoneDetailTitle = document.getElementById('zoneDetailTitle');
             const zoneDetailContent = document.getElementById('zoneDetailContent');
             
             if (!dashboardSection || !zoneDetailSection) return;
+            
+            // Store current zone name
+            currentZoneName = zoneName;
             
             // Hide dashboard, show detail
             dashboardSection.style.setProperty('display', 'none', 'important');
@@ -4157,72 +4197,450 @@
             
             // Populate Content
             if (data) {
+                // Get PHCs for this zone
+                const phcList = getPhcListForZone(zoneName, zoneOrgCounts, zonePredmOrgCounts, zoneOrgScreened, totalTargets);
+                
                 zoneDetailContent.innerHTML = `
-                    <div style="display: flex; flex-direction: column; gap: var(--spacing-md); padding: var(--spacing-md);">
+                    <div class="zone-cards-container" style="display: flex; gap: var(--spacing-md); height: 280px; min-height: 280px; max-height: 280px; padding: 0; margin-bottom: 20px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
                         <!-- TOTAL DM Card -->
-                        <div style="background: var(--white); border: 1px solid rgba(74, 144, 198, 0.2); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 14px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">TOTAL DM</div>
-                            <div style="font-size: 48px; font-weight: 700; color: #000; margin-bottom: 16px; text-align: center; line-height: 1;">${data.dmTotal.toLocaleString()}</div>
+                        <div class="zone-card" data-card-index="0" style="flex: 0 0 calc(100% - 32px); min-width: 260px; height: 280px; min-height: 280px; max-height: 280px; background: var(--white); border: 1px solid rgba(74, 144, 198, 0.2); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: 0 2px 8px rgba(0,0,0,0.08); scroll-snap-align: center; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start;">
+                            <div style="font-size: 14px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">TOTAL DM</div>
+                            <div style="font-size: 36px; font-weight: 700; color: #000; margin-bottom: 12px; text-align: center; line-height: 1;">${data.dmTotal.toLocaleString()}</div>
                             <div style="display: flex; gap: var(--spacing-sm);">
-                                <div style="flex: 1; background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.2); padding: 12px; border-radius: 12px; text-align: center;">
-                                    <div style="font-size: 12px; color: var(--primary-blue); font-weight: 600; margin-bottom: 8px; text-transform: uppercase;">Controlled</div>
-                                    <div style="font-size: 24px; font-weight: 700; color: #000; line-height: 1;">${data.dmControlled.toLocaleString()}</div>
-                            </div>
-                                <div style="flex: 1; background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.2); padding: 12px; border-radius: 12px; text-align: center;">
-                                    <div style="font-size: 12px; color: #FF3B30; font-weight: 600; margin-bottom: 8px; text-transform: uppercase;">Uncontrolled</div>
-                                    <div style="font-size: 24px; font-weight: 700; color: #000; line-height: 1;">${data.dmUncontrolled.toLocaleString()}</div>
-                        </div>
+                                <div style="flex: 1; background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.2); padding: 10px; border-radius: 12px; text-align: center;">
+                                    <div style="font-size: 11px; color: var(--primary-blue); font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">Controlled</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: #000; line-height: 1;">${data.dmControlled.toLocaleString()}</div>
+                                </div>
+                                <div style="flex: 1; background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.2); padding: 10px; border-radius: 12px; text-align: center;">
+                                    <div style="font-size: 11px; color: #FF3B30; font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">Uncontrolled</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: #000; line-height: 1;">${data.dmUncontrolled.toLocaleString()}</div>
+                                </div>
                             </div>
                         </div>
 
                         <!-- TOTAL PRE-DM Card -->
-                        <div style="background: var(--white); border: 1px solid rgba(74, 144, 198, 0.2); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 14px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">TOTAL PRE-DM</div>
-                            <div style="font-size: 48px; font-weight: 700; color: #000; margin-bottom: 16px; text-align: center; line-height: 1;">${data.predmTotal.toLocaleString()}</div>
+                        <div class="zone-card" data-card-index="1" style="flex: 0 0 calc(100% - 32px); min-width: 260px; height: 280px; min-height: 280px; max-height: 280px; background: var(--white); border: 1px solid rgba(74, 144, 198, 0.2); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: 0 2px 8px rgba(0,0,0,0.08); scroll-snap-align: center; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start;">
+                            <div style="font-size: 14px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">TOTAL PRE-DM</div>
+                            <div style="font-size: 36px; font-weight: 700; color: #000; margin-bottom: 12px; text-align: center; line-height: 1;">${data.predmTotal.toLocaleString()}</div>
                             <div style="display: flex; gap: var(--spacing-sm);">
-                                <div style="flex: 1; background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.2); padding: 12px; border-radius: 12px; text-align: center;">
-                                    <div style="font-size: 12px; color: var(--primary-blue); font-weight: 600; margin-bottom: 8px; text-transform: uppercase;">Improved</div>
-                                    <div style="font-size: 24px; font-weight: 700; color: #000; line-height: 1;">${data.predmImproved.toLocaleString()}</div>
-                                                    </div>
-                                <div style="flex: 1; background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.2); padding: 12px; border-radius: 12px; text-align: center;">
-                                    <div style="font-size: 12px; color: #FF3B30; font-weight: 600; margin-bottom: 8px; text-transform: uppercase;">Need Follow-up</div>
-                                    <div style="font-size: 24px; font-weight: 700; color: #000; line-height: 1;">${data.predmNeedFollowup.toLocaleString()}</div>
+                                <div style="flex: 1; background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.2); padding: 10px; border-radius: 12px; text-align: center;">
+                                    <div style="font-size: 11px; color: var(--primary-blue); font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">Improved</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: #000; line-height: 1;">${data.predmImproved.toLocaleString()}</div>
+                                </div>
+                                <div style="flex: 1; background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.2); padding: 10px; border-radius: 12px; text-align: center;">
+                                    <div style="font-size: 11px; color: #FF3B30; font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">Need Follow-up</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: #000; line-height: 1;">${data.predmNeedFollowup.toLocaleString()}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
                         <!-- SCREENING Card -->
-                        <div style="background: var(--white); border: 1px solid rgba(74, 144, 198, 0.2); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 14px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">SCREENING</div>
-                            <div style="font-size: 48px; font-weight: 700; color: #000; margin-bottom: 16px; text-align: center; line-height: 1;">${data.screened.toLocaleString()}</div>
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                                <div style="font-size: 14px; color: #666; font-weight: 400;">Target</div>
+                        <div class="zone-card" data-card-index="2" style="flex: 0 0 calc(100% - 32px); min-width: 260px; height: 280px; min-height: 280px; max-height: 280px; background: var(--white); border: 1px solid rgba(74, 144, 198, 0.2); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: 0 2px 8px rgba(0,0,0,0.08); scroll-snap-align: center; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start;">
+                            <div style="font-size: 14px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">SCREENING</div>
+                            <div style="font-size: 36px; font-weight: 700; color: #000; margin-bottom: 12px; text-align: center; line-height: 1;">${data.screened.toLocaleString()}</div>
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
+                                <div style="font-size: 12px; color: #666; font-weight: 400;">Target</div>
                                 <div style="flex: 1; background: #f5f5f5; height: 8px; border-radius: 4px; overflow: hidden; position: relative;">
                                     <div style="background: var(--primary-blue); height: 100%; width: ${Math.min(100, parseFloat(data.screenedPct))}%; transition: width 0.3s ease;"></div>
-                                        </div>
-                                <div style="font-size: 14px; font-weight: 700; color: #000; min-width: 60px; text-align: right;">${data.target.toLocaleString()}</div>
-                                        </div>
-                            <div style="text-align: right; font-size: 14px; color: var(--primary-blue); font-weight: 600; margin-top: 4px;">${data.screenedPct}%</div>
-                </div>
-            </div>
-            `;
+                                </div>
+                                <div style="font-size: 12px; font-weight: 700; color: #000; min-width: 50px; text-align: right;">${data.target.toLocaleString()}</div>
+                            </div>
+                            <div style="text-align: right; font-size: 12px; color: var(--primary-blue); font-weight: 600; margin-top: 2px;">${data.screenedPct}%</div>
+                        </div>
+                    </div>
+                    <div id="zone-pagination" style="display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 20px; margin-bottom: 20px; padding: 8px 16px; background: rgba(74, 144, 198, 0.1); border-radius: 20px; border: 1px solid rgba(74, 144, 198, 0.2); width: fit-content; margin-left: auto; margin-right: auto; opacity: 0; transition: opacity 0.3s ease; pointer-events: none;">
+                            <div class="zone-dot active" data-card-index="0" style="width: 8px; height: 8px; border-radius: 50%; background: rgba(74, 144, 198, 0.3); cursor: pointer; transition: all 0.3s ease;"></div>
+                            <div class="zone-dot" data-card-index="1" style="width: 8px; height: 8px; border-radius: 50%; background: rgba(74, 144, 198, 0.3); cursor: pointer; transition: all 0.3s ease;"></div>
+                            <div class="zone-dot" data-card-index="2" style="width: 8px; height: 8px; border-radius: 50%; background: rgba(74, 144, 198, 0.3); cursor: pointer; transition: all 0.3s ease;"></div>
+                        </div>
+                    <div id="zonePhcListContainer" style="margin-top: 20px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #000; margin-bottom: 12px;">Primary Health Centers</h3>
+                        <div class="phc-list" style="display: flex; flex-direction: column; gap: 0;">
+                            ${phcList}
+                        </div>
+                    </div>
+                `;
+                
+                // Setup swipe functionality for zone cards
+                setupZoneCardsSwipe();
+                
+                // Setup PHC click handlers
+                setupPhcClickHandlers(zoneName, zoneOrgCounts, zonePredmOrgCounts, zoneOrgScreened, totalTargets);
             } else {
                 zoneDetailContent.innerHTML = '<p>No data available for this zone.</p>';
             }
         }
         
-        // Back button handler - setup after DOM is ready
-        if (document.getElementById('backToDashboard')) {
-            document.getElementById('backToDashboard').addEventListener('click', function() {
-                const dashboardSection = document.getElementById('dashboard-section');
-                const zoneDetailSection = document.getElementById('zone-detail-section');
+        // Get PHC target from ORG_TARGETS_DATA
+        function getPhcTarget(phcName, zoneName) {
+            if (!ORG_TARGETS_DATA) return 0;
+            const normalizedPhc = normalizeOrgName(phcName);
+            const phcData = ORG_TARGETS_DATA.find(org => 
+                org.zone === zoneName && normalizeOrgName(org.name) === normalizedPhc
+            );
+            return phcData ? phcData.target : 0;
+        }
+        
+        // Get PHC list HTML for a zone
+        function getPhcListForZone(zoneName, zoneOrgCounts, zonePredmOrgCounts, zoneOrgScreened, totalTargets) {
+            if (!zoneOrgCounts || !zoneOrgCounts[zoneName]) {
+                return '<p style="padding: 16px; color: #666;">No PHCs available for this zone.</p>';
+            }
+            
+            const phcs = Object.keys(zoneOrgCounts[zoneName] || {}).sort();
+            
+            if (phcs.length === 0) {
+                return '<p style="padding: 16px; color: #666;">No PHCs available for this zone.</p>';
+            }
+            
+            return phcs.map(phc => {
+                const dmData = zoneOrgCounts[zoneName][phc] || { controlled: 0, uncontrolled: 0 };
+                const predmData = zonePredmOrgCounts && zonePredmOrgCounts[zoneName] && zonePredmOrgCounts[zoneName][phc] 
+                    ? zonePredmOrgCounts[zoneName][phc] 
+                    : { improved: 0, needFollowup: 0 };
+                const screened = zoneOrgScreened && zoneOrgScreened[zoneName] && zoneOrgScreened[zoneName][phc]
+                    ? zoneOrgScreened[zoneName][phc].size || 0
+                    : 0;
                 
-                if (dashboardSection && zoneDetailSection) {
-                    zoneDetailSection.style.setProperty('display', 'none', 'important');
-                    dashboardSection.style.setProperty('display', 'block', 'important');
-                }
+                // Get target for this PHC
+                const target = getPhcTarget(phc, zoneName);
+                
+                const dmTotal = dmData.controlled + dmData.uncontrolled;
+                const predmTotal = predmData.improved + predmData.needFollowup;
+                
+                return `
+                    <div class="phc-item" data-phc="${phc}" data-zone="${zoneName}" style="background: var(--white); border: none; border-bottom: 1px solid rgba(0, 0, 0, 0.05); border-radius: 0; padding: 16px 20px; margin-bottom: 0; cursor: pointer; display: flex; align-items: center; justify-content: space-between; box-shadow: none;">
+                        <div>
+                            <div class="phc-name" style="font-weight: 600; font-size: 16px; color: #000000; margin-bottom: 4px;">${phc}</div>
+                            <div style="font-size: 12px; color: #666;">
+                                DM: ${dmTotal} | Pre-DM: ${predmTotal} | Screened: ${screened}
+                            </div>
+                        </div>
+                        <div class="phc-arrow" style="font-size: 20px; color: var(--primary-blue);">&gt;</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Setup PHC click handlers
+        function setupPhcClickHandlers(zoneName, zoneOrgCounts, zonePredmOrgCounts, zoneOrgScreened, totalTargets) {
+            const phcItems = document.querySelectorAll('.phc-item');
+            phcItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const phcName = this.getAttribute('data-phc');
+                    const phcZone = this.getAttribute('data-zone');
+                    showPhcDetail(phcName, phcZone, zoneOrgCounts, zonePredmOrgCounts, zoneOrgScreened, totalTargets);
+                });
             });
         }
+        
+        // Show PHC Detail View
+        function showPhcDetail(phcName, zoneName, zoneOrgCounts, zonePredmOrgCounts, zoneOrgScreened, totalTargets) {
+            const zoneDetailSection = document.getElementById('zone-detail-section');
+            const phcDetailSection = document.getElementById('phc-detail-section');
+            const phcDetailTitle = document.getElementById('phcDetailTitle');
+            const phcDetailContent = document.getElementById('phcDetailContent');
+            
+            if (!phcDetailSection) return;
+            
+            // Hide zone detail, show PHC detail
+            if (zoneDetailSection) {
+                zoneDetailSection.style.setProperty('display', 'none', 'important');
+            }
+            phcDetailSection.style.setProperty('display', 'block', 'important');
+            
+            // Set title
+            phcDetailTitle.textContent = phcName;
+            
+            // Get PHC data
+            const dmData = zoneOrgCounts && zoneOrgCounts[zoneName] && zoneOrgCounts[zoneName][phcName]
+                ? zoneOrgCounts[zoneName][phcName]
+                : { controlled: 0, uncontrolled: 0 };
+            const predmData = zonePredmOrgCounts && zonePredmOrgCounts[zoneName] && zonePredmOrgCounts[zoneName][phcName]
+                ? zonePredmOrgCounts[zoneName][phcName]
+                : { improved: 0, needFollowup: 0 };
+            const screened = zoneOrgScreened && zoneOrgScreened[zoneName] && zoneOrgScreened[zoneName][phcName]
+                ? zoneOrgScreened[zoneName][phcName].size || 0
+                : 0;
+            
+            // Get target for this PHC
+            const target = getPhcTarget(phcName, zoneName);
+            
+            const dmTotal = dmData.controlled + dmData.uncontrolled;
+            const predmTotal = predmData.improved + predmData.needFollowup;
+            const screenedPct = target > 0 ? ((screened / target) * 100).toFixed(1) : '0.0';
+            
+            const phcData = {
+                dmTotal,
+                dmControlled: dmData.controlled,
+                dmUncontrolled: dmData.uncontrolled,
+                predmTotal,
+                predmImproved: predmData.improved,
+                predmNeedFollowup: predmData.needFollowup,
+                screened,
+                target,
+                screenedPct
+            };
+            
+            // Populate PHC content with cards (same structure as zone cards)
+            phcDetailContent.innerHTML = `
+                <div class="zone-cards-container" style="display: flex; gap: var(--spacing-md); height: 280px; min-height: 280px; max-height: 280px; padding: 0; margin-bottom: 20px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
+                    <!-- TOTAL DM Card -->
+                    <div class="zone-card" data-card-index="0" style="flex: 0 0 calc(100% - 32px); min-width: 260px; height: 280px; min-height: 280px; max-height: 280px; background: var(--white); border: 1px solid rgba(74, 144, 198, 0.2); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: 0 2px 8px rgba(0,0,0,0.08); scroll-snap-align: center; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start;">
+                        <div style="font-size: 14px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">TOTAL DM</div>
+                        <div style="font-size: 36px; font-weight: 700; color: #000; margin-bottom: 12px; text-align: center; line-height: 1;">${phcData.dmTotal.toLocaleString()}</div>
+                        <div style="display: flex; gap: var(--spacing-sm);">
+                            <div style="flex: 1; background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.2); padding: 10px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 11px; color: var(--primary-blue); font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">Controlled</div>
+                                <div style="font-size: 20px; font-weight: 700; color: #000; line-height: 1;">${phcData.dmControlled.toLocaleString()}</div>
+                            </div>
+                            <div style="flex: 1; background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.2); padding: 10px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 11px; color: #FF3B30; font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">Uncontrolled</div>
+                                <div style="font-size: 20px; font-weight: 700; color: #000; line-height: 1;">${phcData.dmUncontrolled.toLocaleString()}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TOTAL PRE-DM Card -->
+                    <div class="zone-card" data-card-index="1" style="flex: 0 0 calc(100% - 32px); min-width: 260px; height: 280px; min-height: 280px; max-height: 280px; background: var(--white); border: 1px solid rgba(74, 144, 198, 0.2); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: 0 2px 8px rgba(0,0,0,0.08); scroll-snap-align: center; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start;">
+                        <div style="font-size: 14px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">TOTAL PRE-DM</div>
+                        <div style="font-size: 36px; font-weight: 700; color: #000; margin-bottom: 12px; text-align: center; line-height: 1;">${phcData.predmTotal.toLocaleString()}</div>
+                        <div style="display: flex; gap: var(--spacing-sm);">
+                            <div style="flex: 1; background: rgba(74, 144, 198, 0.1); border: 1px solid rgba(74, 144, 198, 0.2); padding: 10px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 11px; color: var(--primary-blue); font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">Improved</div>
+                                <div style="font-size: 20px; font-weight: 700; color: #000; line-height: 1;">${phcData.predmImproved.toLocaleString()}</div>
+                            </div>
+                            <div style="flex: 1; background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.2); padding: 10px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 11px; color: #FF3B30; font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">Need Follow-up</div>
+                                <div style="font-size: 20px; font-weight: 700; color: #000; line-height: 1;">${phcData.predmNeedFollowup.toLocaleString()}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SCREENING Card -->
+                    <div class="zone-card" data-card-index="2" style="flex: 0 0 calc(100% - 32px); min-width: 260px; height: 280px; min-height: 280px; max-height: 280px; background: var(--white); border: 1px solid rgba(74, 144, 198, 0.2); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: 0 2px 8px rgba(0,0,0,0.08); scroll-snap-align: center; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start;">
+                        <div style="font-size: 14px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">SCREENING</div>
+                        <div style="font-size: 36px; font-weight: 700; color: #000; margin-bottom: 12px; text-align: center; line-height: 1;">${phcData.screened.toLocaleString()}</div>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
+                            <div style="font-size: 12px; color: #666; font-weight: 400;">Target</div>
+                            <div style="flex: 1; background: #f5f5f5; height: 8px; border-radius: 4px; overflow: hidden; position: relative;">
+                                <div style="background: var(--primary-blue); height: 100%; width: ${Math.min(100, parseFloat(phcData.screenedPct))}%; transition: width 0.3s ease;"></div>
+                            </div>
+                            <div style="font-size: 12px; font-weight: 700; color: #000; min-width: 50px; text-align: right;">${phcData.target.toLocaleString()}</div>
+                        </div>
+                        <div style="text-align: right; font-size: 12px; color: var(--primary-blue); font-weight: 600; margin-top: 2px;">${phcData.screenedPct}%</div>
+                    </div>
+                </div>
+                <div id="phc-pagination" style="display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 20px; margin-bottom: 20px; padding: 8px 16px; background: rgba(74, 144, 198, 0.1); border-radius: 20px; border: 1px solid rgba(74, 144, 198, 0.2); width: fit-content; margin-left: auto; margin-right: auto; opacity: 0; transition: opacity 0.3s ease; pointer-events: none;">
+                    <div class="zone-dot active" data-card-index="0" style="width: 8px; height: 8px; border-radius: 50%; background: rgba(74, 144, 198, 0.3); cursor: pointer; transition: all 0.3s ease;"></div>
+                    <div class="zone-dot" data-card-index="1" style="width: 8px; height: 8px; border-radius: 50%; background: rgba(74, 144, 198, 0.3); cursor: pointer; transition: all 0.3s ease;"></div>
+                    <div class="zone-dot" data-card-index="2" style="width: 8px; height: 8px; border-radius: 50%; background: rgba(74, 144, 198, 0.3); cursor: pointer; transition: all 0.3s ease;"></div>
+                </div>
+            `;
+            
+            // Setup swipe functionality for PHC cards
+            setupZoneCardsSwipe();
+        }
+        
+        // Hide PHC Detail and show Zone Detail
+        function hidePhcDetail() {
+            const zoneDetailSection = document.getElementById('zone-detail-section');
+            const phcDetailSection = document.getElementById('phc-detail-section');
+            if (zoneDetailSection && phcDetailSection) {
+                phcDetailSection.style.setProperty('display', 'none', 'important');
+                zoneDetailSection.style.setProperty('display', 'block', 'important');
+            }
+        }
+        
+        // Hide Zone Detail and show Dashboard
+        function hideZoneDetail() {
+            const dashboardSection = document.getElementById('dashboard-section');
+            const zoneDetailSection = document.getElementById('zone-detail-section');
+            if (dashboardSection && zoneDetailSection) {
+                zoneDetailSection.style.setProperty('display', 'none', 'important');
+                dashboardSection.style.setProperty('display', 'block', 'important');
+            }
+        }
+        
+        // Setup swipe functionality for zone detail cards with infinite loop
+        function setupZoneCardsSwipe() {
+            const cardsContainer = document.querySelector('.zone-cards-container');
+            let cards = document.querySelectorAll('.zone-cards-container .zone-card');
+            const dots = document.querySelectorAll('#zone-pagination .zone-dot');
+            const pagination = document.getElementById('zone-pagination');
+            
+            if (!cardsContainer || cards.length === 0) return;
+            
+            const TOTAL_CARDS = 3; // We have 3 real cards (indices 0-2)
+            let isScrolling = false;
+            let interactionTimeout;
+            
+            // Clone first card and add at the end, clone last card and add at the beginning for infinite loop
+            const firstCard = cards[0].cloneNode(true);
+            const lastCard = cards[TOTAL_CARDS - 1].cloneNode(true);
+            firstCard.setAttribute('data-card-clone', 'last');
+            lastCard.setAttribute('data-card-clone', 'first');
+            
+            cardsContainer.insertBefore(lastCard, cards[0]);
+            cardsContainer.appendChild(firstCard);
+            
+            // Update cards reference after cloning
+            cards = document.querySelectorAll('.zone-cards-container .zone-card');
+            
+            function getCardWidth() {
+                return cards[0]?.offsetWidth || 0;
+            }
+            
+            function getGap() {
+                return parseInt(getComputedStyle(cardsContainer).gap) || 16;
+            }
+            
+            function getCardAndGap() {
+                return getCardWidth() + getGap();
+            }
+            
+            // Scroll to first real card (index 1, which is now the real first card after clone at index 0)
+            setTimeout(() => {
+                cardsContainer.scrollLeft = getCardAndGap();
+            }, 100);
+            
+            function showPagination() {
+                if (pagination) {
+                    pagination.style.opacity = '1';
+                    pagination.style.pointerEvents = 'auto';
+                }
+                clearTimeout(interactionTimeout);
+                interactionTimeout = setTimeout(() => {
+                    hidePagination();
+                }, 2000);
+            }
+            
+            function hidePagination() {
+                if (pagination) {
+                    pagination.style.opacity = '0';
+                    pagination.style.pointerEvents = 'none';
+                }
+            }
+            
+            function getRealCardIndex(scrollLeft) {
+                const cardAndGap = getCardAndGap();
+                const position = Math.round(scrollLeft / cardAndGap);
+                let realIndex = position - 1; // Subtract 1 because first card (index 0) is a clone
+                
+                // Map to real card indices (0-2)
+                if (realIndex < 0) {
+                    realIndex = TOTAL_CARDS - 1; // Last card
+                } else if (realIndex >= TOTAL_CARDS) {
+                    realIndex = 0; // First card
+                }
+                
+                return realIndex;
+            }
+            
+            function updateActiveDot() {
+                if (isScrolling) return;
+                
+                const scrollLeft = cardsContainer.scrollLeft;
+                const realIndex = getRealCardIndex(scrollLeft);
+                
+                dots.forEach((dot, index) => {
+                    if (index === realIndex) {
+                        dot.style.background = 'var(--primary-blue)';
+                        dot.style.width = '12px';
+                        dot.style.height = '12px';
+                    } else {
+                        dot.style.background = 'rgba(74, 144, 198, 0.3)';
+                        dot.style.width = '8px';
+                        dot.style.height = '8px';
+                    }
+                });
+            }
+            
+            function handleLoop() {
+                if (isScrolling) return;
+                
+                const scrollLeft = cardsContainer.scrollLeft;
+                const cardAndGap = getCardAndGap();
+                const threshold = cardAndGap * 0.3;
+                
+                // Structure: [clone last] [real 1] [real 2] [real 3] [clone first]
+                // Array indices: 0           1        2        3        4
+                // Scroll positions: 0        1*CG     2*CG     3*CG     4*CG
+                
+                // Check if we've scrolled to the cloned first card at the end
+                const clonedFirstCardPosition = (TOTAL_CARDS + 1) * cardAndGap;
+                if (scrollLeft >= clonedFirstCardPosition - threshold) {
+                    isScrolling = true;
+                    cardsContainer.scrollTo({
+                        left: cardAndGap,
+                        behavior: 'auto'
+                    });
+                    setTimeout(() => {
+                        isScrolling = false;
+                        updateActiveDot();
+                    }, 50);
+                    return;
+                }
+                
+                // Check if we've scrolled to the cloned last card at the beginning
+                if (scrollLeft <= threshold) {
+                    isScrolling = true;
+                    cardsContainer.scrollTo({
+                        left: TOTAL_CARDS * cardAndGap,
+                        behavior: 'auto'
+                    });
+                    setTimeout(() => {
+                        isScrolling = false;
+                        updateActiveDot();
+                    }, 50);
+                    return;
+                }
+            }
+            
+            // Make dots clickable to jump to card
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    const scrollTo = (index + 1) * getCardAndGap();
+                    cardsContainer.scrollTo({
+                        left: scrollTo,
+                        behavior: 'smooth'
+                    });
+                    showPagination();
+                });
+            });
+            
+            // Handle scroll events for looping
+            let scrollTimeout;
+            cardsContainer.addEventListener('scroll', () => {
+                showPagination();
+                
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    handleLoop();
+                    updateActiveDot();
+                }, 100);
+            });
+            
+            cardsContainer.addEventListener('touchstart', showPagination);
+            cardsContainer.addEventListener('mousedown', showPagination);
+            
+            // Update on resize
+            window.addEventListener('resize', () => {
+                updateActiveDot();
+            });
+            
+            // Initial update
+            setTimeout(() => {
+                updateActiveDot();
+            }, 150);
+            
+            // Show pagination initially, then hide after 3 seconds
+            showPagination();
+            setTimeout(() => {
+                hidePagination();
+            }, 3000);
+        }
+        
         
         
         // Store global data for daily summary and DM raw data export
@@ -4731,18 +5149,50 @@
         
         function setupDashboardSwipe() {
             const cardsContainer = document.querySelector('.main-cards-container');
-            const cards = document.querySelectorAll('.main-cards-container .stat-card');
+            let cards = document.querySelectorAll('.main-cards-container .stat-card');
             const dots = document.querySelectorAll('#dashboard-pagination .dashboard-dot');
             const pagination = document.getElementById('dashboard-pagination');
             const zoneListContainer = document.getElementById('zoneListContainer');
             
             if (!cardsContainer || cards.length === 0) return;
             
+            const TOTAL_CARDS = 4; // We have 4 real cards (indices 0-3)
+            let isScrolling = false;
             let interactionTimeout;
+            
+            // Clone first card and add at the end, clone last card and add at the beginning for infinite loop
+            const firstCard = cards[0].cloneNode(true);
+            const lastCard = cards[TOTAL_CARDS - 1].cloneNode(true);
+            firstCard.setAttribute('data-card-clone', 'last');
+            lastCard.setAttribute('data-card-clone', 'first');
+            
+            cardsContainer.insertBefore(lastCard, cards[0]);
+            cardsContainer.appendChild(firstCard);
+            
+            // Update cards reference after cloning
+            cards = document.querySelectorAll('.main-cards-container .stat-card');
+            
+            function getCardWidth() {
+                return cards[0]?.offsetWidth || 0;
+            }
+            
+            function getGap() {
+                return parseInt(getComputedStyle(cardsContainer).gap) || 16;
+            }
+            
+            function getCardAndGap() {
+                return getCardWidth() + getGap();
+            }
+            
+            // Scroll to first real card (index 1, which is now the real first card after clone at index 0)
+            setTimeout(() => {
+                cardsContainer.scrollLeft = getCardAndGap();
+            }, 100);
             
             function showPagination() {
                 if (pagination) {
-                    pagination.classList.add('visible');
+                    pagination.style.opacity = '1';
+                    pagination.style.pointerEvents = 'auto';
                 }
                 clearTimeout(interactionTimeout);
                 interactionTimeout = setTimeout(() => {
@@ -4752,20 +5202,35 @@
             
             function hidePagination() {
                 if (pagination) {
-                    pagination.classList.remove('visible');
+                    pagination.style.opacity = '0';
+                    pagination.style.pointerEvents = 'none';
                 }
             }
             
+            function getRealCardIndex(scrollLeft) {
+                const cardAndGap = getCardAndGap();
+                // Account for the cloned card at the beginning (index 0 is clone)
+                const position = Math.round(scrollLeft / cardAndGap);
+                let realIndex = position - 1; // Subtract 1 because first card (index 0) is a clone
+                
+                // Map to real card indices (0-3)
+                if (realIndex < 0) {
+                    realIndex = TOTAL_CARDS - 1; // Last card
+                } else if (realIndex >= TOTAL_CARDS) {
+                    realIndex = 0; // First card
+                }
+                
+                return realIndex;
+            }
+            
             function updateActiveDot() {
+                if (isScrolling) return;
+                
                 const scrollLeft = cardsContainer.scrollLeft;
-                const cardWidth = cards[0]?.offsetWidth || 0;
-                const gap = 12;
-                const scrollPosition = scrollLeft + (cardWidth / 2);
-                const currentIndex = Math.round(scrollPosition / (cardWidth + gap));
-                const clampedIndex = Math.max(0, Math.min(currentIndex, cards.length - 1));
+                const realIndex = getRealCardIndex(scrollLeft);
                 
                 dots.forEach((dot, index) => {
-                    if (index === clampedIndex) {
+                    if (index === realIndex) {
                         dot.classList.add('active');
                     } else {
                         dot.classList.remove('active');
@@ -4773,12 +5238,54 @@
                 });
             }
             
+            function handleLoop() {
+                if (isScrolling) return;
+                
+                const scrollLeft = cardsContainer.scrollLeft;
+                const cardAndGap = getCardAndGap();
+                const threshold = cardAndGap * 0.3; // 30% of card width as threshold
+                
+                // Structure: [clone last] [real 1] [real 2] [real 3] [real 4] [clone first]
+                // Array indices: 0           1        2        3        4        5
+                // Scroll positions: 0        1*CG     2*CG     3*CG     4*CG     5*CG
+                
+                // Check if we've scrolled to the cloned first card at the end (scroll position ≈ 5 * cardAndGap)
+                const clonedFirstCardPosition = (TOTAL_CARDS + 1) * cardAndGap;
+                if (scrollLeft >= clonedFirstCardPosition - threshold) {
+                    isScrolling = true;
+                    // Instantly jump to the real first card (scroll position: 1 * cardAndGap)
+                    cardsContainer.scrollTo({
+                        left: cardAndGap,
+                        behavior: 'auto' // Instant jump, no animation
+                    });
+                    setTimeout(() => {
+                        isScrolling = false;
+                        updateActiveDot();
+                    }, 50);
+                    return;
+                }
+                
+                // Check if we've scrolled to the cloned last card at the beginning (scroll position ≈ 0)
+                if (scrollLeft <= threshold) {
+                    isScrolling = true;
+                    // Instantly jump to the real last card (scroll position: TOTAL_CARDS * cardAndGap)
+                    cardsContainer.scrollTo({
+                        left: TOTAL_CARDS * cardAndGap,
+                        behavior: 'auto' // Instant jump, no animation
+                    });
+                    setTimeout(() => {
+                        isScrolling = false;
+                        updateActiveDot();
+                    }, 50);
+                    return;
+                }
+            }
+            
             // Make dots clickable to jump to card
             dots.forEach((dot, index) => {
                 dot.addEventListener('click', () => {
-                    const cardWidth = cards[0]?.offsetWidth || 0;
-                    const gap = 12;
-                    const scrollTo = index * (cardWidth + gap);
+                    // Scroll to real card position (index + 1 because first card is clone)
+                    const scrollTo = (index + 1) * getCardAndGap();
                     cardsContainer.scrollTo({
                         left: scrollTo,
                         behavior: 'smooth'
@@ -4787,10 +5294,16 @@
                 });
             });
             
-            // Show pagination on card interaction
+            // Handle scroll events for looping
+            let scrollTimeout;
             cardsContainer.addEventListener('scroll', () => {
                 showPagination();
-                updateActiveDot();
+                
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    handleLoop();
+                    updateActiveDot();
+                }, 100);
             });
             
             cardsContainer.addEventListener('touchstart', showPagination);
@@ -4804,10 +5317,14 @@
             }
             
             // Update on resize
-            window.addEventListener('resize', updateActiveDot);
+            window.addEventListener('resize', () => {
+                updateActiveDot();
+            });
             
             // Initial update
-            updateActiveDot();
+            setTimeout(() => {
+                updateActiveDot();
+            }, 150);
             
             // Show pagination initially, then hide after 3 seconds
             showPagination();
