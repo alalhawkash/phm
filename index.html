@@ -866,7 +866,7 @@
             { zone: "NNGH", name: "HUSSAINIAH PHCC",                           target: 1385 },
             { zone: "NNGH", name: "Primary Health Care Center in Nhogah",      target: 930  },
             { zone: "NNGH", name: "RIJLA PHcc",                                target: 961  },
-            { zone: "NNGH", name: "Shebhan phcc",                              target: 847  },
+            { zone: "WNH", name: "Shebhan phcc",                              target: 847  },
             { zone: "NNGH", name: "primary health care center barrk",          target: 1593 },
             { zone: "NNGH", name: "primary health care center of shurfa",      target: 5234 },
             { zone: "SGH",  name: "Alakashim Health Center",                   target: 259  },
@@ -875,7 +875,7 @@
             { zone: "SGH",  name: "Security Forces PHCC Sharoora",             target: 375  },
             { zone: "SGH",  name: "Sultanaa PHCC Sharoora",                    target: 4287 },
             { zone: "SGH",  name: "Tamani phcc Sharoura",                      target: 6    },
-            { zone: "SGH",  name: "Wadi Riman Health Center",                  target: 3499 },
+            { zone: "NNGH",  name: "Wadi Riman Health Center",                  target: 3499 },
             { zone: "SGH",  name: "alwadia phcc sharoora",                     target: 1885 },
             { zone: "SGH",  name: "khaldiya sharoorah health center",          target: 1920 },
             { zone: "TGH",  name: "hema phcc",                                 target: 211  },
@@ -1470,7 +1470,7 @@
                 "primary health care center barrk": "NNGH",
                 "primary health care center of shurfa": "NNGH",
                 "rijla phcc": "NNGH",
-                "shebhan phcc": "NNGH",
+                "shebhan phcc": "WNH",
                 "alakashim health center": "SGH",
                 "alwadia phcc sharoora": "SGH",
                 "aziziyah phcc sharoora": "SGH",
@@ -1478,6 +1478,8 @@
                 "security forces phcc sharoora": "SGH",
                 "sultanaa phcc sharoora": "SGH",
                 "khaldiya sharoorah health center": "SGH",
+                "tamani phcc Sharoura": "SGH",
+                "wadi rimman Health Center": "SGH",
                 "hema phcc": "TGH",
                 "naiwan phcc": "TGH",
                 "qattan phcc": "TGH",
@@ -1494,7 +1496,7 @@
                 "health center algabil": "WNH",
                 "health center in aljurbah": "WNH",
                 "phcc abasoud": "WNH",
-                "primary health care center in nhogah": "NNGH",
+                "primary health care center in nhogah": "WNH",
                 "legam primary health care center": "YGH",
                 "mohammadia phcc": "YGH",
                 "sultana primaryhealth care center": "YGH",
@@ -1856,11 +1858,11 @@
                 zoneOverall: "إجمالي المنطقة",
                 screened: "تم الفحص:",
                 remaining: "المتبقي:",
-                controlled: "مسيطر عليه:",
-                uncontrolled: "غير مسيطر عليه:",
-                improved: "محسّن:",
+                controlled: "متحكم بالسكري:",
+                uncontrolled: "غير متحكم بالسكري:",
+                improved: "متحسن:",
                 needFollowup: "يحتاج متابعة:",
-                loadingText: "جاري تحميل البيانات من جداول Google...",
+                loadingText: "جاري تحميل البيانات ... ",
                 noZonesAvailable: "لا توجد مناطق متاحة"
             }
         };
@@ -1881,15 +1883,15 @@
             },
             ar: {
                 "BGH": "بدر الجنوب",
-                "HGH": "HGH",
-                "KGH": "KGH",
-                "KKH": "KKH",
-                "MCH": "MCH",
-                "NNGH": "NNGH",
-                "SGH": "SGH",
-                "TGH": "TGH",
-                "WNH": "WNH",
-                "YGH": "YGH"
+                "HGH": "حبونا",
+                "KGH": "خباش",
+                "KKH": "م خالد",
+                "MCH": "الولادة والاطفال",
+                "NNGH": "الشرفة العام",
+                "SGH": "شرورة",
+                "TGH": "ثار",
+                "WNH": "غرب نجران",
+                "YGH": "يدمة"
             }
         };
         
@@ -1918,6 +1920,262 @@
             "primary care alkhaniq": {
                 en: "Alkhaniq",
                 ar: "الخانق"
+            },
+            "al harshar phcc": {
+                en: "Al harshar",
+                ar: "الحرشف"
+            },
+            "al jaffah phcc": {
+                en: "Al jaffah",
+                ar: "الجفة"
+            },
+            "almontsher phcc": {
+                en: "Almontsher",
+                ar: "المنتشر"
+            },
+            "dekah": {
+                en: "AL-dekah",
+                ar: "الضيقة"
+            },
+            "habuna primary health care center": {
+                en: "Habuna",
+                ar: "حبونا"
+            },
+            "majma": {
+                en: "Al-majma",
+                ar: "المجمع"
+            },
+            "alsharaa": {
+                en: "Alkharaa",
+                ar: "الخرعا"
+            },
+            "al-sharaa": {
+                en: "Alkharaa",
+                ar: "الخرعا"
+            },
+            "al shaaraa": {
+                en: "Alkharaa",
+                ar: "الخرعا"
+            },
+            "al-shaaraa": {
+                en: "Alkharaa",
+                ar: "الخرعا"
+            },
+            "junoob matar": {
+                en: "Junoob Al matar",
+                ar: "جنوب المطار"
+            },
+            "khubash health center": {
+                en: "Khubash",
+                ar: "خباش"
+            },
+            "mishaliya": {
+                en: "Mishaliya",
+                ar: "مشعلية"
+            },
+            "taslal health center": {
+                en: "Taslal",
+                ar: "تصلال"
+            },
+            "primary health care center goilla": {
+                en: "Goilla",
+                ar: "غويلاة"
+            },
+            "al contub": {
+                en: "Al contub",
+                ar: "الكنتوب"
+            },
+            "al faisaliah health center": {
+                en: "Al faisaliah",
+                ar: "الفيصلية"
+            },
+            "aldubat phcc": {
+                en: "Al dubat",
+                ar: "الضباط"
+            },
+            "aqfah phcc": {
+                en: "Aqfah",
+                ar: "عاكفة"
+            },
+            "biraskar phcc": {
+                en: "Biraskar",
+                ar: "بئر عسكر"
+            },
+            "khaldiya health center": {
+                en: "Al Khaldiya",
+                ar: "الخالدية"
+            },
+            "primary health care center diyafa": {
+                en: "Al Diyafa",
+                ar: "ضيافة"
+            },
+            "primary health care center north": {
+                en: "North Al Fahad",
+                ar: "الفهد الشمالي"
+            },
+            "prince mishal health center": {
+                en: "Prince Mishal",
+                ar: "الامير مشعل"
+            },
+            "al fahad al janubi phcc": {
+                en: "South Al fahad",
+                ar: "الفهد الجنوبي"
+            },
+            "atheabah phcc": {
+                en: "AL atheabah",
+                ar: "الاثايبة"
+            },
+            "al arisa health center": {
+                en: "Al arisa",
+                ar: "العريسة"
+            },
+            "alhamar phcc": {
+                en: "Alhamar",
+                ar: "الحمر"
+            },
+            "hussainiah phcc": {
+                en: "Hussainiah",
+                ar: "حصينيه"
+            },
+            "primary health care center barrk": {
+                en: "berk",
+                ar: "برك"
+            },
+            "primary health care center of shurfa": {
+                en: "Shurfa",
+                ar: "شرفة"
+            },
+            "rijla phcc": {
+                en: "Rijla",
+                ar: "رجلا"
+            },
+            "shebhan phcc": {
+                en: "Shebhan",
+                ar: "شبهان"
+            },
+            "alakashim health center": {
+                en: "Al akashim",
+                ar: "الاخاشيم"
+            },
+            "alwadia phcc sharoora": {
+                en: "Alwadia",
+                ar: "الوديعة"
+            },
+            "aziziyah phcc sharoora": {
+                en: "Aziziyah",
+                ar: "العزيزية"
+            },
+            "rawdah phcc sharoora": {
+                en: "Rawdah",
+                ar: "الروضة"
+            },
+            "security forces phcc sharoora": {
+                en: "Security Forces",
+                ar: "قوى الأمن"
+            },
+            "Tamani phcc Sharoura": {
+                en: "Tamani",
+                ar: "تماني"
+            },
+            "wadi rimman Health Center": {
+                en: "Wadi Rimman",
+                ar: "وادي رمان"
+            },
+            "sultanaa phcc sharoora": {
+                en: "Sultanaa",
+                ar: "سلطانة"
+            },
+            "khaldiya sharoorah health center": {
+                en: "Khaldiya",
+                ar: "الخالدية"
+            },
+            "hema phcc": {
+                en: "Hema",
+                ar: "حما"
+            },
+            "naiwan phcc": {
+                en: "Naiwan",
+                ar: "نعوان"
+            },
+            "qattan phcc": {
+                en: "Qattan",
+                ar: "قطن"
+            },
+            "suffah phcc": {
+                en: "Suffah",
+                ar: "صفاح"
+            },
+            "talham phcc": {
+                en: "Talham",
+                ar: "طلحام"
+            },
+            "thar phcc": {
+                en: "Thar",
+                ar: "ثار"
+            },
+            "al muratah phcc": {
+                en: "Al muratah",
+                ar: "المراطة"
+            },
+            "al safa health center": {
+                en: "Al safa",
+                ar: "الصفا"
+            },
+            "albalad": {
+                en: "Al Balad",
+                ar: "البلد"
+            },
+            "alhadan phcc": {
+                en: "Al Hadan",
+                ar: "الحضن"
+            },
+            "dahada helth center": {
+                en: "Dahada",
+                ar: "دحضة"
+            },
+            "eam phcc reer": {
+                en: "Rir",
+                ar: "رير"
+            },
+            "health center al mufja": {
+                en: "Al Mufja",
+                ar: "الموفجة"
+            },
+            "health center algabil": {
+                en: "Al Gabil",
+                ar: "القابل"
+            },
+            "health center in aljurbah": {
+                en: "Al Jurbah",
+                ar: "الجربة"
+            },
+            "phcc abasoud": {
+                en: "Aba Soud",
+                ar: "ابا السعود"
+            },
+            "primary health care center in nhogah": {
+                en: "Nahogah",
+                ar: "نهوقة"
+            },
+            "legam primary health care center": {
+                en: "Legam",
+                ar: "لجام"
+            },
+            "mohammadia phcc": {
+                en: "Mohammadia",
+                ar: "محمدية"
+            },
+            "sultana primaryhealth care center": {
+                en: "Sultana",
+                ar: "سلطانه"
+            },
+            "wadi wasat": {
+                en: "Wadi Wasat",
+                ar: "وادي وسط"
+            },
+            "yadama primary health care center": {
+                en: "Yadama",
+                ar: "يدمه"
             }
         };
         
