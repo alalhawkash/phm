@@ -129,6 +129,27 @@
             transform: scale(0.95);
         }
         
+        .footer {
+            position: fixed;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 6px 16px;
+            background: rgba(0, 0, 0, 0.65);
+            color: #fff;
+            font-size: 12px;
+            border-radius: 999px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            letter-spacing: 0.3px;
+            z-index: 4000;
+        }
+
+        .footer-label {
+            opacity: 0.85;
+        }
+
         /* RTL Support for Arabic */
         body[dir="rtl"] {
             direction: rtl;
@@ -768,27 +789,6 @@
             font-weight: 600;
             color: var(--ios-text-primary);
         }
-
-        .footer {
-            position: fixed;
-            bottom: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 6px 12px;
-            background: rgba(0, 0, 0, 0.55);
-            color: #fff;
-            font-size: 12px;
-            border-radius: 999px;
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            letter-spacing: 0.3px;
-            z-index: 2000;
-        }
-
-        .footer-label {
-            opacity: 0.75;
-        }
     </style>
 </head>
 <body>
@@ -871,8 +871,8 @@
     <div class="error" id="error"></div>
 
     <footer class="footer">
-        <span class="footer-label">Last data update:</span>
-        <span id="lastUpdated">—</span>
+        <span class="footer-label" id="lastUpdatedLabel">Last update:</span>
+        <span id="lastUpdatedValue">—</span>
     </footer>
     
     <script>
@@ -886,6 +886,9 @@
             'https://corsproxy.io/?',
             'https://api.codetabs.com/v1/proxy?quest='
         ];
+        const csvG1Url = `${csvUrl}&range=G1`;
+        const CACHE_KEY = 'glass_phc_cache_v1';
+        const MAX_CACHE_AGE = 24 * 60 * 60 * 1000; // 24 hours
         
         // Real PHC data structure from ORG_TARGETS_DATA
         const ORG_TARGETS_DATA = [
@@ -967,26 +970,7 @@
             "tamani phcc sharoura"
         ];
 
-        function setLastUpdatedDisplay(value) {
-            const target = document.getElementById('lastUpdated');
-            if (target) {
-                target.textContent = value;
-            }
-        }
-
-        function setLastUpdatedFromHeader(response) {
-            const header = response.headers?.get?.('last-modified');
-            if (header) {
-                try {
-                    setLastUpdatedDisplay(new Date(header).toLocaleString());
-                    return true;
-                } catch (e) {
-                    // fall through to default
-                }
-            }
-            setLastUpdatedDisplay(new Date().toLocaleString());
-            return false;
-        }
+        let footerLastUpdatedValue = "—";
 
         function isPhcClosed(phcName) {
             return CLOSED_PHCS.includes(normalizeOrgName(phcName));
@@ -1003,6 +987,125 @@
                     group.removeAttribute('data-closed-label');
                 }
             });
+        }
+
+        function updateLastUpdatedFooter() {
+            const labelEl = document.getElementById('lastUpdatedLabel');
+            const valueEl = document.getElementById('lastUpdatedValue');
+            if (!labelEl || !valueEl) return;
+            labelEl.textContent = t('lastUpdatedLabel');
+            valueEl.textContent = footerLastUpdatedValue;
+        }
+
+        function setFooterLastUpdated(rawValue) {
+            const cleaned = (rawValue || '').toString().trim();
+            footerLastUpdatedValue = cleaned || '—';
+            updateLastUpdatedFooter();
+        }
+
+        function parseLastUpdatedValue(csvText) {
+            try {
+                const preview = Papa.parse(csvText, { preview: 1, header: false }).data;
+                if (!preview || !preview[0]) return '';
+                const row = preview[0];
+                const rawValue = row.length === 1 ? row[0] : row[6];
+                return (rawValue || '').toString().trim();
+            } catch (err) {
+                return '';
+            }
+        }
+
+        function extractLastUpdatedFromCsv(csvText) {
+            const value = parseLastUpdatedValue(csvText);
+            setFooterLastUpdated(value);
+            return value;
+        }
+
+        function getCachedData() {
+            try {
+                const cached = localStorage.getItem(CACHE_KEY);
+                if (!cached) return null;
+                const parsed = JSON.parse(cached);
+                if (!parsed.csvText || !parsed.cachedAt) {
+                    localStorage.removeItem(CACHE_KEY);
+                    return null;
+                }
+                const age = Date.now() - parsed.cachedAt;
+                if (age > MAX_CACHE_AGE) {
+                    localStorage.removeItem(CACHE_KEY);
+                    return null;
+                }
+                return parsed;
+            } catch (error) {
+                console.warn('Failed to parse cached data:', error);
+                localStorage.removeItem(CACHE_KEY);
+                return null;
+            }
+        }
+
+        function setCachedData(csvText, g1Timestamp) {
+            try {
+                const payload = {
+                    csvText,
+                    g1Timestamp: (g1Timestamp || '').toString(),
+                    cachedAt: Date.now()
+                };
+                localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
+            } catch (error) {
+                console.warn('Failed to cache data:', error);
+            }
+        }
+
+        async function fetchCsvWithFallback(targetUrl) {
+            let lastError = null;
+            try {
+                const response = await fetch(targetUrl);
+                if (response.ok) {
+                    return await response.text();
+                }
+                throw new Error('Direct fetch failed');
+            } catch (directError) {
+                lastError = directError;
+            }
+
+            for (let i = 0; i < corsProxies.length; i++) {
+                try {
+                    const proxyUrl = corsProxies[i] + encodeURIComponent(targetUrl);
+                    const response = await fetch(proxyUrl);
+                    if (response.ok) {
+                        return await response.text();
+                    }
+                } catch (proxyError) {
+                    lastError = proxyError;
+                    continue;
+                }
+            }
+
+            throw lastError || new Error('Failed to fetch data from all sources. Please ensure the Google Sheet is publicly accessible.');
+        }
+
+        async function fetchG1TimestampOnly() {
+            try {
+                const csvText = await fetchCsvWithFallback(csvG1Url);
+                return parseLastUpdatedValue(csvText);
+            } catch (error) {
+                console.warn('Unable to fetch G1 timestamp:', error);
+                return null;
+            }
+        }
+
+        async function shouldFetchFreshData(cachedData) {
+            if (!cachedData) {
+                return true;
+            }
+
+            const currentTimestamp = await fetchG1TimestampOnly();
+            if (currentTimestamp === null) {
+                // Cannot verify freshness (offline or request failed) - use cache
+                return false;
+            }
+
+            return currentTimestamp !== cachedData.g1Timestamp;
         }
 
         // Initialize empty zonesData - will be populated from Google Sheets
@@ -1479,54 +1582,43 @@
             }
         });
         
-        // Load data from Google Sheets and process it
+        // Load data from Google Sheets with caching
         async function loadDataFromGoogleSheets() {
-            try {
-                let csvText = null;
-                let lastError = null;
+            let cacheUsed = false;
+            let cachedData = getCachedData();
 
-                // Try direct fetch first
+            if (cachedData) {
                 try {
-                    const response = await fetch(csvUrl);
-                    if (response.ok) {
-                        csvText = await response.text();
-                        setLastUpdatedFromHeader(response);
-                    } else {
-                        throw new Error('Direct fetch failed');
-                    }
-                } catch (directError) {
-                    // If direct fetch fails, try CORS proxies
-                    for (let i = 0; i < corsProxies.length; i++) {
-                        try {
-                            const proxyUrl = corsProxies[i] + encodeURIComponent(csvUrl);
-                            const response = await fetch(proxyUrl);
-                            if (response.ok) {
-                                csvText = await response.text();
-                                setLastUpdatedFromHeader(response);
-                                break;
-                            }
-                        } catch (proxyError) {
-                            lastError = proxyError;
-                            continue;
-                        }
-                    }
-                    if (!csvText) {
-                        setLastUpdatedDisplay(new Date().toLocaleString());
-                    }
+                    processDataStream(cachedData.csvText);
+                    setFooterLastUpdated(cachedData.g1Timestamp);
+                    cacheUsed = true;
+                } catch (cacheError) {
+                    console.warn('Failed to process cached data, ignoring cache:', cacheError);
+                    localStorage.removeItem(CACHE_KEY);
+                    cachedData = null;
+                }
+            }
+
+            try {
+                const needsFreshData = await shouldFetchFreshData(cachedData);
+                if (!needsFreshData) {
+                    return;
                 }
 
-                if (!csvText) {
-                    throw new Error('Failed to fetch data from all sources. Please ensure the Google Sheet is publicly accessible.');
-                }
-                
-                // Process data stream
+                const csvText = await fetchCsvWithFallback(csvUrl);
+                const g1Timestamp = extractLastUpdatedFromCsv(csvText);
+                setCachedData(csvText, g1Timestamp);
                 processDataStream(csvText);
-
             } catch (error) {
                 console.error('Error:', error);
+                if (cacheUsed) {
+                    // We already showed cached data; keep UI without blocking
+                    return;
+                }
                 document.getElementById('loading').classList.add('hidden');
-                document.getElementById('error').classList.add('show');
-                document.getElementById('error').innerHTML = `
+                const errorEl = document.getElementById('error');
+                errorEl.classList.add('show');
+                errorEl.innerHTML = `
                     <strong>Error loading data:</strong> ${error.message}<br><br>
                     <strong>To fix this:</strong><br>
                     1. Open your Google Sheet<br>
@@ -1977,7 +2069,8 @@
                 needFollowup: "Need follow up:",
                 loadingText: "Loading data ...",
                 closedMaintenance: "Closed for maintenance",
-                noZonesAvailable: "No zones available"
+                noZonesAvailable: "No zones available",
+                lastUpdatedLabel: "Last update:"
             },
             ar: {
                 headerTitle: "اختر منطقة",
@@ -1993,7 +2086,8 @@
                 needFollowup: "يحتاج متابعة:",
                 loadingText: "جاري تحميل البيانات ... ",
                 closedMaintenance: "مغلق للصيانة",
-                noZonesAvailable: "لا توجد مناطق متاحة"
+                noZonesAvailable: "لا توجد مناطق متاحة",
+                lastUpdatedLabel: "آخر تحديث:"
             }
         };
         
@@ -2434,6 +2528,8 @@
             } else {
                 setMetricsMaintenanceState(false);
             }
+
+            updateLastUpdatedFooter();
         }
         
         // Dark Mode Toggle
