@@ -107,6 +107,90 @@
             transform: scale(0.95);
         }
         
+        .language-toggle {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ios-text-primary);
+            transition: all var(--transition-base);
+            border-radius: var(--radius-md);
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .language-toggle:active {
+            background: var(--ios-gray-2);
+            transform: scale(0.95);
+        }
+        
+        /* RTL Support for Arabic */
+        body[dir="rtl"] {
+            direction: rtl;
+        }
+        
+        body[dir="rtl"] .status-bar,
+        body[dir="rtl"] .header,
+        body[dir="rtl"] .main-container {
+            direction: rtl;
+        }
+        
+        body[dir="rtl"] .phc-list-panel {
+            border-right: none;
+            border-left: 0.5px solid var(--ios-separator);
+        }
+        
+        body[dir="rtl"] .timeline {
+            left: auto;
+            right: 240px;
+        }
+        
+        body[dir="rtl"] .metrics-panel {
+            padding: 16px 60px 16px 20px;
+        }
+        
+        body[dir="rtl"] .zone-dropdown-btn {
+            text-align: right;
+        }
+        
+        body[dir="rtl"] .zone-dropdown-btn::after {
+            left: 16px;
+            right: auto;
+        }
+        
+        body[dir="rtl"] .zone-dropdown {
+            left: auto;
+        }
+        
+        body[dir="rtl"] .zone-option {
+            text-align: right;
+        }
+        
+        @media (max-width: 768px) {
+            body[dir="rtl"] .timeline {
+                right: 220px;
+            }
+            
+            body[dir="rtl"] .metrics-panel {
+                padding: 12px 50px 12px 16px;
+            }
+        }
+        
+        @media only screen 
+            and (min-device-width: 390px) 
+            and (max-device-width: 428px) 
+            and (min-device-height: 844px) 
+            and (max-device-height: 932px) {
+            body[dir="rtl"] .metrics-panel {
+                padding: 12px 50px 12px 16px;
+            }
+        }
+        
         /* Dark Mode Styles */
         body.dark-mode {
             background: linear-gradient(180deg, #1C1C1E 0%, #000000 50%, #1C1C1E 100%);
@@ -296,12 +380,14 @@
         .phc-list-panel {
             flex: 0 0 220px;
             padding: 16px;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            overflow: hidden;
             background: var(--glass-bg);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             border-right: 0.5px solid var(--ios-separator);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         
         .phc-item {
@@ -314,6 +400,7 @@
             position: relative;
             border-radius: var(--radius-md);
             transition: all var(--transition-base);
+            flex-shrink: 0;
         }
         
         .phc-item:active {
@@ -477,6 +564,7 @@
         @media (max-width: 768px) {
             .phc-list-panel {
                 flex: 0 0 200px;
+                overflow: hidden;
             }
             
             .timeline {
@@ -520,6 +608,20 @@
             and (max-device-width: 428px) 
             and (min-device-height: 844px) 
             and (max-device-height: 932px) {
+            .phc-list-panel {
+                max-height: 626px;
+                padding: 12px;
+            }
+            
+            .phc-item {
+                padding: 10px;
+                margin-bottom: 3px;
+            }
+            
+            .phc-label {
+                font-size: 14px;
+            }
+            
             .metrics-panel {
                 max-height: 626px;
                 padding: 12px 16px 12px 50px;
@@ -632,6 +734,7 @@
     <div class="status-bar">
             <div class="status-left">PHM</div>
             <div class="status-right">
+                <button class="language-toggle" id="languageToggle" aria-label="Toggle language">EN</button>
                 <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
             </div>
     </div>
@@ -639,7 +742,7 @@
     <!-- Header -->
     <div class="header">
         <div class="header-left">
-            <div class="header-title">Choose a Zone</div>
+            <div class="header-title" id="headerTitle">Choose a Zone</div>
             <button class="zone-dropdown-btn" id="zoneDropdownBtn">Drop list</button>
             <div class="zone-dropdown" id="zoneDropdown">
                 <!-- Zones will be populated by JavaScript -->
@@ -838,7 +941,7 @@
             // Add "All Zones" option first
             const allZonesOption = document.createElement('div');
             allZonesOption.className = 'zone-option';
-            allZonesOption.textContent = 'All Zones';
+            allZonesOption.textContent = t('allZones');
             allZonesOption.style.fontWeight = '600';
             allZonesOption.style.borderBottom = '1px solid var(--ios-separator)';
             allZonesOption.addEventListener('click', (e) => {
@@ -871,9 +974,37 @@
             function positionDropdown() {
                 if (dropdown.classList.contains('show')) {
                     const rect = dropdownBtn.getBoundingClientRect();
+                    const isRTL = document.body.getAttribute('dir') === 'rtl';
                     dropdown.style.top = rect.bottom + 'px';
-                    dropdown.style.left = rect.left + 'px';
+                    
+                    if (isRTL) {
+                        // Position from right edge in RTL mode
+                        dropdown.style.right = (window.innerWidth - rect.right) + 'px';
+                        dropdown.style.left = 'auto';
+                    } else {
+                        // Position from left edge in LTR mode
+                        dropdown.style.left = rect.left + 'px';
+                        dropdown.style.right = 'auto';
+                    }
+                    
                     dropdown.style.width = Math.max(rect.width, 240) + 'px';
+                    
+                    // Ensure dropdown doesn't go off-screen
+                    requestAnimationFrame(() => {
+                        const dropdownRect = dropdown.getBoundingClientRect();
+                        if (isRTL) {
+                            // Check if dropdown goes off left edge
+                            if (dropdownRect.left < 0) {
+                                dropdown.style.right = '20px';
+                                dropdown.style.left = 'auto';
+                            }
+                        } else {
+                            // Check if dropdown goes off right edge
+                            if (dropdownRect.right > window.innerWidth) {
+                                dropdown.style.left = (window.innerWidth - dropdownRect.width - 20) + 'px';
+                            }
+                        }
+                    });
                 }
             }
             
@@ -909,7 +1040,7 @@
         // Calculate all zones overall metrics
         function calculateAllZonesOverall() {
             const allZonesOverall = {
-                name: 'All Zones Overall',
+                name: t('allZonesOverall'),
                 screened: 0,
                 remaining: 0,
                 controlled: 0,
@@ -940,7 +1071,7 @@
             selectedZone = 'All Zones';
             selectedPhc = null;
             
-            document.getElementById('zoneDropdownBtn').textContent = 'All Zones';
+            document.getElementById('zoneDropdownBtn').textContent = t('allZones');
             populateAllZonesPhcList();
             
             // Update timeline first to create the structure
@@ -1018,7 +1149,7 @@
         function calculateZoneOverall(zone) {
             const phcs = zonesData[zone].phcs;
             const overall = {
-                name: 'Zone Overall',
+                name: t('zoneOverall'),
                 screened: 0,
                 remaining: 0,
                 controlled: 0,
@@ -1700,6 +1831,136 @@
             Object.assign(zonesData, sortedZonesData);
         }
         
+        // Language Translations
+        const translations = {
+            en: {
+                headerTitle: "Choose a Zone",
+                dropList: "Drop list",
+                allZones: "All Zones",
+                allZonesOverall: "All Zones Overall",
+                zoneOverall: "Zone Overall",
+                screened: "Screened:",
+                remaining: "Remaining:",
+                controlled: "Controlled:",
+                uncontrolled: "Uncontrolled:",
+                improved: "Improved:",
+                needFollowup: "Need follow up:",
+                loadingText: "Loading data from Google Sheets...",
+                noZonesAvailable: "No zones available"
+            },
+            ar: {
+                headerTitle: "اختر منطقة",
+                dropList: "قائمة منسدلة",
+                allZones: "جميع المناطق",
+                allZonesOverall: "إجمالي جميع المناطق",
+                zoneOverall: "إجمالي المنطقة",
+                screened: "تم الفحص:",
+                remaining: "المتبقي:",
+                controlled: "مسيطر عليه:",
+                uncontrolled: "غير مسيطر عليه:",
+                improved: "محسّن:",
+                needFollowup: "يحتاج متابعة:",
+                loadingText: "جاري تحميل البيانات من جداول Google...",
+                noZonesAvailable: "لا توجد مناطق متاحة"
+            }
+        };
+        
+        // Get current language
+        function getCurrentLanguage() {
+            return localStorage.getItem('language') || 'en';
+        }
+        
+        // Get translation
+        function t(key) {
+            const lang = getCurrentLanguage();
+            return translations[lang][key] || translations.en[key] || key;
+        }
+        
+        // Language Toggle
+        function initLanguageToggle() {
+            const languageToggle = document.getElementById('languageToggle');
+            const body = document.body;
+            
+            // Check for saved language preference or default to English
+            const savedLang = getCurrentLanguage();
+            let currentLang = savedLang;
+            
+            // Set initial button text - show opposite (what it will switch to)
+            languageToggle.textContent = currentLang === 'en' ? 'AR' : 'EN';
+            
+            // Apply initial language
+            applyLanguage(currentLang);
+            
+            languageToggle.addEventListener('click', () => {
+                currentLang = currentLang === 'en' ? 'ar' : 'en';
+                localStorage.setItem('language', currentLang);
+                applyLanguage(currentLang);
+                // Show opposite (what it will switch to)
+                languageToggle.textContent = currentLang === 'en' ? 'AR' : 'EN';
+            });
+        }
+        
+        // Apply language translations
+        function applyLanguage(lang) {
+            const body = document.body;
+            const currentT = translations[lang];
+            
+            // Set direction
+            body.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+            
+            // Update header
+            const headerTitle = document.getElementById('headerTitle');
+            if (headerTitle) headerTitle.textContent = currentT.headerTitle;
+            
+            // Update dropdown button
+            const dropdownBtn = document.getElementById('zoneDropdownBtn');
+            if (dropdownBtn) {
+                const currentText = dropdownBtn.textContent;
+                // If it's "Drop list" or "All Zones", update it
+                if (currentText === 'Drop list' || currentText === translations.en.dropList || currentText === translations.ar.dropList) {
+                    dropdownBtn.textContent = currentT.dropList;
+                } else if (currentText === 'All Zones' || currentText === translations.en.allZones || currentText === translations.ar.allZones) {
+                    dropdownBtn.textContent = currentT.allZones;
+                }
+            }
+            
+            // Update metric labels
+            const metricLabels = document.querySelectorAll('.metric-label');
+            metricLabels.forEach(label => {
+                const text = label.textContent.trim();
+                if (text.includes('Screened') || text.includes('تم الفحص')) label.textContent = currentT.screened;
+                else if (text.includes('Remaining') || text.includes('المتبقي')) label.textContent = currentT.remaining;
+                else if (text.includes('Controlled') || text.includes('مسيطر عليه')) label.textContent = currentT.controlled;
+                else if (text.includes('Uncontrolled') || text.includes('غير مسيطر عليه')) label.textContent = currentT.uncontrolled;
+                else if (text.includes('Improved') || text.includes('محسّن')) label.textContent = currentT.improved;
+                else if (text.includes('Need follow up') || text.includes('يحتاج متابعة')) label.textContent = currentT.needFollowup;
+            });
+            
+            // Update loading text
+            const loadingText = document.querySelector('.loading-text');
+            if (loadingText) loadingText.textContent = currentT.loadingText;
+            
+            // Re-populate dropdown to update "All Zones" text
+            if (typeof populateZoneDropdown === 'function') {
+                populateZoneDropdown();
+            }
+            
+            // Update PHC list if it exists
+            if (selectedZone === 'All Zones' && typeof populateAllZonesPhcList === 'function') {
+                populateAllZonesPhcList();
+                setTimeout(() => {
+                    const allZonesOverall = calculateAllZonesOverall();
+                    selectZoneOverall(allZonesOverall);
+                }, 10);
+            } else if (selectedZone && typeof populatePhcList === 'function') {
+                populatePhcList(selectedZone);
+                setTimeout(() => {
+                    const zoneOverall = calculateZoneOverall(selectedZone);
+                    selectZoneOverall(zoneOverall);
+                }, 10);
+            }
+        }
+        
         // Dark Mode Toggle
         function initDarkMode() {
             const darkModeToggle = document.getElementById('darkModeToggle');
@@ -1730,6 +1991,8 @@
         // Initialize on load
         init();
         initDarkMode();
+        initLanguageToggle();
     </script>
 </body>
 </html>
+
