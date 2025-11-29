@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>PHC Viewer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <style>
         * {
@@ -16,14 +15,10 @@
         :root {
             /* Apple iOS Design Tokens - Colors */
             --ios-blue: #007AFF;
-            --ios-blue-light: #5AC8FA;
-            --ios-blue-dark: #0051D5;
             --ios-gray-1: #F2F2F7;
             --ios-gray-2: #E5E5EA;
             --ios-gray-3: #D1D1D6;
             --ios-gray-4: #C7C7CC;
-            --ios-gray-5: #AEAEB2;
-            --ios-gray-6: #8E8E93;
             --ios-text-primary: #000000;
             --ios-text-secondary: #3C3C43;
             --ios-text-tertiary: #8E8E93;
@@ -35,38 +30,15 @@
             --glass-bg: rgba(255, 255, 255, 0.7);
             --glass-border: rgba(255, 255, 255, 0.18);
             
-            /* Design Tokens - Spacing (iOS standard) */
-            --space-xs: 4px;
-            --space-sm: 8px;
-            --space-md: 16px;
-            --space-lg: 20px;
-            --space-xl: 24px;
-            --space-2xl: 32px;
-            
-            /* Design Tokens - Typography (SF Pro) */
-            --font-size-xs: 13px;
-            --font-size-sm: 15px;
-            --font-size-base: 17px;
-            --font-size-lg: 20px;
-            --font-size-xl: 28px;
-            --font-size-2xl: 34px;
-            --font-size-3xl: 40px;
-            --font-weight-regular: 400;
-            --font-weight-medium: 500;
-            --font-weight-semibold: 600;
-            --font-weight-bold: 700;
-            
             /* Design Tokens - Border Radius (iOS standard) */
             --radius-sm: 8px;
             --radius-md: 10px;
             --radius-lg: 14px;
             --radius-xl: 20px;
-            --radius-full: 9999px;
             
             /* Design Tokens - Shadows (iOS style) */
             --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
             --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
             
             /* Design Tokens - Transitions (iOS smooth) */
             --transition-fast: 0.15s cubic-bezier(0.4, 0.0, 0.2, 1);
@@ -112,6 +84,72 @@
             color: var(--ios-text-primary);
             font-size: 15px;
             font-weight: 600;
+        }
+        
+        .dark-mode-toggle {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            font-size: 20px;
+            color: var(--ios-text-primary);
+            transition: all var(--transition-base);
+            border-radius: var(--radius-md);
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .dark-mode-toggle:active {
+            background: var(--ios-gray-2);
+            transform: scale(0.95);
+        }
+        
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(180deg, #1C1C1E 0%, #000000 50%, #1C1C1E 100%);
+            color: #FFFFFF;
+            --ios-text-primary: #FFFFFF;
+            --ios-text-secondary: #EBEBF5;
+            --ios-text-tertiary: #8E8E93;
+            --ios-background: #000000;
+            --ios-surface: #1C1C1E;
+            --ios-gray-1: #1C1C1E;
+            --ios-gray-2: #2C2C2E;
+            --ios-gray-3: #3A3A3C;
+            --ios-gray-4: #48484A;
+            --ios-separator: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(28, 28, 30, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        
+        body.dark-mode .status-bar,
+        body.dark-mode .header {
+            background: var(--glass-bg);
+        }
+        
+        body.dark-mode .phc-list-panel,
+        body.dark-mode .metric-group {
+            background: var(--glass-bg);
+        }
+        
+        body.dark-mode .zone-dropdown {
+            background: var(--ios-surface);
+        }
+        
+        body.dark-mode .zone-dropdown-btn {
+            background: var(--ios-surface);
+            color: var(--ios-text-primary);
+        }
+        
+        body.dark-mode .phc-item:active {
+            background: rgba(0, 122, 255, 0.2);
+        }
+        
+        body.dark-mode .phc-item.active {
+            background: rgba(0, 122, 255, 0.25);
         }
         
         /* Header - iOS Style with Glassmorphism */
@@ -183,10 +221,8 @@
         
         .zone-dropdown {
             position: fixed;
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px) saturate(180%);
-            -webkit-backdrop-filter: blur(30px) saturate(180%);
-            border: 0.5px solid var(--glass-border);
+            background: var(--ios-surface);
+            border: 0.5px solid var(--ios-separator);
             border-radius: var(--radius-lg);
             min-width: 240px;
             max-width: 280px;
@@ -244,25 +280,6 @@
         
         .zone-option:hover {
             background: var(--ios-gray-1);
-        }
-        
-        .header-right {
-            font-size: 28px;
-            color: var(--ios-blue);
-            cursor: pointer;
-            transition: all var(--transition-base);
-            padding: 8px;
-            min-width: 44px;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius-md);
-        }
-        
-        .header-right:active {
-            background: var(--ios-gray-2);
-            transform: scale(0.95);
         }
         
         /* Main Container - iOS Style */
@@ -330,6 +347,13 @@
             height: 10px;
         }
         
+        .phc-item-overall:not(.active) .phc-dot {
+            background: var(--ios-gray-4);
+            width: 8px;
+            height: 8px;
+            opacity: 0.5;
+        }
+        
         .phc-label {
             font-size: 15px;
             color: var(--ios-text-secondary);
@@ -352,29 +376,21 @@
             color: var(--ios-blue);
         }
         
-        /* Center Timeline - iOS Style */
+        .phc-item-overall:not(.active) .phc-label {
+            color: var(--ios-text-secondary);
+            opacity: 0.6;
+        }
+        
+        /* Center Timeline - Minimal Style */
         .timeline {
             position: absolute;
             left: 240px;
             top: 0;
             bottom: 0;
-            width: 2px;
-            background: linear-gradient(180deg, 
-                rgba(0, 122, 255, 0.3) 0%, 
-                var(--ios-blue) 50%, 
-                rgba(0, 122, 255, 0.3) 100%);
+            width: 1px;
+            background: var(--ios-separator);
             z-index: 10;
-            border-radius: 1px;
-        }
-        
-        .timeline-tick {
-            position: absolute;
-            left: -4px;
-            width: 10px;
-            height: 2px;
-            background: var(--ios-blue);
-            border-radius: 1px;
-            opacity: 0.5;
+            opacity: 0.3;
         }
         
         .timeline-flower {
@@ -382,8 +398,8 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 24px;
-            height: 24px;
+            width: 8px;
+            height: 8px;
             z-index: 20;
             transition: top var(--transition-smooth);
         }
@@ -394,48 +410,37 @@
             background: var(--ios-blue);
             border-radius: 50%;
             position: relative;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4), 
-                        0 0 0 4px rgba(255, 255, 255, 0.8);
-        }
-        
-        .flower-icon::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 8px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
+            opacity: 0.6;
         }
         
         /* Right Panel - Metrics with iOS Cards */
         .metrics-panel {
             flex: 1;
-            padding: 24px 20px 24px 60px;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            padding: 16px 20px 16px 60px;
+            overflow: hidden;
             background: transparent;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         
         .metric-group {
             background: var(--glass-bg);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-radius: var(--radius-xl);
-            padding: 20px;
-            margin-bottom: 16px;
+            border-radius: var(--radius-lg);
+            padding: 12px 16px;
+            margin-bottom: 10px;
             box-shadow: var(--shadow-md);
             border: 0.5px solid var(--glass-border);
+            flex-shrink: 0;
         }
         
         .metric-item {
             display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 20px;
-            padding: 12px 0;
+            flex-direction: column;
+            margin-bottom: 12px;
+            padding: 8px 0;
         }
         
         .metric-item:last-child {
@@ -443,25 +448,29 @@
         }
         
         .metric-label {
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 400;
             color: var(--ios-text-secondary);
             letter-spacing: -0.24px;
+            margin-bottom: 4px;
         }
         
         .metric-value {
-            font-size: 34px;
+            font-size: 24px;
             font-weight: 600;
             color: var(--ios-text-primary);
-            line-height: 1;
+            line-height: 1.1;
             letter-spacing: -0.4px;
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
         
         .metric-divider {
             height: 0.5px;
             background: var(--ios-separator);
-            margin: 20px 0;
+            margin: 10px 0;
             border: none;
+            flex-shrink: 0;
         }
         
         /* Mobile Responsive - iOS Style */
@@ -475,19 +484,67 @@
             }
             
             .metrics-panel {
-                padding: 20px 16px 20px 50px;
+                padding: 12px 16px 12px 50px;
+                overflow: hidden;
             }
             
             .metric-value {
-                font-size: 28px;
+                font-size: 22px;
             }
             
             .metric-label {
-                font-size: 15px;
+                font-size: 13px;
             }
             
             .metric-group {
-                padding: 16px;
+                padding: 12px 14px;
+                margin-bottom: 10px;
+            }
+            
+            .metric-item {
+                margin-bottom: 12px;
+                padding: 8px 0;
+            }
+            
+            .metric-divider {
+                margin: 10px 0;
+            }
+        }
+        
+        /* iPhone Responsive - All Models (12-17 Pro and Max) */
+        /* Ensure last card bottom is at 750px from viewport top */
+        /* Status bar (44px) + Header (~80px) = ~124px, so content area starts at ~124px */
+        /* To position last card at 750px: max-height = 750px - 124px = 626px */
+        @media only screen 
+            and (min-device-width: 390px) 
+            and (max-device-width: 428px) 
+            and (min-device-height: 844px) 
+            and (max-device-height: 932px) {
+            .metrics-panel {
+                max-height: 626px;
+                padding: 12px 16px 12px 50px;
+            }
+            
+            .metric-group {
+                padding: 10px 12px;
+                margin-bottom: 8px;
+            }
+            
+            .metric-item {
+                margin-bottom: 10px;
+                padding: 6px 0;
+            }
+            
+            .metric-value {
+                font-size: 20px;
+            }
+            
+            .metric-label {
+                font-size: 12px;
+            }
+            
+            .metric-divider {
+                margin: 8px 0;
             }
         }
         
@@ -573,11 +630,9 @@
 <body>
     <!-- Status Bar -->
     <div class="status-bar">
-            <div class="status-left">9:41</div>
+            <div class="status-left">PHM</div>
             <div class="status-right">
-                <span>•</span>
-                <span>•</span>
-                <span>•</span>
+                <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
             </div>
     </div>
     
@@ -590,7 +645,6 @@
                 <!-- Zones will be populated by JavaScript -->
             </div>
         </div>
-        <div class="header-right">⋯</div>
     </div>
     
     <!-- Main Container -->
@@ -619,22 +673,22 @@
             </div>
             <div class="metric-divider"></div>
             <div class="metric-group">
-                <div class="metric-item" data-metric="controlled">
+                <div class="metric-item">
                     <span class="metric-label">Controlled:</span>
                     <span class="metric-value" id="metricControlled">0</span>
                 </div>
-                <div class="metric-item" data-metric="uncontrolled">
+                <div class="metric-item">
                     <span class="metric-label">Uncontrolled:</span>
                     <span class="metric-value" id="metricUncontrolled">0</span>
                 </div>
             </div>
             <div class="metric-divider"></div>
             <div class="metric-group">
-                <div class="metric-item" data-metric="improved">
+                <div class="metric-item">
                     <span class="metric-label">Improved:</span>
                     <span class="metric-value" id="metricImproved">0</span>
                 </div>
-                <div class="metric-item" data-metric="needFollowup">
+                <div class="metric-item">
                     <span class="metric-label">Need follow up:</span>
                     <span class="metric-value" id="metricNeedFollowup">0</span>
                 </div>
@@ -747,19 +801,16 @@
             return org.toString().trim().toLowerCase().split(/\s+/).join(" ");
         }
         
-        // Get PHC target from ORG_TARGETS_DATA
-        function getPhcTarget(phcName, zoneName) {
-            const entry = ORG_TARGETS_DATA.find(org => 
-                org.zone === zoneName && normalizeOrgName(org.name) === normalizeOrgName(phcName)
-            );
-            return entry ? entry.target : 0;
-        }
-        
         // Initialize UI
         function initUI() {
             populateZoneDropdown();
             setupEventListeners();
             document.getElementById('loading').classList.add('hidden');
+            
+            // Select "All Zones" as default
+            setTimeout(() => {
+                selectAllZones();
+            }, 100);
         }
         
         // Initialize - load data first
@@ -784,6 +835,20 @@
                 return;
             }
             
+            // Add "All Zones" option first
+            const allZonesOption = document.createElement('div');
+            allZonesOption.className = 'zone-option';
+            allZonesOption.textContent = 'All Zones';
+            allZonesOption.style.fontWeight = '600';
+            allZonesOption.style.borderBottom = '1px solid var(--ios-separator)';
+            allZonesOption.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectAllZones();
+                dropdown.classList.remove('show');
+            });
+            dropdown.appendChild(allZonesOption);
+            
+            // Add all individual zones
             zones.forEach(zone => {
                 const option = document.createElement('div');
                 option.className = 'zone-option';
@@ -806,7 +871,7 @@
             function positionDropdown() {
                 if (dropdown.classList.contains('show')) {
                     const rect = dropdownBtn.getBoundingClientRect();
-                    dropdown.style.top = (rect.bottom + 8) + 'px';
+                    dropdown.style.top = rect.bottom + 'px';
                     dropdown.style.left = rect.left + 'px';
                     dropdown.style.width = Math.max(rect.width, 240) + 'px';
                 }
@@ -838,6 +903,96 @@
                     window.removeEventListener('scroll', positionDropdown, true);
                     window.removeEventListener('resize', positionDropdown);
                 }
+            });
+        }
+        
+        // Calculate all zones overall metrics
+        function calculateAllZonesOverall() {
+            const allZonesOverall = {
+                name: 'All Zones Overall',
+                screened: 0,
+                remaining: 0,
+                controlled: 0,
+                uncontrolled: 0,
+                improved: 0,
+                needFollowup: 0,
+                target: 0
+            };
+            
+            Object.keys(zonesData).forEach(zone => {
+                const phcs = zonesData[zone].phcs;
+                phcs.forEach(phc => {
+                    allZonesOverall.screened += phc.screened || 0;
+                    allZonesOverall.remaining += phc.remaining || 0;
+                    allZonesOverall.controlled += phc.controlled || 0;
+                    allZonesOverall.uncontrolled += phc.uncontrolled || 0;
+                    allZonesOverall.improved += phc.improved || 0;
+                    allZonesOverall.needFollowup += phc.needFollowup || 0;
+                    allZonesOverall.target += phc.target || 0;
+                });
+            });
+            
+            return allZonesOverall;
+        }
+        
+        // Select All Zones and show all PHCs
+        function selectAllZones() {
+            selectedZone = 'All Zones';
+            selectedPhc = null;
+            
+            document.getElementById('zoneDropdownBtn').textContent = 'All Zones';
+            populateAllZonesPhcList();
+            
+            // Update timeline first to create the structure
+            updateTimeline();
+            
+            // Automatically select All Zones Overall as default
+            setTimeout(() => {
+                const allZonesOverall = calculateAllZonesOverall();
+                selectZoneOverall(allZonesOverall);
+            }, 10);
+        }
+        
+        // Populate PHC list for all zones
+        function populateAllZonesPhcList() {
+            const panel = document.getElementById('phcListPanel');
+            panel.innerHTML = '';
+            
+            // Calculate all zones overall
+            const allZonesOverall = calculateAllZonesOverall();
+            
+            // Add All Zones Overall option at the top
+            const overallItem = document.createElement('div');
+            overallItem.className = 'phc-item phc-item-overall';
+            overallItem.dataset.index = -1;
+            overallItem.innerHTML = `
+                <div class="phc-dot"></div>
+                <div class="phc-label">${allZonesOverall.name}</div>
+            `;
+            
+            overallItem.addEventListener('click', () => {
+                selectZoneOverall(allZonesOverall, overallItem);
+            });
+            
+            panel.appendChild(overallItem);
+            
+            // Show Zone Overall for each zone instead of individual PHCs
+            Object.keys(zonesData).sort().forEach(zone => {
+                const zoneOverall = calculateZoneOverall(zone);
+                const zoneItem = document.createElement('div');
+                zoneItem.className = 'phc-item';
+                zoneItem.dataset.zone = zone;
+                zoneItem.dataset.index = -1;
+                zoneItem.innerHTML = `
+                    <div class="phc-dot"></div>
+                    <div class="phc-label">${zone}</div>
+                `;
+                
+                zoneItem.addEventListener('click', () => {
+                    selectZoneOverall(zoneOverall, zoneItem);
+                });
+                
+                panel.appendChild(zoneItem);
             });
         }
         
@@ -904,7 +1059,7 @@
             `;
             
             overallItem.addEventListener('click', () => {
-                selectZoneOverall(zoneOverall);
+                selectZoneOverall(zoneOverall, overallItem);
             });
             
             panel.appendChild(overallItem);
@@ -928,17 +1083,33 @@
         }
         
         // Select Zone Overall and show aggregated metrics
-        function selectZoneOverall(zoneOverall) {
+        function selectZoneOverall(zoneOverall, clickedElement = null) {
             selectedPhc = zoneOverall;
             
-            // Update active state - highlight overall item
+            // Update active state - highlight only the clicked item or first overall if none specified
             document.querySelectorAll('.phc-item').forEach((item) => {
-                if (item.classList.contains('phc-item-overall')) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
+                item.classList.remove('active');
             });
+            
+            if (clickedElement) {
+                clickedElement.classList.add('active');
+                // Find the DOM index of the clicked element for timeline positioning
+                const panel = document.getElementById('phcListPanel');
+                const phcItems = panel.querySelectorAll('.phc-item');
+                const domIndex = Array.from(phcItems).indexOf(clickedElement);
+                requestAnimationFrame(() => {
+                    updateTimelineFlower(domIndex);
+                });
+            } else {
+                // Fallback: highlight first overall item
+                const firstOverall = document.querySelector('.phc-item-overall');
+                if (firstOverall) {
+                    firstOverall.classList.add('active');
+                    requestAnimationFrame(() => {
+                        updateTimelineFlower(0);
+                    });
+                }
+            }
             
             // Update metrics
             document.getElementById('metricScreened').textContent = zoneOverall.screened;
@@ -947,12 +1118,6 @@
             document.getElementById('metricUncontrolled').textContent = zoneOverall.uncontrolled;
             document.getElementById('metricImproved').textContent = zoneOverall.improved;
             document.getElementById('metricNeedFollowup').textContent = zoneOverall.needFollowup;
-            
-            // Update timeline flower position to first item (overall at DOM index 0)
-            // Use requestAnimationFrame to ensure DOM is fully rendered
-            requestAnimationFrame(() => {
-                updateTimelineFlower(0);
-            });
         }
         
         // Select PHC and show metrics
@@ -961,8 +1126,17 @@
             
             // Update active state
             document.querySelectorAll('.phc-item').forEach((item) => {
-                const itemIndex = parseInt(item.dataset.index);
-                if (itemIndex === index && !item.classList.contains('phc-item-overall')) {
+                if (item.classList.contains('phc-item-overall')) {
+                    item.classList.remove('active');
+                    return;
+                }
+                
+                // Check for globalIndex (All Zones) or index (single zone)
+                const itemIndex = item.dataset.globalIndex !== undefined 
+                    ? parseInt(item.dataset.globalIndex) 
+                    : parseInt(item.dataset.index);
+                    
+                if (itemIndex === index) {
                     item.classList.add('active');
                 } else {
                     item.classList.remove('active');
@@ -977,55 +1151,32 @@
             document.getElementById('metricImproved').textContent = phc.improved;
             document.getElementById('metricNeedFollowup').textContent = phc.needFollowup;
             
-            // Find and update timeline flower position (PHC items start at DOM index 1, after overall)
+            // Find and update timeline flower position
             const phcPanel = document.getElementById('phcListPanel');
             const phcItems = phcPanel.querySelectorAll('.phc-item');
             phcItems.forEach((item, domIdx) => {
-                const itemIndex = parseInt(item.dataset.index);
-                if (itemIndex === index && !item.classList.contains('phc-item-overall')) {
+                if (item.classList.contains('phc-item-overall')) return;
+                
+                const itemIndex = item.dataset.globalIndex !== undefined 
+                    ? parseInt(item.dataset.globalIndex) 
+                    : parseInt(item.dataset.index);
+                    
+                if (itemIndex === index) {
                     updateTimelineFlower(domIdx);
                 }
             });
-        }
-        
-        // Clear metrics
-        function clearMetrics() {
-            document.getElementById('metricScreened').textContent = '0';
-            document.getElementById('metricRemaining').textContent = '0';
-            document.getElementById('metricControlled').textContent = '0';
-            document.getElementById('metricUncontrolled').textContent = '0';
-            document.getElementById('metricImproved').textContent = '0';
-            document.getElementById('metricNeedFollowup').textContent = '0';
         }
         
         // Update timeline
         function updateTimeline() {
             const timeline = document.getElementById('timeline');
             
-            // Clear existing ticks
-            timeline.querySelectorAll('.timeline-tick').forEach(tick => tick.remove());
-            
             if (!selectedZone) {
                 timeline.querySelector('.timeline-flower')?.remove();
                 return;
             }
             
-            const phcs = zonesData[selectedZone].phcs;
-            const panel = document.getElementById('phcListPanel');
-            const phcItems = panel.querySelectorAll('.phc-item');
-            
-            // Add ticks
-            phcItems.forEach((item, index) => {
-                const tick = document.createElement('div');
-                tick.className = 'timeline-tick';
-                const itemRect = item.getBoundingClientRect();
-                const panelRect = panel.getBoundingClientRect();
-                const relativeTop = itemRect.top - panelRect.top + itemRect.height / 2;
-                tick.style.top = relativeTop + 'px';
-                timeline.appendChild(tick);
-            });
-            
-            // Add or update flower
+            // Add or update flower indicator
             let flower = timeline.querySelector('.timeline-flower');
             if (!flower) {
                 flower = document.createElement('div');
@@ -1549,8 +1700,36 @@
             Object.assign(zonesData, sortedZonesData);
         }
         
+        // Dark Mode Toggle
+        function initDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const body = document.body;
+            
+            // Check for saved theme preference or default to light mode
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                darkModeToggle.textContent = '☀️';
+            } else {
+                darkModeToggle.textContent = '🌙';
+            }
+            
+            darkModeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                    darkModeToggle.textContent = '☀️';
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    darkModeToggle.textContent = '🌙';
+                }
+            });
+        }
+        
         // Initialize on load
         init();
+        initDarkMode();
     </script>
 </body>
 </html>
