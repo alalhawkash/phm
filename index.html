@@ -467,6 +467,47 @@
             color: var(--ios-text-secondary);
             opacity: 0.6;
         }
+
+        .phc-item-closed {
+            position: relative;
+            opacity: 0.8;
+            overflow: hidden;
+        }
+
+        .phc-item-closed .phc-label {
+            color: var(--ios-text-tertiary);
+        }
+
+        .phc-status-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+            color: #d97706;
+            flex-shrink: 0;
+        }
+
+        .metric-group.metric-closed {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-group.metric-closed::after {
+            content: attr(data-closed-label);
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 16px;
+            line-height: 1.4;
+            border-radius: inherit;
+            pointer-events: none;
+        }
         
         /* Center Timeline - Minimal Style */
         .timeline {
@@ -892,6 +933,30 @@
             { zone: "YGH",  name: "yadama primary health care center",         target: 2020 }
         ];
         
+        const CLOSED_PHCS = [
+            "al- qarn",
+            "habuna primary health care center",
+            "primary health care center goilla",
+            "primary health care center diyafa"
+        ];
+
+        function isPhcClosed(phcName) {
+            return CLOSED_PHCS.includes(normalizeOrgName(phcName));
+        }
+
+        function setMetricsMaintenanceState(isClosed) {
+            const label = t('closedMaintenance');
+            document.querySelectorAll('.metric-group').forEach(group => {
+                if (isClosed) {
+                    group.classList.add('metric-closed');
+                    group.setAttribute('data-closed-label', label);
+                } else {
+                    group.classList.remove('metric-closed');
+                    group.removeAttribute('data-closed-label');
+                }
+            });
+        }
+
         // Initialize empty zonesData - will be populated from Google Sheets
         const zonesData = {};
         
@@ -1200,8 +1265,13 @@
                 const phcItem = document.createElement('div');
                 phcItem.className = 'phc-item';
                 phcItem.dataset.index = index;
+                const isClosed = isPhcClosed(phc.name);
+                if (isClosed) {
+                    phcItem.classList.add('phc-item-closed');
+                }
+                const indicator = isClosed ? '<div class="phc-status-icon">⚠️</div>' : '<div class="phc-dot"></div>';
                 phcItem.innerHTML = `
-                    <div class="phc-dot"></div>
+                    ${indicator}
                     <div class="phc-label">${getOrgDisplayName(phc.name)}</div>
                 `;
                 
@@ -1216,6 +1286,7 @@
         // Select Zone Overall and show aggregated metrics
         function selectZoneOverall(zoneOverall, clickedElement = null) {
             selectedPhc = zoneOverall;
+            setMetricsMaintenanceState(false);
             
             // Update active state - highlight only the clicked item or first overall if none specified
             document.querySelectorAll('.phc-item').forEach((item) => {
@@ -1296,6 +1367,8 @@
                     updateTimelineFlower(domIdx);
                 }
             });
+            
+            setMetricsMaintenanceState(isPhcClosed(phc.name));
         }
         
         // Update timeline
@@ -1847,7 +1920,8 @@
                 uncontrolled: "Uncontrolled:",
                 improved: "Improved:",
                 needFollowup: "Need follow up:",
-                loadingText: "Loading data from Google Sheets...",
+                loadingText: "Loading data ...",
+                closedMaintenance: "Closed for maintenance",
                 noZonesAvailable: "No zones available"
             },
             ar: {
@@ -1863,6 +1937,7 @@
                 improved: "متحسن:",
                 needFollowup: "يحتاج متابعة:",
                 loadingText: "جاري تحميل البيانات ... ",
+                closedMaintenance: "مغلق للصيانة",
                 noZonesAvailable: "لا توجد مناطق متاحة"
             }
         };
@@ -2293,6 +2368,12 @@
                     const zoneOverall = calculateZoneOverall(selectedZone);
                     selectZoneOverall(zoneOverall);
                 }, 10);
+            }
+
+            if (selectedPhc && selectedPhc.name) {
+                setMetricsMaintenanceState(isPhcClosed(selectedPhc.name));
+            } else {
+                setMetricsMaintenanceState(false);
             }
         }
         
