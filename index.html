@@ -955,7 +955,7 @@
             zones.forEach(zone => {
                 const option = document.createElement('div');
                 option.className = 'zone-option';
-                option.textContent = zone;
+                option.textContent = getZoneDisplayName(zone);
                 option.addEventListener('click', (e) => {
                     e.stopPropagation();
                     selectZone(zone);
@@ -1116,7 +1116,7 @@
                 zoneItem.dataset.index = -1;
                 zoneItem.innerHTML = `
                     <div class="phc-dot"></div>
-                    <div class="phc-label">${zone}</div>
+                    <div class="phc-label">${getZoneDisplayName(zone)}</div>
                 `;
                 
                 zoneItem.addEventListener('click', () => {
@@ -1132,7 +1132,7 @@
             selectedZone = zone;
             selectedPhc = null;
             
-            document.getElementById('zoneDropdownBtn').textContent = zone;
+            document.getElementById('zoneDropdownBtn').textContent = getZoneDisplayName(zone);
             populatePhcList(zone);
             
             // Update timeline first to create the structure
@@ -1202,7 +1202,7 @@
                 phcItem.dataset.index = index;
                 phcItem.innerHTML = `
                     <div class="phc-dot"></div>
-                    <div class="phc-label">${phc.name}</div>
+                    <div class="phc-label">${getOrgDisplayName(phc.name)}</div>
                 `;
                 
                 phcItem.addEventListener('click', () => {
@@ -1865,6 +1865,80 @@
             }
         };
         
+        // Zone Name Translations
+        const zoneNames = {
+            en: {
+                "BGH": "BGH",
+                "HGH": "HGH",
+                "KGH": "KGH",
+                "KKH": "KKH",
+                "MCH": "MCH",
+                "NNGH": "NNGH",
+                "SGH": "SGH",
+                "TGH": "TGH",
+                "WNH": "WNH",
+                "YGH": "YGH"
+            },
+            ar: {
+                "BGH": "بدر الجنوب",
+                "HGH": "HGH",
+                "KGH": "KGH",
+                "KKH": "KKH",
+                "MCH": "MCH",
+                "NNGH": "NNGH",
+                "SGH": "SGH",
+                "TGH": "TGH",
+                "WNH": "WNH",
+                "YGH": "YGH"
+            }
+        };
+        
+        // Organization Display Name Mappings
+        const orgDisplayNames = {
+            "al- qarn": {
+                en: "AL- qarn",
+                ar: "القرن"
+            },
+            "alrehab primary care center": {
+                en: "Alrehab",
+                ar: "الرحاب"
+            },
+            "bader aljanoob primary health care": {
+                en: "Bader Aljanoob",
+                ar: "بدر الجنوب"
+            },
+            "hadadah health center": {
+                en: "Hadadah",
+                ar: "هداده"
+            },
+            "maleha public health center": {
+                en: "Maleha",
+                ar: "مليحه"
+            },
+            "primary care alkhaniq": {
+                en: "Alkhaniq",
+                ar: "الخانق"
+            }
+        };
+        
+        // Get organization display name
+        function getOrgDisplayName(orgName) {
+            const normalized = normalizeOrgName(orgName);
+            const lang = getCurrentLanguage();
+            const mapping = orgDisplayNames[normalized];
+            
+            if (mapping) {
+                return mapping[lang] || mapping.en || orgName;
+            }
+            return orgName;
+        }
+        
+        // Get zone display name
+        function getZoneDisplayName(zoneCode) {
+            const lang = getCurrentLanguage();
+            return zoneNames[lang][zoneCode] || zoneCode;
+        }
+        
         // Get current language
         function getCurrentLanguage() {
             return localStorage.getItem('language') || 'en';
@@ -1921,6 +1995,9 @@
                     dropdownBtn.textContent = currentT.dropList;
                 } else if (currentText === 'All Zones' || currentText === translations.en.allZones || currentText === translations.ar.allZones) {
                     dropdownBtn.textContent = currentT.allZones;
+                } else if (selectedZone && selectedZone !== 'All Zones') {
+                    // Update zone name if a specific zone is selected
+                    dropdownBtn.textContent = getZoneDisplayName(selectedZone);
                 }
             }
             
@@ -1995,4 +2072,3 @@
     </script>
 </body>
 </html>
-
