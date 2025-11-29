@@ -738,17 +738,12 @@
             z-index: 9999;
         }
         
-        .loading-spinner {
-            width: 44px;
-            height: 44px;
-            border: 3px solid var(--ios-gray-2);
-            border-top-color: var(--ios-blue);
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .loading-logo {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            image-rendering: -webkit-optimize-contrast;
+            filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.12));
         }
         
         .loading-text {
@@ -863,7 +858,7 @@
     
     <!-- Loading Indicator -->
     <div class="loading" id="loading">
-        <div class="loading-spinner"></div>
+        <img src="loading-logo.gif" alt="Najran Health Cluster logo" class="loading-logo" width="150" height="150" />
         <div class="loading-text">Loading data from Google Sheets...</div>
     </div>
     
