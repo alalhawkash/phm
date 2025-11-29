@@ -768,6 +768,26 @@
             font-weight: 600;
             color: var(--ios-text-primary);
         }
+
+        .footer {
+            position: fixed;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.55);
+            color: #fff;
+            font-size: 12px;
+            border-radius: 999px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            letter-spacing: 0.3px;
+        }
+
+        .footer-label {
+            opacity: 0.75;
+        }
     </style>
 </head>
 <body>
@@ -848,6 +868,11 @@
     
     <!-- Error Display -->
     <div class="error" id="error"></div>
+
+    <footer class="footer">
+        <span class="footer-label">Last data update:</span>
+        <span id="lastUpdated">—</span>
+    </footer>
     
     <script>
         // Google Sheets CSV export URL
@@ -905,7 +930,7 @@
             { zone: "NNGH", name: "Al Arisa Health Center",                    target: 5696 },
             { zone: "NNGH", name: "Alhamar phcc",                              target: 1170 },
             { zone: "NNGH", name: "HUSSAINIAH PHCC",                           target: 1385 },
-            { zone: "NNGH", name: "Primary Health Care Center in Nhogah",      target: 930  },
+            { zone: "WNH",  name: "Primary Health Care Center in Nhogah",      target: 930  },
             { zone: "NNGH", name: "RIJLA PHcc",                                target: 961  },
             { zone: "WNH", name: "Shebhan phcc",                              target: 847  },
             { zone: "NNGH", name: "primary health care center barrk",          target: 1593 },
@@ -928,7 +953,7 @@
             { zone: "YGH",  name: "legam primary health care center",          target: 601  },
             { zone: "YGH",  name: "mohammadia phcc",                           target: 295  },
             { zone: "YGH",  name: "sultana primaryhealth care center",         target: 413  },
-            { zone: "YGH",  name: "tilah phcc",                                target: 117  },
+            { zone: "TGH",  name: "tilah phcc",                                target: 117  },
             { zone: "YGH",  name: "wadi wasat",                                target: 242  },
             { zone: "YGH",  name: "yadama primary health care center",         target: 2020 }
         ];
@@ -937,7 +962,8 @@
             "al- qarn",
             "habuna primary health care center",
             "primary health care center goilla",
-            "primary health care center diyafa"
+            "primary health care center diyafa",
+            "tamani phcc sharoura"
         ];
 
         function isPhcClosed(phcName) {
@@ -1442,6 +1468,10 @@
                     const response = await fetch(csvUrl);
                     if (response.ok) {
                         csvText = await response.text();
+                        const lastUpdated = response.headers.get('last-modified');
+                        if (lastUpdated) {
+                            document.getElementById('lastUpdated').textContent = new Date(lastUpdated).toLocaleString();
+                        }
                     } else {
                         throw new Error('Direct fetch failed');
                     }
@@ -1559,6 +1589,7 @@
                 "suffah phcc": "TGH",
                 "talham phcc": "TGH",
                 "thar phcc": "TGH",
+                "tilah phcc": "TGH",
                 "al muratah phcc": "WNH",
                 "al safa health center": "WNH",
                 "albalad": "WNH",
@@ -1570,6 +1601,7 @@
                 "health center in aljurbah": "WNH",
                 "phcc abasoud": "WNH",
                 "primary health care center in nhogah": "WNH",
+            "wadi riman health center": "NNGH",
                 "legam primary health care center": "YGH",
                 "mohammadia phcc": "YGH",
                 "sultana primaryhealth care center": "YGH",
@@ -2022,19 +2054,19 @@
             },
             "alsharaa": {
                 en: "Alkharaa",
-                ar: "الخرعا"
+                ar: "الخرعاء"
             },
             "al-sharaa": {
                 en: "Alkharaa",
-                ar: "الخرعا"
+                ar: "الخرعاء"
             },
             "al shaaraa": {
                 en: "Alkharaa",
-                ar: "الخرعا"
+                ar: "الخرعاء"
             },
             "al-shaaraa": {
                 en: "Alkharaa",
-                ar: "الخرعا"
+                ar: "الخرعاء"
             },
             "junoob matar": {
                 en: "Junoob Al matar",
@@ -2148,13 +2180,13 @@
                 en: "Security Forces",
                 ar: "قوى الأمن"
             },
-            "Tamani phcc Sharoura": {
+            "tamani phcc sharoura": {
                 en: "Tamani",
                 ar: "تماني"
             },
-            "wadi rimman Health Center": {
-                en: "Wadi Rimman",
-                ar: "وادي رمان"
+            "wadi riman health center": {
+                en: "Wadi Riman",
+                ar: "وادي ريمان"
             },
             "sultanaa phcc sharoora": {
                 en: "Sultanaa",
@@ -2187,6 +2219,10 @@
             "thar phcc": {
                 en: "Thar",
                 ar: "ثار"
+            },
+            "tilah phcc": {
+                en: "Tilaa",
+                ar: "تلاع"
             },
             "al muratah phcc": {
                 en: "Al muratah",
