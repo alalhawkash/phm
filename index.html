@@ -854,6 +854,7 @@
             </div>
             <div class="metric-divider"></div>
             <div class="metric-group">
+            <div class="metric-group-title" id="metricPreDmSubtitle">Pre-diabetes patients</div>
                 <div class="metric-item">
                     <span class="metric-label">Improved:</span>
                     <span class="metric-value" id="metricImproved">0</span>
@@ -2076,7 +2077,8 @@
                 closedMaintenance: "Closed for maintenance",
                 noZonesAvailable: "No zones available",
                 lastUpdatedLabel: "Last update:",
-                dmSubtitle: "Diabetes patients"
+                dmSubtitle: "Diabetes patients",
+                predmSubtitle: "Pre-diabetes patients"
             },
             ar: {
                 headerTitle: "اختر منطقة",
@@ -2094,7 +2096,8 @@
                 closedMaintenance: "مغلق للصيانة",
                 noZonesAvailable: "لا توجد مناطق متاحة",
                 lastUpdatedLabel: "آخر تحديث:",
-                dmSubtitle: "مرضى السكري"
+                dmSubtitle: "مرضى السكري",
+                predmSubtitle: "مرضى ما قبل السكري"
             }
         };
         
@@ -2508,6 +2511,8 @@
 
             const dmSubtitle = document.getElementById('metricDmSubtitle');
             if (dmSubtitle) dmSubtitle.textContent = currentT.dmSubtitle;
+            const preDmSubtitle = document.getElementById('metricPreDmSubtitle');
+            if (preDmSubtitle) preDmSubtitle.textContent = currentT.predmSubtitle;
             
             // Update loading text
             const loadingText = document.querySelector('.loading-text');
