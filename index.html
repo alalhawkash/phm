@@ -798,7 +798,7 @@
 <body>
     <!-- Status Bar -->
     <div class="status-bar">
-            <div class="status-left">PHM</div>
+            <div class="status-left">NHC-PHM</div>
             <div class="status-right">
                 <button class="language-toggle" id="languageToggle" aria-label="Toggle language">EN</button>
                 <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
@@ -1832,21 +1832,25 @@
                         const { resultType, resultValue } = patientData.latestResult;
                         const controlLimit = CONTROL_MAX[resultType];
                         const org = patientOrganizations[patientId] || '';
-                        const orgNormalized = normalizeOrgName(org);
-                        const zone = inferZone(org);
+                        let orgNormalized = normalizeOrgName(org);
+                        let zone = inferZone(org);
+                        
+                        // If patient has no organization or zone is Unknown, assign to Unknown
+                        if (!org || org.trim() === '' || zone === 'Unknown') {
+                            zone = 'Unknown';
+                            orgNormalized = 'Unknown';
+                        }
                         
                         if (!zoneOrgCounts[zone]) zoneOrgCounts[zone] = {};
-                        if (org && !zoneOrgCounts[zone][orgNormalized]) {
+                        if (!zoneOrgCounts[zone][orgNormalized]) {
                             zoneOrgCounts[zone][orgNormalized] = { controlled: 0, uncontrolled: 0 };
                         }
                         
                         const isControlled = controlLimit && resultValue <= controlLimit;
-                        if (org) {
-                            if (isControlled) {
-                                zoneOrgCounts[zone][orgNormalized].controlled++;
-                            } else {
-                                zoneOrgCounts[zone][orgNormalized].uncontrolled++;
-                            }
+                        if (isControlled) {
+                            zoneOrgCounts[zone][orgNormalized].controlled++;
+                        } else {
+                            zoneOrgCounts[zone][orgNormalized].uncontrolled++;
                         }
                     }
                     
@@ -1940,14 +1944,20 @@
                     const zonePredmOrgCounts = {};
                     for (const [patientId, patientData] of Object.entries(predmPatients)) {
                         const org = patientOrganizations[patientId] || '';
-                        const orgNormalized = normalizeOrgName(org);
-                        const zone = inferZone(org);
+                        let orgNormalized = normalizeOrgName(org);
+                        let zone = inferZone(org);
+                        
+                        // If patient has no organization or zone is Unknown, assign to Unknown
+                        if (!org || org.trim() === '' || zone === 'Unknown') {
+                            zone = 'Unknown';
+                            orgNormalized = 'Unknown';
+                        }
                         
                         if (!zonePredmOrgCounts[zone]) {
                             zonePredmOrgCounts[zone] = {};
                         }
                         
-                        if (org && !zonePredmOrgCounts[zone][orgNormalized]) {
+                        if (!zonePredmOrgCounts[zone][orgNormalized]) {
                             zonePredmOrgCounts[zone][orgNormalized] = { improved: 0, needFollowup: 0 };
                         }
                         
@@ -1958,12 +1968,10 @@
                             needsFollowup = false;
                         }
                         
-                        if (org) {
-                            if (isImproved) {
-                                zonePredmOrgCounts[zone][orgNormalized].improved++;
-                            } else if (needsFollowup) {
-                                zonePredmOrgCounts[zone][orgNormalized].needFollowup++;
-                            }
+                        if (isImproved) {
+                            zonePredmOrgCounts[zone][orgNormalized].improved++;
+                        } else if (needsFollowup) {
+                            zonePredmOrgCounts[zone][orgNormalized].needFollowup++;
                         }
                     }
                     
@@ -1981,14 +1989,19 @@
                         if (!firstAfter2025) continue;
                         
                         const org = patientOrganizations[patientId] || '';
-                        const orgNormalized = normalizeOrgName(org);
-                        const zone = inferZone(org);
+                        let orgNormalized = normalizeOrgName(org);
+                        let zone = inferZone(org);
                         
-                        if (org) {
-                            if (!zoneOrgScreened[zone]) zoneOrgScreened[zone] = {};
-                            if (!zoneOrgScreened[zone][orgNormalized]) zoneOrgScreened[zone][orgNormalized] = new Set();
-                            zoneOrgScreened[zone][orgNormalized].add(patientId);
+                        // If patient has no organization or zone is Unknown, assign to Unknown
+                        if (!org || org.trim() === '' || zone === 'Unknown') {
+                            zone = 'Unknown';
+                            orgNormalized = 'Unknown';
                         }
+                        
+                        // Always add patient, even if they don't have an organization
+                        if (!zoneOrgScreened[zone]) zoneOrgScreened[zone] = {};
+                        if (!zoneOrgScreened[zone][orgNormalized]) zoneOrgScreened[zone][orgNormalized] = new Set();
+                        zoneOrgScreened[zone][orgNormalized].add(patientId);
                     }
                     
                     // Populate zonesData with real metrics
@@ -2045,6 +2058,63 @@
                     target: target
                 });
             });
+            
+            // Handle Unknown zone patients (not in ORG_TARGETS_DATA)
+            // Collect all organizations from screened, DM, and Pre-DM data
+            const unknownOrgs = new Set();
+            if (zoneOrgScreened['Unknown']) {
+                Object.keys(zoneOrgScreened['Unknown']).forEach(org => unknownOrgs.add(org));
+            }
+            if (zoneOrgCounts['Unknown']) {
+                Object.keys(zoneOrgCounts['Unknown']).forEach(org => unknownOrgs.add(org));
+            }
+            if (zonePredmOrgCounts['Unknown']) {
+                Object.keys(zonePredmOrgCounts['Unknown']).forEach(org => unknownOrgs.add(org));
+            }
+            
+            if (unknownOrgs.size > 0) {
+                if (!zonesData['Unknown']) {
+                    zonesData['Unknown'] = { phcs: [] };
+                }
+                
+                // Process all organizations in Unknown zone
+                unknownOrgs.forEach(orgNormalized => {
+                    const screenedSet = zoneOrgScreened['Unknown'] && zoneOrgScreened['Unknown'][orgNormalized];
+                    const screened = screenedSet ? screenedSet.size : 0;
+                    
+                    // Get DM and Pre-DM data for Unknown zone
+                    const dmData = zoneOrgCounts['Unknown'] && zoneOrgCounts['Unknown'][orgNormalized]
+                        ? zoneOrgCounts['Unknown'][orgNormalized]
+                        : { controlled: 0, uncontrolled: 0 };
+                    
+                    const predmData = zonePredmOrgCounts['Unknown'] && zonePredmOrgCounts['Unknown'][orgNormalized]
+                        ? zonePredmOrgCounts['Unknown'][orgNormalized]
+                        : { improved: 0, needFollowup: 0 };
+                    
+                    // Check if this org already exists in zonesData['Unknown']
+                    const existingPhc = zonesData['Unknown'].phcs.find(p => normalizeOrgName(p.name) === orgNormalized);
+                    
+                    if (!existingPhc) {
+                        zonesData['Unknown'].phcs.push({
+                            name: orgNormalized === 'Unknown' ? 'Unknown' : orgNormalized,
+                            screened: screened,
+                            remaining: 0, // No target for Unknown patients
+                            controlled: dmData.controlled || 0,
+                            uncontrolled: dmData.uncontrolled || 0,
+                            improved: predmData.improved || 0,
+                            needFollowup: predmData.needFollowup || 0,
+                            target: 0
+                        });
+                    } else {
+                        // Update existing PHC with all metrics
+                        existingPhc.screened = screened;
+                        existingPhc.controlled = dmData.controlled || 0;
+                        existingPhc.uncontrolled = dmData.uncontrolled || 0;
+                        existingPhc.improved = predmData.improved || 0;
+                        existingPhc.needFollowup = predmData.needFollowup || 0;
+                    }
+                });
+            }
             
             // Sort zones and PHCs
             const sortedZonesData = {};
