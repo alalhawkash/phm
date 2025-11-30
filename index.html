@@ -395,6 +395,7 @@
             position: relative;
             background: transparent;
             z-index: 1;
+            align-items: stretch;
         }
         
         /* Left Panel - PHC List with Glassmorphism */
@@ -409,6 +410,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            box-sizing: border-box;
         }
         
         .phc-item {
@@ -565,12 +567,13 @@
         /* Right Panel - Metrics with iOS Cards */
         .metrics-panel {
             flex: 1.05;
-            padding: 16px 20px 16px 40px;
+            padding: 12px 20px 12px 40px;
             overflow: hidden;
             background: transparent;
             display: flex;
             flex-direction: column;
             height: 100%;
+            box-sizing: border-box;
         }
         
         .metric-group {
