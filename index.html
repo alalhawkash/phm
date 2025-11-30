@@ -684,7 +684,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
+            padding: 4px 0;
             border-bottom: 0.5px solid var(--ios-separator);
         }
         
@@ -693,17 +693,41 @@
         }
         
         .daily-date {
-            font-size: 14px;
+            font-size: 11px;
             font-weight: 500;
             color: var(--ios-text-primary);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
         
         .daily-count {
-            font-size: 18px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--ios-text-primary);
+        }
+        
+        .flip-card-back .metric-group-title {
+            font-size: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .flip-card-back {
+            padding: 10px 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 100%;
+        }
+        
+        #last7DaysContent {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+        }
+        
+        .flip-card-back .flip-hint {
+            margin-top: 6px;
+            font-size: 9px;
         }
         
         /* Mobile Responsive - iOS Style */
@@ -927,14 +951,14 @@
                     </div>
                     <!-- Back of card -->
                     <div class="flip-card-back">
-                        <div class="metric-group-title" style="margin-bottom: 16px;">Last 7 Days</div>
+                        <div class="metric-group-title">Last 7 Days</div>
                         <div id="last7DaysContent">
                             <div class="daily-item">
                                 <span class="daily-date">Loading...</span>
                                 <span class="daily-count">—</span>
                             </div>
                         </div>
-                        <div class="flip-hint" style="margin-top: 16px;">Tap to go back</div>
+                        <div class="flip-hint">Tap to go back</div>
                     </div>
                 </div>
             </div>
