@@ -1226,31 +1226,105 @@
         }
 
         async function fetchCsvWithFallback(targetUrl) {
+            // Check if running from file:// protocol (which causes CORS issues)
+            if (window.location.protocol === 'file:') {
+                throw new Error('Cannot load data when opening file directly. Please serve this file from a web server (e.g., use a local server like Python\'s http.server or Live Server extension).');
+            }
+            
             let lastError = null;
+            let errors = [];
+            
+            // Try direct fetch first
             try {
-                const response = await fetch(targetUrl);
+                const response = await fetch(targetUrl, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
                 if (response.ok) {
-                    return await response.text();
+                    const text = await response.text();
+                    // Validate it's actually CSV data
+                    if (text && text.length > 100 && text.includes(',')) {
+                        return text;
+                    }
                 }
-                throw new Error('Direct fetch failed');
+                throw new Error(`Direct fetch failed: ${response.status}`);
             } catch (directError) {
                 lastError = directError;
+                errors.push(`Direct: ${directError.message}`);
             }
 
+            // Try each CORS proxy with timeout and validation
             for (let i = 0; i < corsProxies.length; i++) {
                 try {
-                    const proxyUrl = corsProxies[i] + encodeURIComponent(targetUrl);
-                    const response = await fetch(proxyUrl);
-                    if (response.ok) {
-                        return await response.text();
+                    let proxyUrl;
+                    const proxy = corsProxies[i];
+                    
+                    // Handle different proxy URL formats
+                    if (proxy.includes('allorigins.win') || proxy.includes('corsproxy.io') || proxy.includes('codetabs.com')) {
+                        proxyUrl = proxy + encodeURIComponent(targetUrl);
+                    } else {
+                        proxyUrl = proxy + encodeURIComponent(targetUrl);
+                    }
+                    
+                    // Create timeout controller (20 second timeout)
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 20000);
+                    
+                    try {
+                        const response = await fetch(proxyUrl, {
+                            method: 'GET',
+                            signal: controller.signal,
+                            headers: {
+                                'Accept': 'text/csv,text/plain,*/*'
+                            }
+                        });
+                        
+                        clearTimeout(timeoutId);
+                        
+                        if (response.ok) {
+                            const text = await response.text();
+                            
+                            // Validate response is actual CSV data, not an error page
+                            if (text && text.length > 100 && 
+                                text.includes(',') && 
+                                !text.toLowerCase().includes('<!doctype') &&
+                                !text.toLowerCase().includes('<html') &&
+                                !text.toLowerCase().includes('error') &&
+                                !text.toLowerCase().includes('blocked') &&
+                                !text.toLowerCase().includes('cors')) {
+                                return text;
+                            } else {
+                                throw new Error('Proxy returned invalid response (not CSV)');
+                            }
+                        } else {
+                            throw new Error(`Proxy returned ${response.status}`);
+                        }
+                    } catch (fetchError) {
+                        clearTimeout(timeoutId);
+                        if (fetchError.name === 'AbortError') {
+                            throw new Error('Request timeout');
+                        }
+                        throw fetchError;
                     }
                 } catch (proxyError) {
                     lastError = proxyError;
+                    errors.push(`Proxy ${i + 1}: ${proxyError.message}`);
                     continue;
                 }
             }
 
-            throw lastError || new Error('Failed to fetch data from all sources. Please ensure the Google Sheet is publicly accessible.');
+            // If all proxies failed, provide helpful error message
+            const errorMsg = `Failed to fetch data from Google Sheets.\n\n` +
+                `Tried: Direct fetch and ${corsProxies.length} CORS proxies.\n\n` +
+                `Possible solutions:\n` +
+                `1. Ensure the Google Sheet is publicly accessible (Anyone with the link can view)\n` +
+                `2. Check your internet connection\n` +
+                `3. Try refreshing the page\n` +
+                `4. The sheet might be temporarily unavailable\n\n` +
+                `Errors: ${errors.join('; ')}`;
+            
+            throw new Error(errorMsg);
         }
 
         async function fetchG1TimestampOnly() {
