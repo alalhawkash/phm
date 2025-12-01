@@ -54,6 +54,7 @@
             min-height: 100dvh;
             padding-top: env(safe-area-inset-top, 0);
             padding-bottom: env(safe-area-inset-bottom, 0);
+            margin: 0;
             overflow: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -71,6 +72,8 @@
             background: transparent;
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
+            position: relative;
+            z-index: 1;
         }
         
         .status-left {
@@ -131,19 +134,23 @@
         
         .footer {
             position: fixed;
-            bottom: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 6px 16px;
-            background: rgba(0, 0, 0, 0.65);
-            color: #fff;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-top: 0.5px solid var(--ios-separator);
+            color: var(--ios-text-primary);
             font-size: 12px;
-            border-radius: 999px;
             display: flex;
             gap: 6px;
             align-items: center;
+            justify-content: center;
             letter-spacing: 0.3px;
             z-index: 4000;
+            min-height: 60px;
         }
 
         .footer-label {
@@ -172,7 +179,7 @@
         }
         
         body[dir="rtl"] .metrics-panel {
-            padding: 16px 40px 16px 20px;
+            padding: 12px 20px 12px 20px;
         }
         
         body[dir="rtl"] .zone-dropdown-btn {
@@ -186,6 +193,7 @@
         
         body[dir="rtl"] .zone-dropdown {
             left: auto;
+            right: 0;
         }
         
         body[dir="rtl"] .zone-option {
@@ -198,7 +206,7 @@
             }
             
             body[dir="rtl"] .metrics-panel {
-                padding: 12px 35px 12px 16px;
+                padding: 12px 16px 12px 16px;
             }
         }
         
@@ -208,7 +216,7 @@
             and (min-device-height: 844px) 
             and (max-device-height: 932px) {
             body[dir="rtl"] .metrics-panel {
-                padding: 12px 35px 12px 16px;
+                padding: 12px 16px 12px 16px;
             }
         }
         
@@ -240,6 +248,11 @@
             background: var(--glass-bg);
         }
         
+        body.dark-mode .last7days-card,
+        body.dark-mode .top7phcs-card {
+            background: rgba(30, 30, 32, 0.95);
+        }
+        
         body.dark-mode .zone-dropdown {
             background: var(--ios-surface);
         }
@@ -259,7 +272,7 @@
         
         /* Header - iOS Style with Glassmorphism */
         .header {
-            padding: 16px 20px;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -269,15 +282,17 @@
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             border-bottom: 0.5px solid var(--ios-separator);
             z-index: 100;
+            min-height: 80px;
         }
         
         .header-left {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px;
             position: relative;
             z-index: 1;
             overflow: visible;
+            width: 100%;
         }
         
         .header-title {
@@ -325,7 +340,9 @@
         }
         
         .zone-dropdown {
-            position: fixed;
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
             background: var(--ios-surface);
             border: 0.5px solid var(--ios-separator);
             border-radius: var(--radius-lg);
@@ -390,19 +407,21 @@
         /* Main Container - iOS Style */
         .main-container {
             display: flex;
-            height: calc(100vh - 100px);
-            height: calc(100dvh - 100px);
+            height: calc(100vh - 44px - 80px - 60px);
+            height: calc(100dvh - 44px - 80px - 60px);
             position: relative;
             background: transparent;
             z-index: 1;
             align-items: stretch;
+            margin-top: 0;
         }
         
         /* Left Panel - PHC List with Glassmorphism */
         .phc-list-panel {
-            flex: 0 0 160px;
-            padding: 12px;
-            overflow: hidden;
+            flex: 0 0 120px;
+            padding: 12px 6px;
+            overflow-y: auto;
+            overflow-x: hidden;
             background: var(--glass-bg);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
@@ -469,7 +488,7 @@
         }
         
         .phc-label {
-            font-size: 15px;
+            font-size: 12px;
             color: var(--ios-text-secondary);
             font-weight: 400;
             transition: all var(--transition-base);
@@ -480,7 +499,7 @@
         }
         
         .phc-item.active .phc-label {
-            font-size: 17px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--ios-text-primary);
         }
@@ -538,41 +557,23 @@
         
         /* Center Timeline - Minimal Style */
         .timeline {
-            position: absolute;
-            left: 180px;
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background: var(--ios-separator);
-            z-index: 10;
-            opacity: 0.3;
+            display: none;
         }
         
         .timeline-flower {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 8px;
-            height: 8px;
-            z-index: 20;
-            transition: top var(--transition-smooth);
+            display: none;
         }
         
         .flower-icon {
-            width: 100%;
-            height: 100%;
-            background: var(--ios-blue);
-            border-radius: 50%;
-            position: relative;
-            opacity: 0.6;
+            display: none;
         }
         
         /* Right Panel - Metrics with iOS Cards */
         .metrics-panel {
             flex: 1.05;
-            padding: 12px 20px 12px 40px;
-            overflow: hidden;
+            padding: 12px 20px 12px 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
             background: transparent;
             display: flex;
             flex-direction: column;
@@ -585,12 +586,12 @@
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             border-radius: var(--radius-lg);
-            padding: 2px 3px;
-            margin-bottom: 4px;
+            padding: 16px 18px;
+            margin-bottom: 10px;
             box-shadow: var(--shadow-md);
             border: 0.5px solid var(--glass-border);
             flex-shrink: 0;
-            min-height: 126px;
+            min-height: 140px;
         }
         
         .metric-group:last-child {
@@ -600,8 +601,8 @@
         .metric-item {
             display: flex;
             flex-direction: column;
-            margin-bottom: 12px;
-            padding: 8px 0;
+            margin-bottom: 16px;
+            padding: 6px 0;
         }
         
         .metric-item:last-child {
@@ -609,28 +610,28 @@
         }
         
         .metric-group-title {
-            font-size: 8px;
+            font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.6px;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
             color: var(--ios-text-secondary);
-            margin-bottom: 8px;
+            margin-bottom: 14px;
         }
         
         .metric-label {
-            font-size: 9px;
+            font-size: 11px;
             font-weight: 400;
             color: var(--ios-text-secondary);
-            letter-spacing: -0.24px;
-            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+            margin-bottom: 8px;
         }
         
         .metric-value {
-            font-size: 10px;
+            font-size: 16px;
             font-weight: 600;
             color: var(--ios-text-primary);
-            line-height: 1.1;
-            letter-spacing: -0.4px;
+            line-height: 1.3;
+            letter-spacing: -0.3px;
             word-break: break-word;
             overflow-wrap: break-word;
         }
@@ -643,60 +644,38 @@
             flex-shrink: 0;
         }
         
-        /* Flip Card Styles */
-        .metric-group-flip {
-            cursor: pointer;
-            perspective: 1000px;
-            position: relative;
-            min-height: 126px;
-            overflow: hidden; /* Contain content within card */
-        }
-        
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            min-height: 126px;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-        
-        .metric-group-flip.flipped .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-        
-        .flip-card-front,
-        .flip-card-back {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-        
-        .flip-card-front {
-            padding: 2px 3px;
-        }
-        
-        .flip-card-back {
-            transform: rotateY(180deg);
-        }
-        
         .metric-percentage {
-            font-size: 8px;
+            font-size: 11px;
             font-weight: 500;
             color: var(--ios-text-secondary);
             margin-left: 6px;
             vertical-align: baseline;
         }
         
+        .metric-daily-change {
+            font-size: 10px;
+            font-weight: 500;
+            margin-left: 8px;
+            vertical-align: baseline;
+        }
+        
+        .metric-daily-change.positive {
+            color: #34C759;
+        }
+        
+        .metric-daily-change.negative {
+            color: #FF3B30;
+        }
+        
+        .metric-daily-change.neutral {
+            color: var(--ios-text-secondary);
+        }
+        
         .flip-hint {
-            font-size: 7px;
+            font-size: 10px;
             color: var(--ios-text-tertiary);
             text-align: center;
-            margin-top: 8px;
+            margin-top: 14px;
             font-style: italic;
         }
         
@@ -704,7 +683,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
+            padding: 12px 0;
             border-bottom: 0.5px solid var(--ios-separator);
         }
         
@@ -713,7 +692,7 @@
         }
         
         .daily-date {
-            font-size: 9px;
+            font-size: 11px;
             font-weight: 500;
             color: var(--ios-text-primary);
             text-transform: uppercase;
@@ -721,40 +700,138 @@
         }
         
         .daily-count {
-            font-size: 10px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--ios-text-primary);
         }
         
-        .flip-card-back .metric-group-title {
-            font-size: 8px;
-            margin-bottom: 8px;
+        /* First card - adjust border radius when expanding card is shown */
+        #screenedCard.expanded {
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            margin-bottom: 0;
         }
         
-        .flip-card-back {
-            padding: 2px 3px;
+        /* DM card - adjust border radius when expanding card is shown */
+        #dmCard.expanded {
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            margin-bottom: 0;
+        }
+        
+        /* Last 7 Days Card - Expandable */
+        .last7days-card {
+            max-height: 0;
             overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.35s cubic-bezier(0.4, 0.0, 0.2, 1), 
+                        margin-bottom 0.35s cubic-bezier(0.4, 0.0, 0.2, 1), 
+                        padding 0.35s cubic-bezier(0.4, 0.0, 0.2, 1),
+                        opacity 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            margin-top: 0;
+            margin-bottom: 0;
+            padding: 0 18px;
+            background: rgba(245, 247, 250, 0.98);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 0.5px solid var(--glass-border);
+            border-top: none;
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .last7days-card.show {
+            max-height: 500px;
+            margin-bottom: 10px;
+            padding: 16px 18px;
+            opacity: 1;
+        }
+        
+        /* Top 7 PHCs Card - Expandable */
+        .top7phcs-card {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.35s cubic-bezier(0.4, 0.0, 0.2, 1), 
+                        margin-bottom 0.35s cubic-bezier(0.4, 0.0, 0.2, 1), 
+                        padding 0.35s cubic-bezier(0.4, 0.0, 0.2, 1),
+                        opacity 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            margin-top: 0;
+            margin-bottom: 0;
+            padding: 0 18px;
+            background: rgba(245, 247, 250, 0.98);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 0.5px solid var(--glass-border);
+            border-top: none;
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .top7phcs-card.show {
+            max-height: 500px;
+            margin-bottom: 10px;
+            padding: 16px 18px;
+            opacity: 1;
+        }
+        
+        .phc-item-row {
             display: flex;
-            flex-direction: column;
-            box-sizing: border-box;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 0.5px solid var(--ios-separator);
         }
         
-        #last7DaysContent {
+        .phc-item-row:last-child {
+            border-bottom: none;
+        }
+        
+        .phc-name {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--ios-text-primary);
             flex: 1;
-            overflow-y: auto;
-            min-height: 0;
         }
         
-        .flip-card-back .flip-hint {
-            margin-top: 6px;
-            font-size: 9px;
+        .phc-stats {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .phc-count {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ios-text-primary);
+        }
+        
+        .phc-percentage {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--ios-text-secondary);
+            min-width: 50px;
+            text-align: right;
         }
         
         /* Mobile Responsive - iOS Style */
         @media (max-width: 768px) {
+            .header {
+                padding: 10px 16px;
+                min-height: 70px;
+            }
+            
+            .header-left {
+                gap: 6px;
+            }
+            
+            .main-container {
+                height: calc(100vh - 44px - 70px - 60px);
+                height: calc(100dvh - 44px - 70px - 60px);
+            }
+            
             .phc-list-panel {
-                flex: 0 0 150px;
-                overflow: hidden;
+                flex: 0 0 110px;
+                padding: 12px 4px;
+                overflow-y: auto;
             }
             
             .timeline {
@@ -762,26 +839,35 @@
             }
             
             .metrics-panel {
-                padding: 12px 16px 12px 35px;
-                overflow: hidden;
+                padding: 12px 16px 12px 16px;
+                overflow-y: auto;
+            }
+            
+            .footer {
+                padding: 10px 16px;
+                min-height: 50px;
             }
             
             .metric-value {
-                font-size: 10px;
+                font-size: 14px;
             }
             
             .metric-label {
-                font-size: 9px;
+                font-size: 10px;
+            }
+            
+            .metric-group-title {
+                font-size: 11px;
             }
             
             .metric-group {
-                padding: 2px;
+                padding: 14px 16px;
                 margin-bottom: 10px;
             }
             
             .metric-item {
-                margin-bottom: 12px;
-                padding: 8px 0;
+                margin-bottom: 14px;
+                padding: 6px 0;
             }
             
             .metric-divider {
@@ -790,17 +876,24 @@
         }
         
         /* iPhone Responsive - All Models (12-17 Pro and Max) */
-        /* Ensure last card bottom is at 750px from viewport top */
-        /* Status bar (44px) + Header (~80px) = ~124px, so content area starts at ~124px */
-        /* To position last card at 750px: max-height = 750px - 124px = 626px */
         @media only screen 
             and (min-device-width: 390px) 
             and (max-device-width: 428px) 
             and (min-device-height: 844px) 
             and (max-device-height: 932px) {
+            .header {
+                padding: 10px 16px;
+                min-height: 70px;
+            }
+            
+            .main-container {
+                height: calc(100vh - 44px - 70px - 60px);
+                height: calc(100dvh - 44px - 70px - 60px);
+            }
+            
             .phc-list-panel {
-                max-height: 626px;
-                padding: 12px;
+                padding: 12px 6px;
+                overflow-y: auto;
             }
             
             .phc-item {
@@ -809,30 +902,39 @@
             }
             
             .phc-label {
-                font-size: 14px;
+                font-size: 11px;
             }
             
             .metrics-panel {
-                max-height: 626px;
-                padding: 12px 16px 12px 35px;
+                padding: 12px 16px 12px 16px;
+                overflow-y: auto;
+            }
+            
+            .footer {
+                padding: 10px 16px;
+                min-height: 50px;
             }
             
             .metric-group {
-                padding: 2px;
+                padding: 14px 16px;
                 margin-bottom: 8px;
             }
             
             .metric-item {
-                margin-bottom: 10px;
+                margin-bottom: 14px;
                 padding: 6px 0;
             }
             
             .metric-value {
-                font-size: 10px;
+                font-size: 14px;
             }
             
             .metric-label {
-                font-size: 9px;
+                font-size: 10px;
+            }
+            
+            .metric-group-title {
+                font-size: 11px;
             }
             
             .metric-divider {
@@ -924,17 +1026,6 @@
             </div>
     </div>
     
-    <!-- Header -->
-    <div class="header">
-        <div class="header-left">
-            <div class="header-title" id="headerTitle">Choose a Zone</div>
-            <button class="zone-dropdown-btn" id="zoneDropdownBtn">Drop list</button>
-            <div class="zone-dropdown" id="zoneDropdown">
-                <!-- Zones will be populated by JavaScript -->
-            </div>
-        </div>
-    </div>
-    
     <!-- Main Container -->
     <div class="main-container">
         <!-- Left Panel - PHC List -->
@@ -949,60 +1040,67 @@
         
         <!-- Right Panel - Metrics -->
         <div class="metrics-panel" id="metricsPanel">
-            <div class="metric-group metric-group-flip" id="screenedCard">
-                <div class="flip-card-inner">
-                    <!-- Front of card -->
-                    <div class="flip-card-front">
+            <div class="metric-group" id="screenedCard" style="cursor: pointer;">
+                <div class="metric-group-title" id="metricScreeningSubtitle">Screening Coverage</div>
                         <div class="metric-item">
-                            <span class="metric-label">Screened:</span>
+                    <span class="metric-label" id="metricLabelScreened">Screened:</span>
                             <span class="metric-value">
                                 <span id="metricScreened">0</span>
-                                <span class="metric-percentage" id="metricScreenedPercent">(0%)</span>
+                        <span class="metric-daily-change" id="metricScreenedChange"></span>
                             </span>
                         </div>
                         <div class="metric-item">
-                            <span class="metric-label">Remaining:</span>
+                    <span class="metric-label" id="metricLabelRemaining">Remaining:</span>
                             <span class="metric-value">
                                 <span id="metricRemaining">0</span>
-                                <span class="metric-percentage" id="metricRemainingPercent">(0%)</span>
                             </span>
                         </div>
-                        <div class="flip-hint">Tap to see last 7 days</div>
-                    </div>
-                    <!-- Back of card -->
-                    <div class="flip-card-back">
-                        <div class="metric-group-title">Last 7 Days</div>
-                        <div id="last7DaysContent">
-                            <div class="daily-item">
-                                <span class="daily-date">Loading...</span>
-                                <span class="daily-count">—</span>
-                            </div>
-                        </div>
-                        <div class="flip-hint">Tap to go back</div>
+            </div>
+            <!-- Last 7 Days Card - Hidden by default -->
+            <div class="metric-group last7days-card" id="last7DaysCard" style="display: none;">
+                <div class="metric-group-title" id="last7DaysTitle">Last 7 Days</div>
+                <div id="last7DaysContent">
+                    <div class="daily-item">
+                        <span class="daily-date">Loading...</span>
+                        <span class="daily-count">—</span>
                     </div>
                 </div>
             </div>
             <div class="metric-divider"></div>
-            <div class="metric-group">
+            <div class="metric-group" id="dmCard" style="cursor: pointer;">
             <div class="metric-group-title" id="metricDmSubtitle">Diabetes patients</div>
                 <div class="metric-item">
-                    <span class="metric-label">Controlled:</span>
-                    <span class="metric-value" id="metricControlled">0</span>
+                    <span class="metric-label" id="metricLabelControlled">Controlled:</span>
+                    <span class="metric-value">
+                        <span id="metricControlled">0</span>
+                    </span>
                 </div>
                 <div class="metric-item">
-                    <span class="metric-label">Uncontrolled:</span>
-                    <span class="metric-value" id="metricUncontrolled">0</span>
+                    <span class="metric-label" id="metricLabelUncontrolled">Uncontrolled:</span>
+                    <span class="metric-value">
+                        <span id="metricUncontrolled">0</span>
+                    </span>
+                </div>
+            </div>
+            <!-- Top 7 PHCs with Uncontrolled DM Card - Hidden by default -->
+            <div class="metric-group top7phcs-card" id="top7PhcsCard" style="display: none;">
+                <div class="metric-group-title" id="top7PhcsTitle">PHCs with Highest Uncontrolled DM Cases</div>
+                <div id="top7PhcsContent">
+                    <div class="daily-item">
+                        <span class="daily-date">Loading...</span>
+                        <span class="daily-count">—</span>
+                    </div>
                 </div>
             </div>
             <div class="metric-divider"></div>
             <div class="metric-group">
             <div class="metric-group-title" id="metricPreDmSubtitle">Pre-diabetes patients</div>
                 <div class="metric-item">
-                    <span class="metric-label">Improved:</span>
+                    <span class="metric-label" id="metricLabelImproved">Improved:</span>
                     <span class="metric-value" id="metricImproved">0</span>
                 </div>
                 <div class="metric-item">
-                    <span class="metric-label">Need follow up:</span>
+                    <span class="metric-label" id="metricLabelNeedFollowup">Need follow up:</span>
                     <span class="metric-value" id="metricNeedFollowup">0</span>
                 </div>
             </div>
@@ -1198,133 +1296,38 @@
                     g1Timestamp: (g1Timestamp || '').toString(),
                     cachedAt: Date.now()
                 };
-                const dataToStore = JSON.stringify(payload);
-                
-                // Check size before storing (localStorage limit is typically 5-10MB)
-                const maxSize = 4 * 1024 * 1024; // 4MB safe limit
-                if (dataToStore.length > maxSize) {
-                    console.warn(`Data too large to cache (${(dataToStore.length / 1024 / 1024).toFixed(2)}MB). Skipping cache. App will still work.`);
-                    return;
-                }
-                
-                localStorage.setItem(CACHE_KEY, dataToStore);
+                localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
             } catch (error) {
-                // Handle quota exceeded error specifically
-                if (error.name === 'QuotaExceededError' || error.code === 22) {
-                    console.warn('localStorage quota exceeded. Clearing old cache and skipping new cache. App will continue to work normally.');
-                    try {
-                        // Clear the old cache to free up space
-                        localStorage.removeItem(CACHE_KEY);
-                    } catch (clearError) {
-                        // Ignore errors when clearing
-                    }
-                } else {
-                    console.warn('Failed to cache data:', error);
-                }
-                // App continues to work even if caching fails
+                console.warn('Failed to cache data:', error);
             }
         }
 
         async function fetchCsvWithFallback(targetUrl) {
-            // Check if running from file:// protocol (which causes CORS issues)
-            if (window.location.protocol === 'file:') {
-                throw new Error('Cannot load data when opening file directly. Please serve this file from a web server (e.g., use a local server like Python\'s http.server or Live Server extension).');
-            }
-            
             let lastError = null;
-            let errors = [];
-            
-            // Try direct fetch first
             try {
-                const response = await fetch(targetUrl, {
-                    method: 'GET',
-                    mode: 'cors',
-                    cache: 'no-cache'
-                });
+                const response = await fetch(targetUrl);
                 if (response.ok) {
-                    const text = await response.text();
-                    // Validate it's actually CSV data
-                    if (text && text.length > 100 && text.includes(',')) {
-                        return text;
-                    }
+                    return await response.text();
                 }
-                throw new Error(`Direct fetch failed: ${response.status}`);
+                throw new Error('Direct fetch failed');
             } catch (directError) {
                 lastError = directError;
-                errors.push(`Direct: ${directError.message}`);
             }
 
-            // Try each CORS proxy with timeout and validation
             for (let i = 0; i < corsProxies.length; i++) {
                 try {
-                    let proxyUrl;
-                    const proxy = corsProxies[i];
-                    
-                    // Handle different proxy URL formats
-                    if (proxy.includes('allorigins.win') || proxy.includes('corsproxy.io') || proxy.includes('codetabs.com')) {
-                        proxyUrl = proxy + encodeURIComponent(targetUrl);
-                    } else {
-                        proxyUrl = proxy + encodeURIComponent(targetUrl);
-                    }
-                    
-                    // Create timeout controller (20 second timeout)
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 20000);
-                    
-                    try {
-                        const response = await fetch(proxyUrl, {
-                            method: 'GET',
-                            signal: controller.signal,
-                            headers: {
-                                'Accept': 'text/csv,text/plain,*/*'
-                            }
-                        });
-                        
-                        clearTimeout(timeoutId);
-                        
-                        if (response.ok) {
-                            const text = await response.text();
-                            
-                            // Validate response is actual CSV data, not an error page
-                            if (text && text.length > 100 && 
-                                text.includes(',') && 
-                                !text.toLowerCase().includes('<!doctype') &&
-                                !text.toLowerCase().includes('<html') &&
-                                !text.toLowerCase().includes('error') &&
-                                !text.toLowerCase().includes('blocked') &&
-                                !text.toLowerCase().includes('cors')) {
-                                return text;
-                            } else {
-                                throw new Error('Proxy returned invalid response (not CSV)');
-                            }
-                        } else {
-                            throw new Error(`Proxy returned ${response.status}`);
-                        }
-                    } catch (fetchError) {
-                        clearTimeout(timeoutId);
-                        if (fetchError.name === 'AbortError') {
-                            throw new Error('Request timeout');
-                        }
-                        throw fetchError;
+                    const proxyUrl = corsProxies[i] + encodeURIComponent(targetUrl);
+                    const response = await fetch(proxyUrl);
+                    if (response.ok) {
+                        return await response.text();
                     }
                 } catch (proxyError) {
                     lastError = proxyError;
-                    errors.push(`Proxy ${i + 1}: ${proxyError.message}`);
                     continue;
                 }
             }
 
-            // If all proxies failed, provide helpful error message
-            const errorMsg = `Failed to fetch data from Google Sheets.\n\n` +
-                `Tried: Direct fetch and ${corsProxies.length} CORS proxies.\n\n` +
-                `Possible solutions:\n` +
-                `1. Ensure the Google Sheet is publicly accessible (Anyone with the link can view)\n` +
-                `2. Check your internet connection\n` +
-                `3. Try refreshing the page\n` +
-                `4. The sheet might be temporarily unavailable\n\n` +
-                `Errors: ${errors.join('; ')}`;
-            
-            throw new Error(errorMsg);
+            throw lastError || new Error('Failed to fetch data from all sources. Please ensure the Google Sheet is publicly accessible.');
         }
 
         async function fetchG1TimestampOnly() {
@@ -1381,8 +1384,6 @@
         
         // Initialize UI
         function initUI() {
-            populateZoneDropdown();
-            setupEventListeners();
             document.getElementById('loading').classList.add('hidden');
             
             // Select "All Zones" as default
@@ -1396,124 +1397,10 @@
             await loadDataFromGoogleSheets();
         }
         
-        // Populate zone dropdown
-        function populateZoneDropdown() {
-            const dropdown = document.getElementById('zoneDropdown');
-            dropdown.innerHTML = '';
-            
-            const zones = Object.keys(zonesData).sort();
-            
-            if (zones.length === 0) {
-                const emptyOption = document.createElement('div');
-                emptyOption.className = 'zone-option';
-                emptyOption.textContent = 'No zones available';
-                emptyOption.style.opacity = '0.5';
-                emptyOption.style.cursor = 'default';
-                dropdown.appendChild(emptyOption);
-                return;
-            }
-            
-            // Add "All Zones" option first
-            const allZonesOption = document.createElement('div');
-            allZonesOption.className = 'zone-option';
-            allZonesOption.textContent = t('allZones');
-            allZonesOption.style.fontWeight = '600';
-            allZonesOption.style.borderBottom = '1px solid var(--ios-separator)';
-            allZonesOption.addEventListener('click', (e) => {
-                e.stopPropagation();
-                selectAllZones();
-                dropdown.classList.remove('show');
-            });
-            dropdown.appendChild(allZonesOption);
-            
-            // Add all individual zones
-            zones.forEach(zone => {
-                const option = document.createElement('div');
-                option.className = 'zone-option';
-                option.textContent = getZoneDisplayName(zone);
-                option.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    selectZone(zone);
-                    dropdown.classList.remove('show');
-                });
-                dropdown.appendChild(option);
-            });
-        }
-        
-        // Setup event listeners
-        function setupEventListeners() {
-            const dropdownBtn = document.getElementById('zoneDropdownBtn');
-            const dropdown = document.getElementById('zoneDropdown');
-            
-            // Function to position dropdown
-            function positionDropdown() {
-                if (dropdown.classList.contains('show')) {
-                    const rect = dropdownBtn.getBoundingClientRect();
-                    const isRTL = document.body.getAttribute('dir') === 'rtl';
-                    dropdown.style.top = rect.bottom + 'px';
-                    
-                    if (isRTL) {
-                        // Position from right edge in RTL mode
-                        dropdown.style.right = (window.innerWidth - rect.right) + 'px';
-                        dropdown.style.left = 'auto';
-                    } else {
-                        // Position from left edge in LTR mode
-                        dropdown.style.left = rect.left + 'px';
-                        dropdown.style.right = 'auto';
-                    }
-                    
-                    dropdown.style.width = Math.max(rect.width, 240) + 'px';
-                    
-                    // Ensure dropdown doesn't go off-screen
-                    requestAnimationFrame(() => {
-                        const dropdownRect = dropdown.getBoundingClientRect();
-                        if (isRTL) {
-                            // Check if dropdown goes off left edge
-                            if (dropdownRect.left < 0) {
-                                dropdown.style.right = '20px';
-                                dropdown.style.left = 'auto';
-                            }
-                        } else {
-                            // Check if dropdown goes off right edge
-                            if (dropdownRect.right > window.innerWidth) {
-                                dropdown.style.left = (window.innerWidth - dropdownRect.width - 20) + 'px';
-                            }
-                        }
-                    });
-                }
-            }
-            
-            dropdownBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                dropdown.classList.toggle('show');
-                if (dropdown.classList.contains('show')) {
-                    positionDropdown();
-                    // Reposition on scroll/resize
-                    window.addEventListener('scroll', positionDropdown, true);
-                    window.addEventListener('resize', positionDropdown);
-                } else {
-                    window.removeEventListener('scroll', positionDropdown, true);
-                    window.removeEventListener('resize', positionDropdown);
-                }
-            });
-            
-            // Prevent dropdown from closing when clicking inside it
-            dropdown.addEventListener('click', (e) => {
-                e.stopPropagation();
-            });
-            
-            // Close dropdown when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!dropdownBtn.contains(e.target) && !dropdown.contains(e.target)) {
-                    dropdown.classList.remove('show');
-                    window.removeEventListener('scroll', positionDropdown, true);
-                    window.removeEventListener('resize', positionDropdown);
-                }
-            });
-        }
         
         // Calculate all zones overall metrics
         function calculateAllZonesOverall() {
+            console.log('Calculating all zones overall. Available zones:', Object.keys(zonesData));
             const allZonesOverall = {
                 name: t('allZonesOverall'),
                 screened: 0,
@@ -1526,15 +1413,18 @@
             };
             
             Object.keys(zonesData).forEach(zone => {
+                if (!zonesData[zone] || !zonesData[zone].phcs) return;
+                
                 const phcs = zonesData[zone].phcs;
                 phcs.forEach(phc => {
-                    allZonesOverall.screened += phc.screened || 0;
-                    allZonesOverall.remaining += phc.remaining || 0;
-                    allZonesOverall.controlled += phc.controlled || 0;
-                    allZonesOverall.uncontrolled += phc.uncontrolled || 0;
-                    allZonesOverall.improved += phc.improved || 0;
-                    allZonesOverall.needFollowup += phc.needFollowup || 0;
-                    allZonesOverall.target += phc.target || 0;
+                    // Ensure we're using numeric values, not strings
+                    allZonesOverall.screened += Number(phc.screened) || 0;
+                    allZonesOverall.remaining += Number(phc.remaining) || 0;
+                    allZonesOverall.controlled += Number(phc.controlled) || 0;
+                    allZonesOverall.uncontrolled += Number(phc.uncontrolled) || 0;
+                    allZonesOverall.improved += Number(phc.improved) || 0;
+                    allZonesOverall.needFollowup += Number(phc.needFollowup) || 0;
+                    allZonesOverall.target += Number(phc.target) || 0;
                 });
             });
             
@@ -1546,7 +1436,10 @@
             selectedZone = 'All Zones';
             selectedPhc = null;
             
-            document.getElementById('zoneDropdownBtn').textContent = t('allZones');
+            const dropdownBtn = document.getElementById('zoneDropdownBtn');
+            if (dropdownBtn) {
+                dropdownBtn.textContent = t('allZones');
+            }
             populateAllZonesPhcList();
             
             // Update timeline first to create the structure
@@ -1564,19 +1457,21 @@
             const panel = document.getElementById('phcListPanel');
             panel.innerHTML = '';
             
-            // Calculate all zones overall
-            const allZonesOverall = calculateAllZonesOverall();
-            
             // Add All Zones Overall option at the top
             const overallItem = document.createElement('div');
             overallItem.className = 'phc-item phc-item-overall';
             overallItem.dataset.index = -1;
+            const allZonesOverallInitial = calculateAllZonesOverall();
             overallItem.innerHTML = `
                 <div class="phc-dot"></div>
-                <div class="phc-label">${allZonesOverall.name}</div>
+                <div class="phc-label">${allZonesOverallInitial.name}</div>
             `;
             
             overallItem.addEventListener('click', () => {
+                // Reset selectedZone to 'All Zones' when clicking All Zones Overall
+                selectedZone = 'All Zones';
+                // Recalculate all zones overall fresh on click to ensure accurate data
+                const allZonesOverall = calculateAllZonesOverall();
                 selectZoneOverall(allZonesOverall, overallItem);
             });
             
@@ -1584,7 +1479,6 @@
             
             // Show Zone Overall for each zone instead of individual PHCs
             Object.keys(zonesData).sort().forEach(zone => {
-                const zoneOverall = calculateZoneOverall(zone);
                 const zoneItem = document.createElement('div');
                 zoneItem.className = 'phc-item';
                 zoneItem.dataset.zone = zone;
@@ -1595,6 +1489,10 @@
                 `;
                 
                 zoneItem.addEventListener('click', () => {
+                    // Update selectedZone to the clicked zone for proper filtering
+                    selectedZone = zone;
+                    // Recalculate zone overall fresh on click to ensure accurate data
+                    const zoneOverall = calculateZoneOverall(zone);
                     selectZoneOverall(zoneOverall, zoneItem);
                 });
                 
@@ -1607,7 +1505,10 @@
             selectedZone = zone;
             selectedPhc = null;
             
-            document.getElementById('zoneDropdownBtn').textContent = getZoneDisplayName(zone);
+            const dropdownBtn = document.getElementById('zoneDropdownBtn');
+            if (dropdownBtn) {
+                dropdownBtn.textContent = getZoneDisplayName(zone);
+            }
             populatePhcList(zone);
             
             // Update timeline first to create the structure
@@ -1622,7 +1523,23 @@
         
         // Calculate zone overall metrics
         function calculateZoneOverall(zone) {
+            // Safety check
+            if (!zonesData[zone] || !zonesData[zone].phcs) {
+                console.warn(`Zone ${zone} not found in zonesData or has no PHCs`);
+                return {
+                    name: t('zoneOverall'),
+                    screened: 0,
+                    remaining: 0,
+                    controlled: 0,
+                    uncontrolled: 0,
+                    improved: 0,
+                    needFollowup: 0,
+                    target: 0
+                };
+            }
+            
             const phcs = zonesData[zone].phcs;
+            console.log(`Calculating zone overall for ${zone}, PHCs count:`, phcs.length, 'Sample PHC:', phcs[0]);
             const overall = {
                 name: t('zoneOverall'),
                 screened: 0,
@@ -1635,111 +1552,17 @@
             };
             
             phcs.forEach(phc => {
-                overall.screened += phc.screened || 0;
-                overall.remaining += phc.remaining || 0;
-                overall.controlled += phc.controlled || 0;
-                overall.uncontrolled += phc.uncontrolled || 0;
-                overall.improved += phc.improved || 0;
-                overall.needFollowup += phc.needFollowup || 0;
-                overall.target += phc.target || 0;
+                // Ensure we're using numeric values, not strings
+                overall.screened += Number(phc.screened) || 0;
+                overall.remaining += Number(phc.remaining) || 0;
+                overall.controlled += Number(phc.controlled) || 0;
+                overall.uncontrolled += Number(phc.uncontrolled) || 0;
+                overall.improved += Number(phc.improved) || 0;
+                overall.needFollowup += Number(phc.needFollowup) || 0;
+                overall.target += Number(phc.target) || 0;
             });
             
             return overall;
-        }
-        
-        // Calculate last 7 days screening data
-        function calculateLast7DaysScreening(currentZone, currentPhc) {
-            const SCREENING_START_DATE = new Date("2025-01-01");
-            const today = new Date();
-            today.setHours(23, 59, 59, 999);
-            
-            // Get the last 7 days
-            const last7Days = [];
-            for (let i = 6; i >= 0; i--) {
-                const date = new Date(today);
-                date.setDate(date.getDate() - i);
-                date.setHours(0, 0, 0, 0);
-                last7Days.push(date);
-            }
-            
-            // Initialize daily counts
-            const dailyCounts = {};
-            last7Days.forEach(date => {
-                const dateStr = date.toISOString().split('T')[0];
-                dailyCounts[dateStr] = 0;
-            });
-            
-            // Filter patient records based on current selection
-            let filteredPatientRecords = {};
-            
-            if (currentPhc && currentPhc.name) {
-                // Filter by specific PHC
-                const orgNormalized = normalizeOrgName(currentPhc.name);
-                const zone = currentZone || inferZone(currentPhc.name);
-                
-                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
-                    const org = globalPatientOrganizations[patientId] || '';
-                    const patientOrgNormalized = normalizeOrgName(org);
-                    const patientZone = inferZone(org);
-                    
-                    if ((patientOrgNormalized === orgNormalized && patientZone === zone) || 
-                        (!org && orgNormalized === 'Unknown' && zone === 'Unknown')) {
-                        filteredPatientRecords[patientId] = records;
-                    }
-                }
-            } else if (currentZone && currentZone !== 'All Zones') {
-                // Filter by zone
-                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
-                    const org = globalPatientOrganizations[patientId] || '';
-                    const zone = inferZone(org);
-                    
-                    if (zone === currentZone || (!org && zone === 'Unknown' && currentZone === 'Unknown')) {
-                        filteredPatientRecords[patientId] = records;
-                    }
-                }
-            } else {
-                // All zones - use all records
-                filteredPatientRecords = globalPatientRecords;
-            }
-            
-            // Count screenings by day
-            for (const [patientId, records] of Object.entries(filteredPatientRecords)) {
-                const age = records[0]?.age || 0;
-                if (age <= 34) continue;
-                
-                const sortedRecords = records
-                    .filter(r => r.resultDate && !isNaN(r.resultDate.getTime()) && r.resultDate >= SCREENING_START_DATE)
-                    .sort((a, b) => a.resultDate - b.resultDate);
-                
-                if (sortedRecords.length === 0) continue;
-                
-                // Count all screenings that occurred in the last 7 days
-                for (const record of sortedRecords) {
-                    const screeningDate = new Date(record.resultDate);
-                    screeningDate.setHours(0, 0, 0, 0);
-                    const dateStr = screeningDate.toISOString().split('T')[0];
-                    
-                    // Check if this date is within last 7 days
-                    if (dailyCounts.hasOwnProperty(dateStr)) {
-                        dailyCounts[dateStr]++;
-                    }
-                }
-            }
-            
-            // Format results for display (reverse to show most recent first)
-            const result = last7Days.map(date => {
-                const dateStr = date.toISOString().split('T')[0];
-                const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-                const month = monthNames[date.getMonth()];
-                const day = date.getDate(); // No padding to match user format
-                return {
-                    date: `${month} ${day}`,
-                    count: dailyCounts[dateStr] || 0,
-                    dateStr: dateStr
-                };
-            }).reverse(); // Reverse to show most recent first
-            
-            return result;
         }
         
         // Populate PHC list
@@ -1750,16 +1573,18 @@
             panel.innerHTML = '';
             
             // Add Zone Overall option at the top
-            const zoneOverall = calculateZoneOverall(zone);
             const overallItem = document.createElement('div');
             overallItem.className = 'phc-item phc-item-overall';
             overallItem.dataset.index = -1; // Special index for overall
+            const zoneOverallInitial = calculateZoneOverall(zone);
             overallItem.innerHTML = `
                 <div class="phc-dot"></div>
-                <div class="phc-label">${zoneOverall.name}</div>
+                <div class="phc-label">${zoneOverallInitial.name}</div>
             `;
             
             overallItem.addEventListener('click', () => {
+                // Recalculate zone overall fresh on click to ensure accurate data
+                const zoneOverall = calculateZoneOverall(zone);
                 selectZoneOverall(zoneOverall, overallItem);
             });
             
@@ -1786,6 +1611,453 @@
                 
                 panel.appendChild(phcItem);
             });
+        }
+        
+        // Calculate metrics for a specific date (up to that date)
+        function calculateMetricsForDate(filteredPatientRecords, cutoffDate) {
+            const SCREENING_START_DATE = new Date("2025-01-01");
+            const DM_THRESHOLDS = { "HBA1C": 6.5, "FASTING": 7.0 };
+            const CONTROL_MAX = { "HBA1C": 8.0, "FASTING": 9.0 };
+            const DM_FIRST_RESULT_CUTOFF = new Date("2025-06-01");
+            
+            // Calculate screened (up to cutoff date)
+            const screenedSet = new Set();
+            
+            // Calculate DM patients (up to cutoff date)
+            const dmPatients = {};
+            for (const [patientId, records] of Object.entries(filteredPatientRecords)) {
+                // Filter records up to cutoff date
+                const sortedRecords = records
+                    .filter(r => r.resultDate && !isNaN(r.resultDate.getTime()) && r.resultDate <= cutoffDate)
+                    .sort((a, b) => b.resultDate - a.resultDate);
+                
+                if (sortedRecords.length === 0) continue;
+                
+                // Screened calculation (first screening after start date, up to cutoff date)
+                const recordsUpToCutoff = records
+                    .filter(r => r.resultDate && !isNaN(r.resultDate.getTime()) && r.resultDate <= cutoffDate)
+                    .sort((a, b) => a.resultDate - b.resultDate);
+                const firstAfter2025 = recordsUpToCutoff.find(r => r.resultDate >= SCREENING_START_DATE);
+                if (firstAfter2025) {
+                    screenedSet.add(patientId);
+                }
+                
+                // DM detection (up to cutoff date)
+                let firstDMDate = null;
+                let latestResult = null;
+                
+                if (sortedRecords.length > 0) {
+                    const latestRecord = sortedRecords[0];
+                    const latestResultName = (latestRecord.resultName || '').toLowerCase();
+                    let latestResultType = null;
+                    
+                    if (latestResultName.includes('a1c')) {
+                        latestResultType = 'HBA1C';
+                    } else if (latestResultName.includes('fast')) {
+                        latestResultType = 'FASTING';
+                    }
+                    
+                    if (latestResultType) {
+                        latestResult = { 
+                            resultType: latestResultType, 
+                            resultValue: latestRecord.resultValue 
+                        };
+                    }
+                }
+                
+                const allRecordsUpToCutoff = records
+                    .filter(r => r.resultDate && !isNaN(r.resultDate.getTime()) && r.resultDate <= cutoffDate);
+                
+                for (const record of allRecordsUpToCutoff) {
+                    const resultName = (record.resultName || '').toLowerCase();
+                    const resultValue = record.resultValue;
+                    let meetsDM = false;
+                    
+                    if (resultName.includes('a1c') && resultValue >= DM_THRESHOLDS.HBA1C) {
+                        meetsDM = true;
+                    } else if (resultName.includes('fast') && resultValue >= DM_THRESHOLDS.FASTING) {
+                        meetsDM = true;
+                    }
+                    
+                    // Age check removed - all patients are above 35
+                    if (meetsDM) {
+                        if (!firstDMDate || record.resultDate < firstDMDate) {
+                            firstDMDate = record.resultDate;
+                        }
+                    }
+                }
+                
+                if (firstDMDate && firstDMDate >= DM_FIRST_RESULT_CUTOFF && latestResult) {
+                    dmPatients[patientId] = { firstDMDate, latestResult };
+                }
+            }
+            
+            // Calculate controlled and uncontrolled
+            let controlled = 0;
+            let uncontrolled = 0;
+            
+            for (const [patientId, patientData] of Object.entries(dmPatients)) {
+                if (!patientData.latestResult) continue;
+                
+                const { resultType, resultValue } = patientData.latestResult;
+                const controlLimit = CONTROL_MAX[resultType];
+                
+                const isControlled = controlLimit && resultValue <= controlLimit;
+                if (isControlled) {
+                    controlled++;
+                } else {
+                    uncontrolled++;
+                }
+            }
+            
+            return {
+                screened: screenedSet.size,
+                controlled: controlled,
+                uncontrolled: uncontrolled
+            };
+        }
+        
+        // Calculate daily counts for today and yesterday (for daily change comparison)
+        function calculateYesterdayMetrics(currentZone, currentPhc) {
+            const SCREENING_START_DATE = new Date("2025-01-01");
+            const DM_THRESHOLDS = { "HBA1C": 6.5, "FASTING": 7.0 };
+            const CONTROL_MAX = { "HBA1C": 8.0, "FASTING": 9.0 };
+            const DM_FIRST_RESULT_CUTOFF = new Date("2025-06-01");
+            
+            const today = getLastUpdateDate();
+            const todayStart = new Date(today);
+            todayStart.setHours(0, 0, 0, 0);
+            
+            const yesterday = new Date(todayStart);
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStart = new Date(yesterday);
+            yesterdayStart.setHours(0, 0, 0, 0);
+            const yesterdayEnd = new Date(yesterdayStart);
+            yesterdayEnd.setHours(23, 59, 59, 999);
+            
+            // Filter patient records based on current selection
+            let filteredPatientRecords = {};
+            
+            // Check if currentPhc is an overall object
+            const isOverall = currentPhc && (
+                currentPhc.name === t('zoneOverall') || 
+                currentPhc.name === t('allZonesOverall') ||
+                currentPhc.name === 'Zone Overall' ||
+                currentPhc.name === 'All Zones'
+            );
+            
+            if (currentPhc && currentPhc.name && !isOverall) {
+                const orgNormalized = normalizeOrgName(currentPhc.name);
+                const zone = currentZone || inferZone(currentPhc.name);
+                
+                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
+                    const org = globalPatientOrganizations[patientId] || '';
+                    const patientOrgNormalized = normalizeOrgName(org);
+                    const patientZone = inferZone(org);
+                    
+                    if ((patientOrgNormalized === orgNormalized && patientZone === zone) || 
+                        (!org && orgNormalized === 'Unknown' && zone === 'Unknown')) {
+                        filteredPatientRecords[patientId] = records;
+                    }
+                }
+            } else if (isOverall && currentZone === 'All Zones') {
+                filteredPatientRecords = globalPatientRecords;
+            } else if (isOverall && currentZone && currentZone !== 'All Zones') {
+                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
+                    const org = globalPatientOrganizations[patientId] || '';
+                    const zone = inferZone(org);
+                    
+                    if (zone === currentZone || (!org && zone === 'Unknown' && currentZone === 'Unknown')) {
+                        filteredPatientRecords[patientId] = records;
+                    }
+                }
+            } else if (currentZone && currentZone !== 'All Zones' && currentZone !== null) {
+                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
+                    const org = globalPatientOrganizations[patientId] || '';
+                    const zone = inferZone(org);
+                    
+                    if (zone === currentZone || (!org && zone === 'Unknown' && currentZone === 'Unknown')) {
+                        filteredPatientRecords[patientId] = records;
+                    }
+                }
+            } else {
+                filteredPatientRecords = globalPatientRecords;
+            }
+            
+            // Calculate DAILY counts for yesterday (screenings that happened on yesterday's date)
+            let screenedYesterday = 0;
+            const screenedSetYesterday = new Set();
+            
+            // Count screenings that happened on yesterday
+            for (const [patientId, records] of Object.entries(filteredPatientRecords)) {
+                const recordsOnYesterday = records.filter(r => {
+                    if (!r.resultDate || isNaN(r.resultDate.getTime())) return false;
+                    const recordDate = new Date(r.resultDate);
+                    recordDate.setHours(0, 0, 0, 0);
+                    return recordDate.getTime() === yesterdayStart.getTime() && r.resultDate >= SCREENING_START_DATE;
+                });
+                
+                if (recordsOnYesterday.length > 0) {
+                    screenedSetYesterday.add(patientId);
+                }
+            }
+            screenedYesterday = screenedSetYesterday.size;
+            
+            // Calculate controlled and uncontrolled for patients with results on yesterday
+            let controlledYesterday = 0;
+            let uncontrolledYesterday = 0;
+            
+            for (const [patientId, records] of Object.entries(filteredPatientRecords)) {
+                // Get the latest result up to yesterday
+                const sortedRecords = records
+                    .filter(r => r.resultDate && !isNaN(r.resultDate.getTime()) && r.resultDate <= yesterdayEnd)
+                    .sort((a, b) => b.resultDate - a.resultDate);
+                
+                if (sortedRecords.length === 0) continue;
+                
+                // Check if patient has a result on yesterday
+                const hasResultYesterday = sortedRecords.some(r => {
+                    const recordDate = new Date(r.resultDate);
+                    recordDate.setHours(0, 0, 0, 0);
+                    return recordDate.getTime() === yesterdayStart.getTime();
+                });
+                
+                if (!hasResultYesterday) continue;
+                
+                // Get latest result up to yesterday
+                const latestRecord = sortedRecords[0];
+                const latestResultName = (latestRecord.resultName || '').toLowerCase();
+                let latestResultType = null;
+                
+                if (latestResultName.includes('a1c')) {
+                    latestResultType = 'HBA1C';
+                } else if (latestResultName.includes('fast')) {
+                    latestResultType = 'FASTING';
+                }
+                
+                if (!latestResultType) continue;
+                
+                // Check if patient is DM
+                let isDM = false;
+                let firstDMDate = null;
+                
+                for (const record of sortedRecords) {
+                    const resultName = (record.resultName || '').toLowerCase();
+                    const resultValue = record.resultValue;
+                    let meetsDM = false;
+                    
+                    if (resultName.includes('a1c') && resultValue >= DM_THRESHOLDS.HBA1C) {
+                        meetsDM = true;
+                    } else if (resultName.includes('fast') && resultValue >= DM_THRESHOLDS.FASTING) {
+                        meetsDM = true;
+                    }
+                    
+                    if (meetsDM) {
+                        if (!firstDMDate || record.resultDate < firstDMDate) {
+                            firstDMDate = record.resultDate;
+                        }
+                        isDM = true;
+                    }
+                }
+                
+                if (isDM && firstDMDate && firstDMDate >= DM_FIRST_RESULT_CUTOFF) {
+                    const controlLimit = CONTROL_MAX[latestResultType];
+                    const resultValue = latestRecord.resultValue;
+                    const isControlled = controlLimit && resultValue <= controlLimit;
+                    
+                    if (isControlled) {
+                        controlledYesterday++;
+                    } else {
+                        uncontrolledYesterday++;
+                    }
+                }
+            }
+            
+            return {
+                screened: screenedYesterday,
+                controlled: controlledYesterday,
+                uncontrolled: uncontrolledYesterday
+            };
+        }
+        
+        // Calculate today's daily counts (for daily change comparison)
+        function calculateTodayDailyMetrics(currentZone, currentPhc) {
+            const SCREENING_START_DATE = new Date("2025-01-01");
+            const DM_THRESHOLDS = { "HBA1C": 6.5, "FASTING": 7.0 };
+            const CONTROL_MAX = { "HBA1C": 8.0, "FASTING": 9.0 };
+            const DM_FIRST_RESULT_CUTOFF = new Date("2025-06-01");
+            
+            const today = getLastUpdateDate();
+            const todayStart = new Date(today);
+            todayStart.setHours(0, 0, 0, 0);
+            const todayEnd = new Date(today);
+            todayEnd.setHours(23, 59, 59, 999);
+            
+            // Filter patient records based on current selection (same logic as calculateYesterdayMetrics)
+            let filteredPatientRecords = {};
+            
+            const isOverall = currentPhc && (
+                currentPhc.name === t('zoneOverall') || 
+                currentPhc.name === t('allZonesOverall') ||
+                currentPhc.name === 'Zone Overall' ||
+                currentPhc.name === 'All Zones'
+            );
+            
+            if (currentPhc && currentPhc.name && !isOverall) {
+                const orgNormalized = normalizeOrgName(currentPhc.name);
+                const zone = currentZone || inferZone(currentPhc.name);
+                
+                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
+                    const org = globalPatientOrganizations[patientId] || '';
+                    const patientOrgNormalized = normalizeOrgName(org);
+                    const patientZone = inferZone(org);
+                    
+                    if ((patientOrgNormalized === orgNormalized && patientZone === zone) || 
+                        (!org && orgNormalized === 'Unknown' && zone === 'Unknown')) {
+                        filteredPatientRecords[patientId] = records;
+                    }
+                }
+            } else if (isOverall && currentZone === 'All Zones') {
+                filteredPatientRecords = globalPatientRecords;
+            } else if (isOverall && currentZone && currentZone !== 'All Zones') {
+                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
+                    const org = globalPatientOrganizations[patientId] || '';
+                    const zone = inferZone(org);
+                    
+                    if (zone === currentZone || (!org && zone === 'Unknown' && currentZone === 'Unknown')) {
+                        filteredPatientRecords[patientId] = records;
+                    }
+                }
+            } else if (currentZone && currentZone !== 'All Zones' && currentZone !== null) {
+                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
+                    const org = globalPatientOrganizations[patientId] || '';
+                    const zone = inferZone(org);
+                    
+                    if (zone === currentZone || (!org && zone === 'Unknown' && currentZone === 'Unknown')) {
+                        filteredPatientRecords[patientId] = records;
+                    }
+                }
+            } else {
+                filteredPatientRecords = globalPatientRecords;
+            }
+            
+            // Calculate DAILY counts for today (screenings that happened on today's date)
+            let screenedToday = 0;
+            const screenedSetToday = new Set();
+            
+            for (const [patientId, records] of Object.entries(filteredPatientRecords)) {
+                const recordsOnToday = records.filter(r => {
+                    if (!r.resultDate || isNaN(r.resultDate.getTime())) return false;
+                    const recordDate = new Date(r.resultDate);
+                    recordDate.setHours(0, 0, 0, 0);
+                    return recordDate.getTime() === todayStart.getTime() && r.resultDate >= SCREENING_START_DATE;
+                });
+                
+                if (recordsOnToday.length > 0) {
+                    screenedSetToday.add(patientId);
+                }
+            }
+            screenedToday = screenedSetToday.size;
+            
+            // Calculate controlled and uncontrolled for patients with results on today
+            let controlledToday = 0;
+            let uncontrolledToday = 0;
+            
+            for (const [patientId, records] of Object.entries(filteredPatientRecords)) {
+                const sortedRecords = records
+                    .filter(r => r.resultDate && !isNaN(r.resultDate.getTime()) && r.resultDate <= todayEnd)
+                    .sort((a, b) => b.resultDate - a.resultDate);
+                
+                if (sortedRecords.length === 0) continue;
+                
+                // Check if patient has a result on today
+                const hasResultToday = sortedRecords.some(r => {
+                    const recordDate = new Date(r.resultDate);
+                    recordDate.setHours(0, 0, 0, 0);
+                    return recordDate.getTime() === todayStart.getTime();
+                });
+                
+                if (!hasResultToday) continue;
+                
+                const latestRecord = sortedRecords[0];
+                const latestResultName = (latestRecord.resultName || '').toLowerCase();
+                let latestResultType = null;
+                
+                if (latestResultName.includes('a1c')) {
+                    latestResultType = 'HBA1C';
+                } else if (latestResultName.includes('fast')) {
+                    latestResultType = 'FASTING';
+                }
+                
+                if (!latestResultType) continue;
+                
+                let isDM = false;
+                let firstDMDate = null;
+                
+                for (const record of sortedRecords) {
+                    const resultName = (record.resultName || '').toLowerCase();
+                    const resultValue = record.resultValue;
+                    let meetsDM = false;
+                    
+                    if (resultName.includes('a1c') && resultValue >= DM_THRESHOLDS.HBA1C) {
+                        meetsDM = true;
+                    } else if (resultName.includes('fast') && resultValue >= DM_THRESHOLDS.FASTING) {
+                        meetsDM = true;
+                    }
+                    
+                    if (meetsDM) {
+                        if (!firstDMDate || record.resultDate < firstDMDate) {
+                            firstDMDate = record.resultDate;
+                        }
+                        isDM = true;
+                    }
+                }
+                
+                if (isDM && firstDMDate && firstDMDate >= DM_FIRST_RESULT_CUTOFF) {
+                    const controlLimit = CONTROL_MAX[latestResultType];
+                    const resultValue = latestRecord.resultValue;
+                    const isControlled = controlLimit && resultValue <= controlLimit;
+                    
+                    if (isControlled) {
+                        controlledToday++;
+                    } else {
+                        uncontrolledToday++;
+                    }
+                }
+            }
+            
+            return {
+                screened: screenedToday,
+                controlled: controlledToday,
+                uncontrolled: uncontrolledToday
+            };
+        }
+        
+        // Format and display daily change
+        function updateDailyChange(currentValue, yesterdayValue, elementId) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            const change = currentValue - yesterdayValue;
+            let arrow = '→';
+            let sign = '';
+            
+            if (change > 0) {
+                arrow = '↑';
+                sign = '+';
+            } else if (change < 0) {
+                arrow = '↓';
+            }
+            
+            element.textContent = `${arrow} ${sign}${change}`;
+            
+            if (change > 0) {
+                element.className = 'metric-daily-change positive';
+            } else if (change < 0) {
+                element.className = 'metric-daily-change negative';
+            } else {
+                element.className = 'metric-daily-change neutral';
+            }
         }
         
         // Select Zone Overall and show aggregated metrics
@@ -1827,13 +2099,22 @@
                 : '0.0';
             
             document.getElementById('metricScreened').textContent = zoneOverall.screened;
-            document.getElementById('metricScreenedPercent').textContent = `(${screenedPercent}%)`;
             document.getElementById('metricRemaining').textContent = zoneOverall.remaining;
-            document.getElementById('metricRemainingPercent').textContent = `(${remainingPercent}%)`;
             document.getElementById('metricControlled').textContent = zoneOverall.controlled;
             document.getElementById('metricUncontrolled').textContent = zoneOverall.uncontrolled;
             document.getElementById('metricImproved').textContent = zoneOverall.improved;
             document.getElementById('metricNeedFollowup').textContent = zoneOverall.needFollowup;
+            
+            // Calculate and display daily changes (comparing today's daily count vs yesterday's daily count)
+            const yesterdayMetrics = calculateYesterdayMetrics(selectedZone, zoneOverall);
+            const todayMetrics = calculateTodayDailyMetrics(selectedZone, zoneOverall);
+            
+            console.log('Daily change calculation:', {
+                todayDaily: todayMetrics,
+                yesterdayDaily: yesterdayMetrics
+            });
+            
+            updateDailyChange(todayMetrics.screened, yesterdayMetrics.screened, 'metricScreenedChange');
         }
         
         // Select PHC and show metrics
@@ -1868,13 +2149,17 @@
                 : '0.0';
             
             document.getElementById('metricScreened').textContent = phc.screened;
-            document.getElementById('metricScreenedPercent').textContent = `(${screenedPercent}%)`;
             document.getElementById('metricRemaining').textContent = phc.remaining;
-            document.getElementById('metricRemainingPercent').textContent = `(${remainingPercent}%)`;
             document.getElementById('metricControlled').textContent = phc.controlled;
             document.getElementById('metricUncontrolled').textContent = phc.uncontrolled;
             document.getElementById('metricImproved').textContent = phc.improved;
             document.getElementById('metricNeedFollowup').textContent = phc.needFollowup;
+            
+            // Calculate and display daily changes (comparing today's daily count vs yesterday's daily count)
+            const yesterdayMetrics = calculateYesterdayMetrics(selectedZone, phc);
+            const todayMetrics = calculateTodayDailyMetrics(selectedZone, phc);
+            
+            updateDailyChange(todayMetrics.screened, yesterdayMetrics.screened, 'metricScreenedChange');
             
             // Find and update timeline flower position
             const phcPanel = document.getElementById('phcListPanel');
@@ -2121,13 +2406,14 @@
                     }
                     
                     const resultDate = data['Result Date'] ? new Date(data['Result Date']) : null;
-                    const age = parseInt(data.Age) || 0;
+                    // Age column not in CSV - all patients are above 35
+                    // const age = parseInt(data.Age) || 0;
                     
                     patientRecords[patientId].push({
                         resultName: data['Result Name'] || '',
                         resultValue: parseFloat(data.ResultValue) || 0,
-                        resultDate: resultDate,
-                        age: age
+                        resultDate: resultDate
+                        // age: age - removed since not in CSV
                     });
                     
                     if (org) {
@@ -2135,6 +2421,9 @@
                     }
                 },
                 complete: function() {
+                    console.log('CSV parsing complete. Total patients:', Object.keys(patientRecords).length);
+                    console.log('Sample patient records:', Object.entries(patientRecords).slice(0, 2));
+                    
                     // Calculate DM patients
                     const dmPatients = {};
                     for (const [patientId, records] of Object.entries(patientRecords)) {
@@ -2146,7 +2435,8 @@
                         
                         let firstDMDate = null;
                         let latestResult = null;
-                        const age = records[0]?.age || 0;
+                        // Age not in CSV - all patients are above 35
+                        // const age = records[0]?.age || 0;
                         
                         if (sortedRecords.length > 0) {
                             const latestRecord = sortedRecords[0];
@@ -2178,7 +2468,8 @@
                                 meetsDM = true;
                             }
                             
-                            if (meetsDM && age > 34) {
+                            // Age check removed - all patients are above 35
+                            if (meetsDM) {
                                 if (!firstDMDate || record.resultDate < firstDMDate) {
                                     firstDMDate = record.resultDate;
                                 }
@@ -2186,7 +2477,8 @@
                         }
                         
                         if (firstDMDate && firstDMDate >= DM_FIRST_RESULT_CUTOFF && latestResult) {
-                            dmPatients[patientId] = { firstDMDate, latestResult, age };
+                            // Age removed from storage since not in CSV
+                            dmPatients[patientId] = { firstDMDate, latestResult };
                         }
                     }
                     
@@ -2227,8 +2519,9 @@
                     for (const [patientId, records] of Object.entries(patientRecords)) {
                         if (dmPatientIds.has(patientId)) continue;
                         
-                        const age = records[0]?.age || 0;
-                        if (age <= 34) continue;
+                        // Age filter removed - all patients are above 35
+                        // const age = records[0]?.age || 0;
+                        // if (age <= 34) continue;
                         
                         const sortedRecords = records
                             .filter(r => r.resultDate && !isNaN(r.resultDate.getTime()))
@@ -2343,16 +2636,39 @@
                     
                     // Calculate screened patients by PHC (using normalized org names for matching)
                     const zoneOrgScreened = {};
+                    let screenedCount = 0;
+                    let ageFilteredCount = 0;
+                    let noDateCount = 0;
+                    let before2025Count = 0;
+                    let sampleDates = [];
+                    
                     for (const [patientId, records] of Object.entries(patientRecords)) {
-                        const age = records[0]?.age || 0;
-                        if (age <= 34) continue;
+                        // Age filter removed - all patients are above 35
+                        // const age = records[0]?.age || 0;
+                        // if (age <= 34) {
+                        //     ageFilteredCount++;
+                        //     continue;
+                        // }
                         
                         const sortedRecords = records
                             .filter(r => r.resultDate && !isNaN(r.resultDate.getTime()))
                             .sort((a, b) => a.resultDate - b.resultDate);
                         
+                        if (sortedRecords.length === 0) {
+                            noDateCount++;
+                            continue;
+                        }
+                        
+                        // Collect sample dates for debugging
+                        if (sampleDates.length < 5) {
+                            sampleDates.push(sortedRecords[0].resultDate);
+                        }
+                        
                         const firstAfter2025 = sortedRecords.find(r => r.resultDate >= SCREENING_START_DATE);
-                        if (!firstAfter2025) continue;
+                        if (!firstAfter2025) {
+                            before2025Count++;
+                            continue;
+                        }
                         
                         const org = patientOrganizations[patientId] || '';
                         let orgNormalized = normalizeOrgName(org);
@@ -2368,14 +2684,39 @@
                         if (!zoneOrgScreened[zone]) zoneOrgScreened[zone] = {};
                         if (!zoneOrgScreened[zone][orgNormalized]) zoneOrgScreened[zone][orgNormalized] = new Set();
                         zoneOrgScreened[zone][orgNormalized].add(patientId);
+                        screenedCount++;
                     }
+                    
+                    console.log('Screening stats:', {
+                        totalPatients: Object.keys(patientRecords).length,
+                        ageFiltered: ageFilteredCount,
+                        noDate: noDateCount,
+                        before2025: before2025Count,
+                        screened: screenedCount,
+                        sampleDates: sampleDates.map(d => d.toISOString().split('T')[0]),
+                        screeningStartDate: SCREENING_START_DATE.toISOString().split('T')[0]
+                    });
                     
                     // Store patientRecords and patientOrganizations globally for last 7 days calculation
                     globalPatientRecords = patientRecords;
                     globalPatientOrganizations = patientOrganizations;
                     
+                    console.log('Zone org counts:', zoneOrgCounts);
+                    console.log('Zone org screened:', Object.keys(zoneOrgScreened).map(z => ({ 
+                        zone: z, 
+                        orgs: Object.keys(zoneOrgScreened[z] || {}),
+                        patientCounts: Object.entries(zoneOrgScreened[z] || {}).map(([org, set]) => ({ org, count: set.size }))
+                    })));
+                    console.log('Total screened patients:', Object.values(zoneOrgScreened).reduce((sum, zoneOrgs) => {
+                        return sum + Object.values(zoneOrgs).reduce((s, set) => s + (set.size || 0), 0);
+                    }, 0));
+                    console.log('Sample organizations from patient data:', Object.values(patientOrganizations).slice(0, 10));
+                    console.log('Sample normalized orgs:', Object.values(patientOrganizations).slice(0, 10).map(org => ({ original: org, normalized: normalizeOrgName(org), zone: inferZone(org) })));
+                    
                     // Populate zonesData with real metrics
                     populateZonesDataFromProcessedData(zoneOrgCounts, zonePredmOrgCounts, zoneOrgScreened);
+                    
+                    console.log('Zones data after population:', zonesData);
                     
                     // Initialize UI after data is loaded
                     initUI();
@@ -2505,7 +2846,7 @@
                 headerTitle: "Choose a Zone",
                 dropList: "Drop list",
                 allZones: "All Zones",
-                allZonesOverall: "All Zones Overall",
+                allZonesOverall: "All Zones",
                 zoneOverall: "Zone Overall",
                 screened: "Screened:",
                 remaining: "Remaining:",
@@ -2517,14 +2858,18 @@
                 closedMaintenance: "Closed for maintenance",
                 noZonesAvailable: "No zones available",
                 lastUpdatedLabel: "Last update:",
+                screeningSubtitle: "Screening Coverage",
                 dmSubtitle: "Diabetes patients",
-                predmSubtitle: "Pre-diabetes patients"
+                predmSubtitle: "Pre-diabetes patients",
+                last7Days: "Last 7 Days",
+                top7PhcsTitle: "PHCs with Highest Uncontrolled DM Cases",
+                top7ZonesTitle: "Zones with Highest Uncontrolled DM Cases"
             },
             ar: {
                 headerTitle: "اختر منطقة",
                 dropList: "قائمة منسدلة",
                 allZones: "جميع المناطق",
-                allZonesOverall: "إجمالي جميع المناطق",
+                allZonesOverall: "جميع المناطق",
                 zoneOverall: "إجمالي المنطقة",
                 screened: "تم الفحص:",
                 remaining: "المتبقي:",
@@ -2536,8 +2881,12 @@
                 closedMaintenance: "مغلق للصيانة",
                 noZonesAvailable: "لا توجد مناطق متاحة",
                 lastUpdatedLabel: "آخر تحديث:",
+                screeningSubtitle: "تغطية الفحص",
                 dmSubtitle: "مرضى السكري",
-                predmSubtitle: "مرضى ما قبل السكري"
+                predmSubtitle: "مرضى ما قبل السكري",
+                last7Days: "آخر 7 أيام",
+                top7PhcsTitle: "المراكز الصحية ذات أعلى حالات السكري غير المتحكم بها",
+                top7ZonesTitle: "المناطق ذات أعلى حالات السكري غير المتحكم بها"
             }
         };
         
@@ -2937,32 +3286,89 @@
                 }
             }
             
-            // Update metric labels
-            const metricLabels = document.querySelectorAll('.metric-label');
-            metricLabels.forEach(label => {
-                const text = label.textContent.trim();
-                if (text.includes('Screened') || text.includes('تم الفحص')) label.textContent = currentT.screened;
-                else if (text.includes('Remaining') || text.includes('المتبقي')) label.textContent = currentT.remaining;
-                else if (text.includes('Controlled') || text.includes('مسيطر عليه')) label.textContent = currentT.controlled;
-                else if (text.includes('Uncontrolled') || text.includes('غير مسيطر عليه')) label.textContent = currentT.uncontrolled;
-                else if (text.includes('Improved') || text.includes('محسّن')) label.textContent = currentT.improved;
-                else if (text.includes('Need follow up') || text.includes('يحتاج متابعة')) label.textContent = currentT.needFollowup;
-            });
+            // Update metric labels - use IDs for direct targeting
+            const labelScreened = document.getElementById('metricLabelScreened');
+            if (labelScreened) labelScreened.textContent = currentT.screened;
+            
+            const labelRemaining = document.getElementById('metricLabelRemaining');
+            if (labelRemaining) labelRemaining.textContent = currentT.remaining;
+            
+            const labelControlled = document.getElementById('metricLabelControlled');
+            if (labelControlled) labelControlled.textContent = currentT.controlled;
+            
+            const labelUncontrolled = document.getElementById('metricLabelUncontrolled');
+            if (labelUncontrolled) labelUncontrolled.textContent = currentT.uncontrolled;
+            
+            const labelImproved = document.getElementById('metricLabelImproved');
+            if (labelImproved) labelImproved.textContent = currentT.improved;
+            
+            const labelNeedFollowup = document.getElementById('metricLabelNeedFollowup');
+            if (labelNeedFollowup) labelNeedFollowup.textContent = currentT.needFollowup;
 
+            const screeningSubtitle = document.getElementById('metricScreeningSubtitle');
+            if (screeningSubtitle) screeningSubtitle.textContent = currentT.screeningSubtitle;
             const dmSubtitle = document.getElementById('metricDmSubtitle');
             if (dmSubtitle) dmSubtitle.textContent = currentT.dmSubtitle;
             const preDmSubtitle = document.getElementById('metricPreDmSubtitle');
             if (preDmSubtitle) preDmSubtitle.textContent = currentT.predmSubtitle;
+            const last7DaysTitle = document.getElementById('last7DaysTitle');
+            if (last7DaysTitle) last7DaysTitle.textContent = currentT.last7Days;
+            const top7PhcsTitle = document.getElementById('top7PhcsTitle');
+            if (top7PhcsTitle) {
+                // Show "Zones" title only if we're in "All Zones" mode AND no specific zone/PHC is selected
+                if (selectedZone === 'All Zones' && (!selectedPhc || selectedPhc.name === t('allZonesOverall') || selectedPhc.name === 'All Zones')) {
+                    top7PhcsTitle.textContent = currentT.top7ZonesTitle;
+                } else {
+                    top7PhcsTitle.textContent = currentT.top7PhcsTitle;
+                }
+            }
+            
+            // Recalculate last 7 days if card is currently shown
+            const last7DaysCard = document.getElementById('last7DaysCard');
+            if (last7DaysCard && last7DaysCard.classList.contains('show')) {
+                const last7Days = calculateLast7DaysScreening(selectedZone, selectedPhc);
+                const contentContainer = document.getElementById('last7DaysContent');
+                if (contentContainer) {
+                    if (last7Days.length === 0) {
+                        contentContainer.innerHTML = '<div class="daily-item"><span class="daily-date">No data available</span></div>';
+                    } else {
+                        contentContainer.innerHTML = last7Days.map(day => `
+                            <div class="daily-item">
+                                <span class="daily-date">${day.date}:</span>
+                                <span class="daily-count">${day.count}</span>
+                            </div>
+                        `).join('');
+                    }
+                }
+            }
+            
+            // Recalculate top 7 PHCs if card is currently shown
+            const top7PhcsCard = document.getElementById('top7PhcsCard');
+            if (top7PhcsCard && top7PhcsCard.classList.contains('show')) {
+                const topPhcs = calculateTop7PhcsUncontrolled(selectedZone, selectedPhc);
+                const contentContainer = document.getElementById('top7PhcsContent');
+                if (contentContainer) {
+                    if (topPhcs.length === 0) {
+                        contentContainer.innerHTML = '<div class="phc-item-row"><span class="phc-name">No data available</span></div>';
+                    } else {
+                        contentContainer.innerHTML = topPhcs.map(phc => `
+                            <div class="phc-item-row">
+                                <span class="phc-name">${phc.name}</span>
+                                <div class="phc-stats">
+                                    <span class="phc-count">${phc.count}</span>
+                                    <span class="phc-percentage">${phc.percentage}%</span>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            }
             
             // Update loading text
             const loadingText = document.querySelector('.loading-text');
             if (loadingText) loadingText.textContent = currentT.loadingText;
             
             // Re-populate dropdown to update "All Zones" text
-            if (typeof populateZoneDropdown === 'function') {
-                populateZoneDropdown();
-            }
-            
             // Update PHC list if it exists
             if (selectedZone === 'All Zones' && typeof populateAllZonesPhcList === 'function') {
                 populateAllZonesPhcList();
@@ -3014,16 +3420,191 @@
             });
         }
         
-        // Initialize flip card for screened data
-        function initFlipCard() {
-            const screenedCard = document.getElementById('screenedCard');
-            if (!screenedCard) return;
-            
-            screenedCard.addEventListener('click', () => {
-                const isFlipped = screenedCard.classList.contains('flipped');
+        function getLastUpdateDate() {
+            let lastUpdateDate = new Date();
+            if (footerLastUpdatedValue && footerLastUpdatedValue !== '—') {
+                // Try to parse the date - handle DD/MM/YYYY format
+                let parsedDate = null;
+                const dateStr = footerLastUpdatedValue.trim();
                 
-                if (!isFlipped) {
-                    // Flip to back - show last 7 days
+                // Check if it's in DD/MM/YYYY format (e.g., "30/11/2025")
+                const ddmmyyyyMatch = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+                if (ddmmyyyyMatch) {
+                    const day = parseInt(ddmmyyyyMatch[1], 10);
+                    const month = parseInt(ddmmyyyyMatch[2], 10) - 1; // Month is 0-indexed
+                    const year = parseInt(ddmmyyyyMatch[3], 10);
+                    parsedDate = new Date(year, month, day);
+                } else {
+                    // Try standard Date parsing for other formats
+                    parsedDate = new Date(dateStr);
+                }
+                
+                if (parsedDate && !isNaN(parsedDate.getTime())) {
+                    lastUpdateDate = parsedDate;
+                }
+            }
+            lastUpdateDate.setHours(23, 59, 59, 999);
+            return lastUpdateDate;
+        }
+        
+        // Calculate last 7 days screening data
+        function calculateLast7DaysScreening(currentZone, currentPhc) {
+            const SCREENING_START_DATE = new Date("2025-01-01");
+            const lastUpdateDate = getLastUpdateDate();
+            
+            // Get the last 7 days ending at last update date
+            const last7Days = [];
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(lastUpdateDate);
+                date.setDate(date.getDate() - i);
+                date.setHours(0, 0, 0, 0);
+                last7Days.push(date);
+            }
+            
+            // Initialize daily counts
+            const dailyCounts = {};
+            last7Days.forEach(date => {
+                const dateStr = date.toISOString().split('T')[0];
+                dailyCounts[dateStr] = 0;
+            });
+            
+            // Filter patient records based on current selection
+            let filteredPatientRecords = {};
+            
+            // Check if currentPhc is an overall object (not a specific PHC)
+            // Overall objects have names like "Zone Overall" or "All Zones"
+            const isOverall = currentPhc && (
+                currentPhc.name === t('zoneOverall') || 
+                currentPhc.name === t('allZonesOverall') ||
+                currentPhc.name === 'Zone Overall' ||
+                currentPhc.name === 'All Zones'
+            );
+            
+            if (currentPhc && currentPhc.name && !isOverall) {
+                // Filter by specific PHC
+                const orgNormalized = normalizeOrgName(currentPhc.name);
+                const zone = currentZone || inferZone(currentPhc.name);
+                
+                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
+                    const org = globalPatientOrganizations[patientId] || '';
+                    const patientOrgNormalized = normalizeOrgName(org);
+                    const patientZone = inferZone(org);
+                    
+                    if ((patientOrgNormalized === orgNormalized && patientZone === zone) || 
+                        (!org && orgNormalized === 'Unknown' && zone === 'Unknown')) {
+                        filteredPatientRecords[patientId] = records;
+                    }
+                }
+            } else if (isOverall && currentZone === 'All Zones') {
+                // All Zones Overall - use all records
+                filteredPatientRecords = globalPatientRecords;
+            } else if (isOverall && currentZone && currentZone !== 'All Zones') {
+                // Zone Overall for a specific zone - filter by that zone
+                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
+                    const org = globalPatientOrganizations[patientId] || '';
+                    const zone = inferZone(org);
+                    
+                    if (zone === currentZone || (!org && zone === 'Unknown' && currentZone === 'Unknown')) {
+                        filteredPatientRecords[patientId] = records;
+                    }
+                }
+            } else if (currentZone && currentZone !== 'All Zones' && currentZone !== null) {
+                // Filter by zone (fallback case)
+                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
+                    const org = globalPatientOrganizations[patientId] || '';
+                    const zone = inferZone(org);
+                    
+                    if (zone === currentZone || (!org && zone === 'Unknown' && currentZone === 'Unknown')) {
+                        filteredPatientRecords[patientId] = records;
+                    }
+                }
+            } else {
+                // All zones or no zone selected - use all records
+                filteredPatientRecords = globalPatientRecords;
+            }
+            
+            // Count screenings by day
+            // Get the date range for last 7 days (from 6 days ago to last update date)
+            const lastUpdateStart = new Date(lastUpdateDate);
+            lastUpdateStart.setHours(0, 0, 0, 0);
+            const sevenDaysAgo = new Date(lastUpdateStart);
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+            
+            for (const [patientId, records] of Object.entries(filteredPatientRecords)) {
+                // Age filter removed - all patients are above 35
+                // const age = records[0]?.age || 0;
+                // if (age <= 34) continue;
+                
+                // Filter records that are valid and within the last 7 days
+                const validRecords = records.filter(r => {
+                    if (!r.resultDate || isNaN(r.resultDate.getTime())) return false;
+                    const recordDate = new Date(r.resultDate);
+                    recordDate.setHours(0, 0, 0, 0);
+                    // Must be after start date and within last 7 days (inclusive, ending at last update date)
+                    return recordDate >= SCREENING_START_DATE && recordDate >= sevenDaysAgo && recordDate <= lastUpdateStart;
+                });
+                
+                // Count each screening in the last 7 days
+                validRecords.forEach(record => {
+                    const screeningDate = new Date(record.resultDate);
+                    screeningDate.setHours(0, 0, 0, 0);
+                    const dateStr = screeningDate.toISOString().split('T')[0];
+                    
+                    // Check if this date is within last 7 days
+                    if (dailyCounts.hasOwnProperty(dateStr)) {
+                        dailyCounts[dateStr]++;
+                    }
+                });
+            }
+            
+            // Format results for display (reverse to show most recent first)
+            // Get current language
+            const savedLang = localStorage.getItem('language') || 'en';
+            const isArabic = savedLang === 'ar';
+            
+            const monthNamesEn = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+            const monthNamesAr = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+            const monthNames = isArabic ? monthNamesAr : monthNamesEn;
+            
+            const result = last7Days.map(date => {
+                const dateStr = date.toISOString().split('T')[0];
+                const month = monthNames[date.getMonth()];
+                const day = date.getDate();
+                return {
+                    date: `${month} ${day}`,
+                    count: dailyCounts[dateStr] || 0,
+                    dateStr: dateStr
+                };
+            }).reverse(); // Reverse to show most recent first
+            
+            return result;
+        }
+        
+        // Initialize expandable last 7 days card
+        function initLast7DaysCard() {
+            const screenedCard = document.getElementById('screenedCard');
+            const last7DaysCard = document.getElementById('last7DaysCard');
+            const top7PhcsCard = document.getElementById('top7PhcsCard');
+            const dmCard = document.getElementById('dmCard');
+            if (!screenedCard || !last7DaysCard) return;
+            
+            // Toggle card when clicked
+            screenedCard.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                const isShowing = last7DaysCard.classList.contains('show');
+                
+                if (!isShowing) {
+                    // Close the other card if it's open
+                    if (top7PhcsCard && top7PhcsCard.classList.contains('show')) {
+                        top7PhcsCard.classList.remove('show');
+                        if (dmCard) dmCard.classList.remove('expanded');
+                setTimeout(() => {
+                            top7PhcsCard.style.display = 'none';
+                        }, 400);
+                    }
+                    
+                    // Show card - calculate and display last 7 days
                     const last7Days = calculateLast7DaysScreening(selectedZone, selectedPhc);
                     const contentContainer = document.getElementById('last7DaysContent');
                     
@@ -3040,10 +3621,229 @@
                         }
                     }
                     
-                    screenedCard.classList.add('flipped');
+                    // Add expanded class to first card to adjust border radius
+                    screenedCard.classList.add('expanded');
+                    last7DaysCard.style.display = 'block';
+                    // Use setTimeout to ensure display is set before adding show class
+                    setTimeout(() => {
+                        last7DaysCard.classList.add('show');
+                    }, 10);
                 } else {
-                    // Flip back to front
-                    screenedCard.classList.remove('flipped');
+                    // Hide card
+                    last7DaysCard.classList.remove('show');
+                    screenedCard.classList.remove('expanded');
+                    setTimeout(() => {
+                        last7DaysCard.style.display = 'none';
+                    }, 400); // Wait for transition to complete
+                }
+            });
+            
+            // Collapse card when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!screenedCard.contains(e.target) && !last7DaysCard.contains(e.target)) {
+                    last7DaysCard.classList.remove('show');
+                    screenedCard.classList.remove('expanded');
+                    setTimeout(() => {
+                        last7DaysCard.style.display = 'none';
+                    }, 400);
+                }
+            });
+        }
+        
+        // Calculate top 7 PHCs with uncontrolled DM patients
+        function calculateTop7PhcsUncontrolled(currentZone, currentPhc) {
+            // Check if currentPhc is an overall object (All Zones Overall or Zone Overall)
+            const isOverallPhc = currentPhc && (
+                currentPhc.name === t('allZonesOverall') ||
+                currentPhc.name === t('zoneOverall') ||
+                currentPhc.name === 'All Zones' ||
+                currentPhc.name === 'Zone Overall' ||
+                (!currentPhc.target || currentPhc.target === 0)
+            );
+            
+            // Check if we're in "All Zones" mode AND no specific zone/PHC is selected (or only overall is selected)
+            // Only show zones if currentZone is 'All Zones' and no specific PHC is selected
+            if (currentZone === 'All Zones' && (!currentPhc || isOverallPhc)) {
+                // Calculate by zones (exclude "All Zones" itself)
+                const allZones = [];
+                
+                Object.keys(zonesData).forEach(zone => {
+                    if (zone === 'All Zones' || zone === 'Unknown') return; // Exclude "All Zones" and "Unknown"
+                    
+                    if (zonesData[zone] && zonesData[zone].phcs) {
+                        // Calculate zone total uncontrolled
+                        const zoneUncontrolled = zonesData[zone].phcs.reduce((sum, phc) => sum + (phc.uncontrolled || 0), 0);
+                        
+                        if (zoneUncontrolled > 0) {
+                            allZones.push({
+                                name: getZoneDisplayName(zone),
+                                count: zoneUncontrolled,
+                                zone: zone
+                            });
+                        }
+                    }
+                });
+                
+                // Sort by uncontrolled count (descending), take top 10
+                const topZones = allZones
+                    .sort((a, b) => b.count - a.count)
+                    .slice(0, 10);
+                
+                // Calculate total uncontrolled for percentage calculation
+                const totalUncontrolled = allZones.reduce((sum, zone) => sum + zone.count, 0);
+                
+                // Format results
+                return topZones.map(zone => {
+                    const percentage = totalUncontrolled > 0 
+                        ? ((zone.count / totalUncontrolled) * 100).toFixed(1)
+                        : '0.0';
+                    return {
+                        name: zone.name,
+                        count: zone.count,
+                        percentage: percentage
+                    };
+                });
+            }
+            
+            // Collect all PHCs based on current selection (for specific zone or PHC)
+            let allPhcs = [];
+            
+            // Helper function to check if a PHC is an overall object
+            const isPhcOverall = (phc) => {
+                return phc.name === t('zoneOverall') || 
+                       phc.name === t('allZonesOverall') ||
+                       phc.name === 'Zone Overall' ||
+                       phc.name === 'All Zones' ||
+                       (!phc.target || phc.target === 0);
+            };
+            
+            if (currentPhc && currentPhc.name && !isPhcOverall(currentPhc)) {
+                // If a specific PHC is selected (and it's not an overall), only show that one
+                allPhcs = [currentPhc];
+            } else if (currentZone && currentZone !== 'All Zones') {
+                // Filter by zone - exclude "Zone Overall" from the list
+                if (zonesData[currentZone] && zonesData[currentZone].phcs) {
+                    allPhcs = zonesData[currentZone].phcs.filter(phc => {
+                        // Exclude "Zone Overall" - check if it's an overall object
+                        return !isPhcOverall(phc);
+                    });
+                }
+            } else {
+                // Fallback - collect all PHCs (exclude overalls)
+                Object.keys(zonesData).forEach(zone => {
+                    if (zonesData[zone] && zonesData[zone].phcs) {
+                        const zonePhcs = zonesData[zone].phcs.filter(phc => {
+                            // Exclude "Zone Overall" objects
+                            return !isPhcOverall(phc);
+                        });
+                        allPhcs = allPhcs.concat(zonePhcs);
+                    }
+                });
+            }
+            
+            // Filter PHCs with uncontrolled > 0, sort by uncontrolled count (descending), take top 7
+            const topPhcs = allPhcs
+                .filter(phc => phc.uncontrolled > 0)
+                .sort((a, b) => b.uncontrolled - a.uncontrolled)
+                .slice(0, 7);
+            
+            // Calculate total uncontrolled for percentage calculation
+            const totalUncontrolled = allPhcs.reduce((sum, phc) => sum + (phc.uncontrolled || 0), 0);
+            
+            // Format results
+            return topPhcs.map(phc => {
+                const percentage = totalUncontrolled > 0 
+                    ? ((phc.uncontrolled / totalUncontrolled) * 100).toFixed(1)
+                    : '0.0';
+                return {
+                    name: phc.name,
+                    count: phc.uncontrolled,
+                    percentage: percentage
+                };
+            });
+        }
+        
+        // Initialize expandable top 7 PHCs card
+        function initTop7PhcsCard() {
+            const dmCard = document.getElementById('dmCard');
+            const top7PhcsCard = document.getElementById('top7PhcsCard');
+            const last7DaysCard = document.getElementById('last7DaysCard');
+            const screenedCard = document.getElementById('screenedCard');
+            if (!dmCard || !top7PhcsCard) return;
+            
+            // Toggle card when clicked
+            dmCard.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                const isShowing = top7PhcsCard.classList.contains('show');
+                
+                if (!isShowing) {
+                    // Close the other card if it's open
+                    if (last7DaysCard && last7DaysCard.classList.contains('show')) {
+                        last7DaysCard.classList.remove('show');
+                        if (screenedCard) screenedCard.classList.remove('expanded');
+                        setTimeout(() => {
+                            last7DaysCard.style.display = 'none';
+                        }, 400);
+                    }
+                    
+                    // Update title based on selection
+                    // Show "Zones" title only if we're in "All Zones" mode AND no specific zone/PHC is selected
+                    const top7PhcsTitle = document.getElementById('top7PhcsTitle');
+                    if (top7PhcsTitle) {
+                        const currentT = translations[getCurrentLanguage()];
+                        if (selectedZone === 'All Zones' && (!selectedPhc || selectedPhc.name === t('allZonesOverall') || selectedPhc.name === 'All Zones')) {
+                            top7PhcsTitle.textContent = currentT.top7ZonesTitle;
+                        } else {
+                            top7PhcsTitle.textContent = currentT.top7PhcsTitle;
+                        }
+                    }
+                    
+                    // Show card - calculate and display top 7 PHCs or Zones
+                    const topPhcs = calculateTop7PhcsUncontrolled(selectedZone, selectedPhc);
+                    const contentContainer = document.getElementById('top7PhcsContent');
+                    
+                    if (contentContainer) {
+                        if (topPhcs.length === 0) {
+                            contentContainer.innerHTML = '<div class="phc-item-row"><span class="phc-name">No data available</span></div>';
+                        } else {
+                            contentContainer.innerHTML = topPhcs.map(phc => `
+                                <div class="phc-item-row">
+                                    <span class="phc-name">${phc.name}</span>
+                                    <div class="phc-stats">
+                                        <span class="phc-count">${phc.count}</span>
+                                        <span class="phc-percentage">${phc.percentage}%</span>
+                                    </div>
+                                </div>
+                            `).join('');
+                        }
+                    }
+                    
+                    // Add expanded class to DM card to adjust border radius
+                    dmCard.classList.add('expanded');
+                    top7PhcsCard.style.display = 'block';
+                    // Use setTimeout to ensure display is set before adding show class
+                    setTimeout(() => {
+                        top7PhcsCard.classList.add('show');
+                    }, 10);
+                } else {
+                    // Hide card
+                    top7PhcsCard.classList.remove('show');
+                    dmCard.classList.remove('expanded');
+                    setTimeout(() => {
+                        top7PhcsCard.style.display = 'none';
+                    }, 400); // Wait for transition to complete
+                }
+            });
+            
+            // Collapse card when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!dmCard.contains(e.target) && !top7PhcsCard.contains(e.target)) {
+                    top7PhcsCard.classList.remove('show');
+                    dmCard.classList.remove('expanded');
+                    setTimeout(() => {
+                        top7PhcsCard.style.display = 'none';
+                    }, 400);
                 }
             });
         }
@@ -3052,7 +3852,8 @@
         init();
         initDarkMode();
         initLanguageToggle();
-        initFlipCard();
+        initLast7DaysCard();
+        initTop7PhcsCard();
     </script>
 </body>
 </html>
