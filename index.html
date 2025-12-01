@@ -1198,9 +1198,30 @@
                     g1Timestamp: (g1Timestamp || '').toString(),
                     cachedAt: Date.now()
                 };
-                localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
+                const dataToStore = JSON.stringify(payload);
+                
+                // Check size before storing (localStorage limit is typically 5-10MB)
+                const maxSize = 4 * 1024 * 1024; // 4MB safe limit
+                if (dataToStore.length > maxSize) {
+                    console.warn(`Data too large to cache (${(dataToStore.length / 1024 / 1024).toFixed(2)}MB). Skipping cache. App will still work.`);
+                    return;
+                }
+                
+                localStorage.setItem(CACHE_KEY, dataToStore);
             } catch (error) {
-                console.warn('Failed to cache data:', error);
+                // Handle quota exceeded error specifically
+                if (error.name === 'QuotaExceededError' || error.code === 22) {
+                    console.warn('localStorage quota exceeded. Clearing old cache and skipping new cache. App will continue to work normally.');
+                    try {
+                        // Clear the old cache to free up space
+                        localStorage.removeItem(CACHE_KEY);
+                    } catch (clearError) {
+                        // Ignore errors when clearing
+                    }
+                } else {
+                    console.warn('Failed to cache data:', error);
+                }
+                // App continues to work even if caching fails
             }
         }
 
@@ -1613,20 +1634,21 @@
                 if (age <= 34) continue;
                 
                 const sortedRecords = records
-                    .filter(r => r.resultDate && !isNaN(r.resultDate.getTime()))
+                    .filter(r => r.resultDate && !isNaN(r.resultDate.getTime()) && r.resultDate >= SCREENING_START_DATE)
                     .sort((a, b) => a.resultDate - b.resultDate);
                 
-                const firstAfter2025 = sortedRecords.find(r => r.resultDate >= SCREENING_START_DATE);
-                if (!firstAfter2025) continue;
+                if (sortedRecords.length === 0) continue;
                 
-                // Get the date of first screening after start date
-                const screeningDate = new Date(firstAfter2025.resultDate);
-                screeningDate.setHours(0, 0, 0, 0);
-                const dateStr = screeningDate.toISOString().split('T')[0];
-                
-                // Check if this date is within last 7 days
-                if (dailyCounts.hasOwnProperty(dateStr)) {
-                    dailyCounts[dateStr]++;
+                // Count all screenings that occurred in the last 7 days
+                for (const record of sortedRecords) {
+                    const screeningDate = new Date(record.resultDate);
+                    screeningDate.setHours(0, 0, 0, 0);
+                    const dateStr = screeningDate.toISOString().split('T')[0];
+                    
+                    // Check if this date is within last 7 days
+                    if (dailyCounts.hasOwnProperty(dateStr)) {
+                        dailyCounts[dateStr]++;
+                    }
                 }
             }
             
