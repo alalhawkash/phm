@@ -91,6 +91,7 @@
             cursor: pointer;
             padding: 8px;
             font-size: 20px;
+            font-weight: 600;
             color: var(--ios-text-primary);
             transition: all var(--transition-base);
             border-radius: var(--radius-md);
@@ -1060,8 +1061,8 @@
     <!-- Status Bar -->
     <div class="status-bar">
             <div class="status-left">
-                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">☰</button>
-                <span>NHC-PHM</span>
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">›</button>
+                <span id="statusZoneName">All Zones</span>
             </div>
             <div class="status-right">
                 <button class="language-toggle" id="languageToggle" aria-label="Toggle language">EN</button>
@@ -1482,6 +1483,13 @@
             if (dropdownBtn) {
                 dropdownBtn.textContent = t('allZones');
             }
+            
+            // Update status bar zone name
+            const statusZoneName = document.getElementById('statusZoneName');
+            if (statusZoneName) {
+                statusZoneName.textContent = t('allZones');
+            }
+            
             populateAllZonesPhcList();
             
             // Update timeline first to create the structure
@@ -1512,6 +1520,13 @@
             overallItem.addEventListener('click', () => {
                 // Reset selectedZone to 'All Zones' when clicking All Zones Overall
                 selectedZone = 'All Zones';
+                
+                // Update status bar zone name
+                const statusZoneName = document.getElementById('statusZoneName');
+                if (statusZoneName) {
+                    statusZoneName.textContent = t('allZones');
+                }
+                
                 // Recalculate all zones overall fresh on click to ensure accurate data
                 const allZonesOverall = calculateAllZonesOverall();
                 selectZoneOverall(allZonesOverall, overallItem);
@@ -1533,6 +1548,13 @@
                 zoneItem.addEventListener('click', () => {
                     // Update selectedZone to the clicked zone for proper filtering
                     selectedZone = zone;
+                    
+                    // Update status bar zone name
+                    const statusZoneName = document.getElementById('statusZoneName');
+                    if (statusZoneName) {
+                        statusZoneName.textContent = getZoneDisplayName(zone);
+                    }
+                    
                     // Recalculate zone overall fresh on click to ensure accurate data
                     requestAnimationFrame(() => {
                         const zoneOverall = calculateZoneOverall(zone);
@@ -1553,6 +1575,13 @@
             if (dropdownBtn) {
                 dropdownBtn.textContent = getZoneDisplayName(zone);
             }
+            
+            // Update status bar zone name
+            const statusZoneName = document.getElementById('statusZoneName');
+            if (statusZoneName) {
+                statusZoneName.textContent = getZoneDisplayName(zone);
+            }
+            
             populatePhcList(zone);
             
             // Update timeline first to create the structure
@@ -3909,13 +3938,27 @@
             
             // Check for saved state
             const sidebarHidden = localStorage.getItem('sidebarHidden') === 'true';
+            const isRTL = document.body.getAttribute('dir') === 'rtl';
+            
             if (sidebarHidden) {
                 sidebar.classList.add('hidden');
+                sidebarToggle.textContent = isRTL ? '›' : '‹';
+            } else {
+                sidebarToggle.textContent = isRTL ? '‹' : '›';
             }
             
-            sidebarToggle.addEventListener('click', () => {
+            sidebarToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
                 sidebar.classList.toggle('hidden');
                 const isHidden = sidebar.classList.contains('hidden');
+                
+                // Update button text based on state
+                if (isHidden) {
+                    sidebarToggle.textContent = '‹';
+                } else {
+                    sidebarToggle.textContent = '›';
+                }
+                
                 localStorage.setItem('sidebarHidden', isHidden);
             });
         }
