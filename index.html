@@ -3228,7 +3228,13 @@
                 predmSubtitle: "Pre-diabetes patients",
                 last7Days: "Last 7 Days",
                 top7PhcsTitle: "PHCs with Highest Uncontrolled DM Cases",
-                top7ZonesTitle: "Zones with Highest Uncontrolled DM Cases"
+                top7ZonesTitle: "Zones with Highest Uncontrolled DM Cases",
+                modalTitle: "Select Location",
+                modalZoneTitle: "Select Zone",
+                modalPhcTitle: "Select PHC",
+                modalClear: "Clear",
+                modalCancel: "Cancel",
+                modalApply: "Apply"
             },
             ar: {
                 headerTitle: "اختر منطقة",
@@ -3251,7 +3257,13 @@
                 predmSubtitle: "مرضى ما قبل السكري",
                 last7Days: "آخر 7 أيام",
                 top7PhcsTitle: "المراكز الصحية ذات أعلى حالات السكري غير المتحكم بها",
-                top7ZonesTitle: "المناطق ذات أعلى حالات السكري غير المتحكم بها"
+                top7ZonesTitle: "المناطق ذات أعلى حالات السكري غير المتحكم بها",
+                modalTitle: "اختر الموقع",
+                modalZoneTitle: "اختر المنطقة",
+                modalPhcTitle: "اختر المركز الصحي",
+                modalClear: "مسح",
+                modalCancel: "إلغاء",
+                modalApply: "تطبيق"
             }
         };
         
@@ -3610,7 +3622,7 @@
             let currentLang = savedLang;
             
             // Set initial button text - show opposite (what it will switch to)
-            languageToggle.textContent = currentLang === 'en' ? 'AR' : 'EN';
+            languageToggle.textContent = currentLang === 'en' ? 'ع' : 'E';
             
             // Apply initial language
             applyLanguage(currentLang);
@@ -3620,7 +3632,7 @@
                 localStorage.setItem('language', currentLang);
                 applyLanguage(currentLang);
                 // Show opposite (what it will switch to)
-                languageToggle.textContent = currentLang === 'en' ? 'AR' : 'EN';
+                languageToggle.textContent = currentLang === 'en' ? 'ع' : 'E';
             });
         }
         
@@ -3628,6 +3640,12 @@
         function applyLanguage(lang) {
             const body = document.body;
             const currentT = translations[lang];
+            
+            // Update language toggle button text
+            const languageToggle = document.getElementById('languageToggle');
+            if (languageToggle) {
+                languageToggle.textContent = lang === 'en' ? 'ع' : 'E';
+            }
             
             // Set direction
             body.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
@@ -3756,6 +3774,28 @@
             }
 
             updateLastUpdatedFooter();
+            
+            // Update modal translations
+            const modalTitle = document.getElementById('modalTitle');
+            if (modalTitle) modalTitle.textContent = currentT.modalTitle;
+            
+            const modalZoneTitle = document.getElementById('modalZoneTitle');
+            if (modalZoneTitle) modalZoneTitle.textContent = currentT.modalZoneTitle;
+            
+            const modalPhcTitle = document.getElementById('modalPhcTitle');
+            if (modalPhcTitle) modalPhcTitle.textContent = currentT.modalPhcTitle;
+            
+            const modalClearBtn = document.getElementById('modalClearBtn');
+            if (modalClearBtn) modalClearBtn.textContent = currentT.modalClear;
+            
+            const modalCancelBtn = document.getElementById('modalCancelBtn');
+            if (modalCancelBtn) modalCancelBtn.textContent = currentT.modalCancel;
+            
+            const modalApplyBtn = document.getElementById('modalApplyBtn');
+            if (modalApplyBtn) modalApplyBtn.textContent = currentT.modalApply;
+            
+            // Update location button display with translated name (force current language)
+            updateLocationDisplay(lang);
         }
         
         // Dark Mode Toggle
@@ -4224,7 +4264,6 @@
             // Close modal functions
             const closeModal = () => {
                 modal.classList.remove('show');
-                searchInput.value = '';
             };
             
             closeBtn.addEventListener('click', closeModal);
@@ -4395,10 +4434,11 @@
             });
         }
         
-        function updateLocationDisplay() {
+        function updateLocationDisplay(forceLang = null) {
             const locationText = document.getElementById('currentLocationText');
             if (!locationText) return;
             
+            const lang = forceLang || getCurrentLanguage();
             let displayText = '';
             
             if (selectedPhc && selectedPhc.name) {
@@ -4406,13 +4446,24 @@
                 if (selectedPhc.isZoneOverall || selectedPhc.isAllZonesOverall) {
                     displayText = selectedPhc.name;
                 } else {
-                    displayText = getOrgDisplayName(selectedPhc.name);
+                    // Get translated name using specified language
+                    const normalized = normalizeOrgName(selectedPhc.name);
+                    const mapping = orgDisplayNames[normalized];
+                    if (mapping) {
+                        displayText = mapping[lang] || mapping.en || selectedPhc.name;
+                    } else {
+                        displayText = selectedPhc.name;
+                    }
                 }
             } else if (selectedZone) {
-                // Show zone name
-                displayText = selectedZone === 'All Zones' ? t('allZones') : getZoneDisplayName(selectedZone);
+                // Show zone name with translation
+                if (selectedZone === 'All Zones') {
+                    displayText = translations[lang].allZones;
+                } else {
+                    displayText = zoneNames[lang][selectedZone] || selectedZone;
+                }
             } else {
-                displayText = t('allZones');
+                displayText = translations[lang].allZones;
             }
             
             locationText.textContent = displayText;
