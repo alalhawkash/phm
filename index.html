@@ -201,10 +201,6 @@
         }
         
         
-        body[dir="rtl"] .timeline {
-            left: auto;
-            right: 180px;
-        }
         
         body[dir="rtl"] .metrics-panel {
             padding: 12px 20px 12px 20px;
@@ -229,9 +225,6 @@
         }
         
         @media (max-width: 768px) {
-            body[dir="rtl"] .timeline {
-                right: 170px;
-            }
             
             body[dir="rtl"] .metrics-panel {
                 padding: 12px 16px 12px 16px;
@@ -595,18 +588,6 @@
             pointer-events: none;
         }
         
-        /* Center Timeline - Minimal Style */
-        .timeline {
-            display: none;
-        }
-        
-        .timeline-flower {
-            display: none;
-        }
-        
-        .flower-icon {
-            display: none;
-        }
         
         /* Right Panel - Metrics with iOS Cards */
         .metrics-panel {
@@ -875,9 +856,6 @@
                 overflow-y: auto;
             }
             
-            .timeline {
-                left: 170px;
-            }
             
             .metrics-panel {
                 padding: 12px 16px 12px 16px;
@@ -1055,14 +1033,347 @@
             font-weight: 600;
             color: var(--ios-text-primary);
         }
+        
+        /* Location Selector Button */
+        .location-selector-btn {
+            background: var(--ios-surface);
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 8px 16px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition-base);
+            color: var(--ios-text-primary);
+            box-shadow: var(--shadow-sm);
+            min-height: 44px;
+        }
+        
+        .location-selector-btn:active {
+            transform: scale(0.98);
+            background: var(--ios-gray-1);
+        }
+        
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+            animation: fadeIn 0.2s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* Modal Container */
+        .modal-container {
+            background: var(--ios-surface);
+            border-radius: var(--radius-xl);
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(40px) scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        /* Modal Header */
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 0.5px solid var(--ios-separator);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--ios-text-primary);
+            margin: 0;
+        }
+        
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            color: var(--ios-text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: var(--radius-md);
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-base);
+        }
+        
+        .modal-close:hover {
+            background: var(--ios-gray-1);
+        }
+        
+        .modal-close:active {
+            transform: scale(0.95);
+            background: var(--ios-gray-2);
+        }
+        
+        /* Modal Body */
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        /* Modal Sections */
+        .modal-section {
+            margin-bottom: 24px;
+        }
+        
+        .modal-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--ios-text-secondary);
+            margin-bottom: 12px;
+        }
+        
+        /* Zone Grid */
+        .modal-zone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px;
+        }
+        
+        .modal-zone-item {
+            background: var(--ios-gray-1);
+            border: 2px solid transparent;
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--ios-text-primary);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            user-select: none;
+        }
+        
+        .modal-zone-item:hover {
+            background: var(--ios-gray-2);
+        }
+        
+        .modal-zone-item:active {
+            transform: scale(0.95);
+        }
+        
+        .modal-zone-item.selected {
+            background: var(--ios-blue);
+            color: white;
+            border-color: var(--ios-blue);
+            font-weight: 600;
+        }
+        
+        /* PHC List */
+        .modal-phc-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .modal-phc-item {
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            background: var(--ios-gray-1);
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: var(--ios-text-primary);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            user-select: none;
+        }
+        
+        .modal-phc-item:hover {
+            background: var(--ios-gray-2);
+        }
+        
+        .modal-phc-item:active {
+            transform: scale(0.98);
+        }
+        
+        .modal-phc-item.selected {
+            background: var(--ios-blue);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .modal-phc-item.closed {
+            opacity: 0.6;
+            font-style: italic;
+        }
+        
+        /* Modal Footer */
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 0.5px solid var(--ios-separator);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .modal-footer-spacer {
+            flex: 1;
+        }
+        
+        .modal-btn {
+            padding: 10px 24px;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            min-width: 100px;
+            min-height: 44px;
+        }
+        
+        .modal-btn-clear {
+            background: transparent;
+            color: #FF3B30;
+            border: 2px solid #FF3B30;
+        }
+        
+        .modal-btn-clear:hover {
+            background: rgba(255, 59, 48, 0.1);
+        }
+        
+        .modal-btn-clear:active {
+            transform: scale(0.95);
+            background: rgba(255, 59, 48, 0.2);
+        }
+        
+        .modal-btn-cancel {
+            background: var(--ios-gray-1);
+            color: var(--ios-text-primary);
+        }
+        
+        .modal-btn-cancel:hover {
+            background: var(--ios-gray-2);
+        }
+        
+        .modal-btn-cancel:active {
+            transform: scale(0.95);
+        }
+        
+        .modal-btn-apply {
+            background: var(--ios-blue);
+            color: white;
+        }
+        
+        .modal-btn-apply:hover {
+            opacity: 0.9;
+        }
+        
+        .modal-btn-apply:active {
+            transform: scale(0.95);
+        }
+        
+        .modal-btn-apply:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Dark Mode Support */
+        body.dark-mode .location-selector-btn {
+            background: var(--ios-surface);
+        }
+        
+        body.dark-mode .modal-container {
+            background: var(--ios-gray-1);
+        }
+        
+        body.dark-mode .modal-zone-item,
+        body.dark-mode .modal-phc-item {
+            background: var(--ios-gray-2);
+        }
+        
+        body.dark-mode .modal-zone-item:hover,
+        body.dark-mode .modal-phc-item:hover {
+            background: var(--ios-gray-3);
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .modal-container {
+                max-width: 100%;
+                max-height: 90vh;
+                margin: 0;
+                border-radius: var(--radius-lg);
+            }
+            
+            .modal-zone-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            
+            .modal-header {
+                padding: 16px 20px;
+            }
+            
+            .modal-body {
+                padding: 20px;
+            }
+            
+            .modal-title {
+                font-size: 18px;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Status Bar -->
     <div class="status-bar">
             <div class="status-left">
-                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">›</button>
-                <span id="statusZoneName">All Zones</span>
+                <button class="location-selector-btn" id="locationSelectorBtn" aria-label="Change location">
+                    <span id="currentLocationText">All Zones</span>
+                </button>
             </div>
             <div class="status-right">
                 <button class="language-toggle" id="languageToggle" aria-label="Toggle language">EN</button>
@@ -1072,17 +1383,7 @@
     
     <!-- Main Container -->
     <div class="main-container">
-        <!-- Left Panel - PHC List -->
-        <div class="phc-list-panel" id="phcListPanel">
-            <!-- PHCs will be populated by JavaScript -->
-        </div>
-        
-        <!-- Center Timeline -->
-        <div class="timeline" id="timeline">
-            <!-- Timeline ticks and flower will be added by JavaScript -->
-        </div>
-        
-        <!-- Right Panel - Metrics -->
+        <!-- Right Panel - Metrics (Full Width) -->
         <div class="metrics-panel" id="metricsPanel">
             <div class="metric-group" id="screenedCard" style="cursor: pointer;">
                 <div class="metric-group-title" id="metricScreeningSubtitle">Screening Coverage</div>
@@ -1159,6 +1460,41 @@
     
     <!-- Error Display -->
     <div class="error" id="error"></div>
+
+    <!-- Location Selector Modal -->
+    <div class="modal-overlay" id="locationModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Select Location</h2>
+                <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Zone Selection -->
+                <div class="modal-section">
+                    <div class="modal-section-title" id="modalZoneTitle">Select Zone</div>
+                    <div class="modal-zone-grid" id="modalZoneGrid">
+                        <!-- Zones populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- PHC Selection -->
+                <div class="modal-section" id="modalPhcSection">
+                    <div class="modal-section-title" id="modalPhcTitle">Select PHC</div>
+                    <div class="modal-phc-list" id="modalPhcList">
+                        <!-- PHCs populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-clear" id="modalClearBtn">Clear</button>
+                <div class="modal-footer-spacer"></div>
+                <button class="modal-btn modal-btn-cancel" id="modalCancelBtn">Cancel</button>
+                <button class="modal-btn modal-btn-apply" id="modalApplyBtn">Apply</button>
+            </div>
+        </div>
+    </div>
 
     <footer class="footer">
         <span class="footer-label" id="lastUpdatedLabel">Last update:</span>
@@ -1328,7 +1664,6 @@
                 }
                 return parsed;
             } catch (error) {
-                console.warn('Failed to parse cached data:', error);
                 localStorage.removeItem(CACHE_KEY);
                 return null;
             }
@@ -1343,7 +1678,7 @@
                 };
                 localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
             } catch (error) {
-                console.warn('Failed to cache data:', error);
+                // Silently fail cache write
             }
         }
 
@@ -1380,7 +1715,6 @@
                 const csvText = await fetchCsvWithFallback(csvG1Url);
                 return parseLastUpdatedValue(csvText);
             } catch (error) {
-                console.warn('Unable to fetch G1 timestamp:', error);
                 return null;
             }
         }
@@ -1457,7 +1791,8 @@
                 uncontrolled: 0,
                 improved: 0,
                 needFollowup: 0,
-                target: 0
+                target: 0,
+                isAllZonesOverall: true  // Flag to identify it as all zones overall
             };
             
             Object.keys(zonesData).forEach(zone => {
@@ -1489,16 +1824,8 @@
                 dropdownBtn.textContent = t('allZones');
             }
             
-            // Update status bar zone name
-            const statusZoneName = document.getElementById('statusZoneName');
-            if (statusZoneName) {
-                statusZoneName.textContent = t('allZones');
-            }
-            
-            populateAllZonesPhcList();
-            
-            // Update timeline first to create the structure
-            updateTimeline();
+            // Update location display
+            updateLocationDisplay();
             
             // Automatically select All Zones Overall as default
             setTimeout(() => {
@@ -1581,16 +1908,8 @@
                 dropdownBtn.textContent = getZoneDisplayName(zone);
             }
             
-            // Update status bar zone name
-            const statusZoneName = document.getElementById('statusZoneName');
-            if (statusZoneName) {
-                statusZoneName.textContent = getZoneDisplayName(zone);
-            }
-            
-            populatePhcList(zone);
-            
-            // Update timeline first to create the structure
-            updateTimeline();
+            // Update location display
+            updateLocationDisplay();
             
             // Automatically select Zone Overall as default (after a brief delay to ensure DOM is ready)
             setTimeout(() => {
@@ -1603,29 +1922,30 @@
         function calculateZoneOverall(zone) {
             // Safety check
             if (!zonesData[zone] || !zonesData[zone].phcs) {
-                console.warn(`Zone ${zone} not found in zonesData or has no PHCs`);
                 return {
-                    name: t('zoneOverall'),
+                    name: getZoneDisplayName(zone),
                     screened: 0,
                     remaining: 0,
                     controlled: 0,
                     uncontrolled: 0,
                     improved: 0,
                     needFollowup: 0,
-                    target: 0
+                    target: 0,
+                    isZoneOverall: true
                 };
             }
             
             const phcs = zonesData[zone].phcs;
             const overall = {
-                name: t('zoneOverall'),
+                name: getZoneDisplayName(zone),  // Use actual zone name instead of "Zone Overall"
                 screened: 0,
                 remaining: 0,
                 controlled: 0,
                 uncontrolled: 0,
                 improved: 0,
                 needFollowup: 0,
-                target: 0
+                target: 0,
+                isZoneOverall: true  // Flag to identify it as an overall item
             };
             
             phcs.forEach(phc => {
@@ -1813,7 +2133,6 @@
         
         // Build patient indexes for fast filtering (called once when data loads)
         function buildPatientIndexes() {
-            console.time('Building patient indexes');
             patientIdsByZone = {};
             patientIdsByPhc = {};
             
@@ -1835,13 +2154,6 @@
                 }
                 patientIdsByPhc[phcKey].push(patientId);
             }
-            
-            console.timeEnd('Building patient indexes');
-            console.log('Patient indexes built:', {
-                zones: Object.keys(patientIdsByZone).length,
-                phcs: Object.keys(patientIdsByPhc).length,
-                totalPatients: Object.keys(globalPatientRecords).length
-            });
         }
         
         // Fast filtering using pre-built indexes (replaces slow nested loops)
@@ -1849,12 +2161,15 @@
             const filteredPatientRecords = {};
             let patientIds = [];
             
-            // Check if currentPhc is an overall object
+            // Check if currentPhc is an overall object (using flags for reliability)
             const isOverall = currentPhc && (
+                currentPhc.isZoneOverall === true || 
+                currentPhc.isAllZonesOverall === true ||
                 currentPhc.name === t('zoneOverall') || 
                 currentPhc.name === t('allZonesOverall') ||
                 currentPhc.name === 'Zone Overall' ||
-                currentPhc.name === 'All Zones'
+                currentPhc.name === 'All Zones' ||
+                !currentPhc.target || currentPhc.target === 0
             );
             
             if (currentPhc && currentPhc.name && !isOverall) {
@@ -2192,31 +2507,8 @@
         function selectZoneOverall(zoneOverall, clickedElement = null) {
             selectedPhc = zoneOverall;
             
-            // Update active state - highlight only the clicked item or first overall if none specified
-            const phcItems = document.querySelectorAll('.phc-item');
-            phcItems.forEach((item) => {
-                item.classList.remove('active');
-            });
-            
-            if (clickedElement) {
-                clickedElement.classList.add('active');
-                // Find the DOM index of the clicked element for timeline positioning
-                const panel = document.getElementById('phcListPanel');
-                const phcItems = panel.querySelectorAll('.phc-item');
-                const domIndex = Array.from(phcItems).indexOf(clickedElement);
-                requestAnimationFrame(() => {
-                    updateTimelineFlower(domIndex);
-                });
-            } else {
-                // Fallback: highlight first overall item
-                const firstOverall = document.querySelector('.phc-item-overall');
-                if (firstOverall) {
-                    firstOverall.classList.add('active');
-                    requestAnimationFrame(() => {
-                        updateTimelineFlower(0);
-                    });
-                }
-            }
+            // Update location display
+            updateLocationDisplay();
             
             // Update metrics with percentages
             const screenedPercent = zoneOverall.target > 0 
@@ -2255,24 +2547,8 @@
         function selectPhc(phc, index) {
             selectedPhc = phc;
             
-            // Update active state
-            document.querySelectorAll('.phc-item').forEach((item) => {
-                if (item.classList.contains('phc-item-overall')) {
-                    item.classList.remove('active');
-                    return;
-                }
-                
-                // Check for globalIndex (All Zones) or index (single zone)
-                const itemIndex = item.dataset.globalIndex !== undefined 
-                    ? parseInt(item.dataset.globalIndex) 
-                    : parseInt(item.dataset.index);
-                    
-                if (itemIndex === index) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
+            // Update location display
+            updateLocationDisplay();
             
             // Update metrics with percentages
             const screenedPercent = phc.target > 0 
@@ -2302,83 +2578,8 @@
                 updateDailyChange(todayMetrics.screened, yesterdayMetrics.screened, 'metricScreenedChange');
             }, 100);
             
-            // Find and update timeline flower position
-            const phcPanel = document.getElementById('phcListPanel');
-            const phcItems = phcPanel.querySelectorAll('.phc-item');
-            phcItems.forEach((item, domIdx) => {
-                if (item.classList.contains('phc-item-overall')) return;
-                
-                const itemIndex = item.dataset.globalIndex !== undefined 
-                    ? parseInt(item.dataset.globalIndex) 
-                    : parseInt(item.dataset.index);
-                    
-                if (itemIndex === index) {
-                    updateTimelineFlower(domIdx);
-                }
-            });
-            
             setMetricsMaintenanceState(isPhcClosed(phc.name));
         }
-        
-        // Update timeline
-        function updateTimeline() {
-            const timeline = document.getElementById('timeline');
-            
-            if (!selectedZone) {
-                timeline.querySelector('.timeline-flower')?.remove();
-                return;
-            }
-            
-            // Add or update flower indicator
-            let flower = timeline.querySelector('.timeline-flower');
-            if (!flower) {
-                flower = document.createElement('div');
-                flower.className = 'timeline-flower';
-                flower.innerHTML = '<div class="flower-icon"></div>';
-                timeline.appendChild(flower);
-            }
-        }
-        
-        // Update timeline flower position (phcIndex is the DOM index)
-        function updateTimelineFlower(phcIndex) {
-            const flower = document.querySelector('.timeline-flower');
-            if (!flower) {
-                // If flower doesn't exist, create timeline first
-                updateTimeline();
-                // Try again after a brief delay
-                setTimeout(() => updateTimelineFlower(phcIndex), 10);
-                return;
-            }
-            
-            const panel = document.getElementById('phcListPanel');
-            const phcItems = panel.querySelectorAll('.phc-item');
-            
-            if (phcItems[phcIndex]) {
-                const itemRect = phcItems[phcIndex].getBoundingClientRect();
-                const panelRect = panel.getBoundingClientRect();
-                const relativeTop = itemRect.top - panelRect.top + itemRect.height / 2;
-                flower.style.top = relativeTop + 'px';
-            } else if (phcIndex === 0 && phcItems.length > 0) {
-                // Fallback: if index 0 doesn't exist but items do, use first item
-                const itemRect = phcItems[0].getBoundingClientRect();
-                const panelRect = panel.getBoundingClientRect();
-                const relativeTop = itemRect.top - panelRect.top + itemRect.height / 2;
-                flower.style.top = relativeTop + 'px';
-            }
-        }
-        
-        // Update timeline on scroll
-        const phcPanel = document.getElementById('phcListPanel');
-        phcPanel.addEventListener('scroll', () => {
-            if (selectedPhc) {
-                const phcItems = phcPanel.querySelectorAll('.phc-item');
-                phcItems.forEach((item, domIndex) => {
-                    if (item.classList.contains('active')) {
-                        updateTimelineFlower(domIndex);
-                    }
-                });
-            }
-        });
         
         // Load data from Google Sheets with caching
         async function loadDataFromGoogleSheets() {
@@ -2391,7 +2592,6 @@
                     setFooterLastUpdated(cachedData.g1Timestamp);
                     cacheUsed = true;
                 } catch (cacheError) {
-                    console.warn('Failed to process cached data, ignoring cache:', cacheError);
                     localStorage.removeItem(CACHE_KEY);
                     cachedData = null;
                 }
@@ -2408,7 +2608,6 @@
                 setCachedData(csvText, g1Timestamp);
                 processDataStream(csvText);
             } catch (error) {
-                console.error('Error:', error);
                 if (cacheUsed) {
                     // We already showed cached data; keep UI without blocking
                     return;
@@ -2562,9 +2761,6 @@
                     }
                 },
                 complete: function() {
-                    console.log('CSV parsing complete. Total patients:', Object.keys(patientRecords).length);
-                    console.log('Sample patient records:', Object.entries(patientRecords).slice(0, 2));
-                    
                     // Calculate DM patients
                     const dmPatients = {};
                     for (const [patientId, records] of Object.entries(patientRecords)) {
@@ -2828,36 +3024,12 @@
                         screenedCount++;
                     }
                     
-                    console.log('Screening stats:', {
-                        totalPatients: Object.keys(patientRecords).length,
-                        ageFiltered: ageFilteredCount,
-                        noDate: noDateCount,
-                        before2025: before2025Count,
-                        screened: screenedCount,
-                        sampleDates: sampleDates.map(d => d.toISOString().split('T')[0]),
-                        screeningStartDate: SCREENING_START_DATE.toISOString().split('T')[0]
-                    });
-                    
                     // Store patientRecords and patientOrganizations globally for last 7 days calculation
                     globalPatientRecords = patientRecords;
                     globalPatientOrganizations = patientOrganizations;
                     
-                    console.log('Zone org counts:', zoneOrgCounts);
-                    console.log('Zone org screened:', Object.keys(zoneOrgScreened).map(z => ({ 
-                        zone: z, 
-                        orgs: Object.keys(zoneOrgScreened[z] || {}),
-                        patientCounts: Object.entries(zoneOrgScreened[z] || {}).map(([org, set]) => ({ org, count: set.size }))
-                    })));
-                    console.log('Total screened patients:', Object.values(zoneOrgScreened).reduce((sum, zoneOrgs) => {
-                        return sum + Object.values(zoneOrgs).reduce((s, set) => s + (set.size || 0), 0);
-                    }, 0));
-                    console.log('Sample organizations from patient data:', Object.values(patientOrganizations).slice(0, 10));
-                    console.log('Sample normalized orgs:', Object.values(patientOrganizations).slice(0, 10).map(org => ({ original: org, normalized: normalizeOrgName(org), zone: inferZone(org) })));
-                    
                     // Populate zonesData with real metrics
                     populateZonesDataFromProcessedData(zoneOrgCounts, zonePredmOrgCounts, zoneOrgScreened);
-                    
-                    console.log('Zones data after population:', zonesData);
                     
                     // Build patient indexes for fast filtering
                     buildPatientIndexes();
@@ -3774,8 +3946,10 @@
         
         // Calculate top 7 PHCs with uncontrolled DM patients
         function calculateTop7PhcsUncontrolled(currentZone, currentPhc) {
-            // Check if currentPhc is an overall object (All Zones Overall or Zone Overall)
+            // Check if currentPhc is an overall object (using flags for reliability)
             const isOverallPhc = currentPhc && (
+                currentPhc.isZoneOverall === true ||
+                currentPhc.isAllZonesOverall === true ||
                 currentPhc.name === t('allZonesOverall') ||
                 currentPhc.name === t('zoneOverall') ||
                 currentPhc.name === 'All Zones' ||
@@ -3832,7 +4006,9 @@
             
             // Helper function to check if a PHC is an overall object
             const isPhcOverall = (phc) => {
-                return phc.name === t('zoneOverall') || 
+                return phc.isZoneOverall === true ||
+                       phc.isAllZonesOverall === true ||
+                       phc.name === t('zoneOverall') || 
                        phc.name === t('allZonesOverall') ||
                        phc.name === 'Zone Overall' ||
                        phc.name === 'All Zones' ||
@@ -3914,7 +4090,8 @@
                     const top7PhcsTitle = document.getElementById('top7PhcsTitle');
                     if (top7PhcsTitle) {
                         const currentT = translations[getCurrentLanguage()];
-                        if (selectedZone === 'All Zones' && (!selectedPhc || selectedPhc.name === t('allZonesOverall') || selectedPhc.name === 'All Zones')) {
+                        const isAllZones = selectedZone === 'All Zones' && (!selectedPhc || selectedPhc.isAllZonesOverall || selectedPhc.name === t('allZonesOverall') || selectedPhc.name === 'All Zones');
+                        if (isAllZones) {
                             top7PhcsTitle.textContent = currentT.top7ZonesTitle;
                         } else {
                             top7PhcsTitle.textContent = currentT.top7PhcsTitle;
@@ -3970,45 +4147,229 @@
             });
         }
         
-        // Initialize sidebar toggle
-        function initSidebarToggle() {
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebar = document.getElementById('phcListPanel');
+        // Modal Location Selector
+        let modalSelectedZone = null;
+        let modalSelectedPhc = null;
+        
+        function initLocationModal() {
+            const modal = document.getElementById('locationModal');
+            const openBtn = document.getElementById('locationSelectorBtn');
+            const closeBtn = document.getElementById('modalClose');
+            const cancelBtn = document.getElementById('modalCancelBtn');
+            const applyBtn = document.getElementById('modalApplyBtn');
+            const clearBtn = document.getElementById('modalClearBtn');
+            const zoneGrid = document.getElementById('modalZoneGrid');
+            const phcList = document.getElementById('modalPhcList');
+            const phcSection = document.getElementById('modalPhcSection');
             
-            if (!sidebarToggle || !sidebar) return;
+            if (!modal || !openBtn) return;
             
-            // Check for saved state
-            const sidebarHidden = localStorage.getItem('sidebarHidden') === 'true';
-            const isRTL = document.body.getAttribute('dir') === 'rtl';
+            // Open modal
+            openBtn.addEventListener('click', () => {
+                // Set current selections as starting point
+                modalSelectedZone = selectedZone;
+                modalSelectedPhc = selectedPhc;
+                
+                populateModalZones();
+                populateModalPhcs();
+                modal.classList.add('show');
+            });
             
-            if (sidebarHidden) {
-                sidebar.classList.add('hidden');
-                sidebarToggle.textContent = isRTL ? '›' : '‹';
-            } else {
-                sidebarToggle.textContent = isRTL ? '‹' : '›';
+            // Close modal functions
+            const closeModal = () => {
+                modal.classList.remove('show');
+                searchInput.value = '';
+            };
+            
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            
+            // Close on overlay click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+            
+            // Close on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('show')) {
+                    closeModal();
+                }
+            });
+            
+            // Clear Filter - Reset to All Zones
+            clearBtn.addEventListener('click', () => {
+                modalSelectedZone = 'All Zones';
+                modalSelectedPhc = null;
+                populateModalZones();
+                populateModalPhcs();
+            });
+            
+            // Apply selection
+            applyBtn.addEventListener('click', () => {
+                if (modalSelectedZone) {
+                    selectedZone = modalSelectedZone;
+                    selectedPhc = modalSelectedPhc;
+                    
+                    // Update UI
+                    updateLocationDisplay();
+                    
+                    // Apply the selection
+                    if (modalSelectedPhc) {
+                        if (modalSelectedPhc.isZoneOverall || modalSelectedPhc.isAllZonesOverall) {
+                            selectZoneOverall(modalSelectedPhc);
+                        } else {
+                            // Find PHC index in the zone
+                            const phcs = zonesData[modalSelectedZone]?.phcs || [];
+                            const phcIndex = phcs.findIndex(p => p.name === modalSelectedPhc.name);
+                            selectPhc(modalSelectedPhc, phcIndex);
+                        }
+                    } else {
+                        // Just zone selected, show zone overall
+                        if (modalSelectedZone === 'All Zones') {
+                            const allZonesOverall = calculateAllZonesOverall();
+                            selectZoneOverall(allZonesOverall);
+                        } else {
+                            const zoneOverall = calculateZoneOverall(modalSelectedZone);
+                            selectZoneOverall(zoneOverall);
+                        }
+                    }
+                    
+                    closeModal();
+                }
+            });
+        }
+        
+        function populateModalZones() {
+            const zoneGrid = document.getElementById('modalZoneGrid');
+            if (!zoneGrid) return;
+            
+            zoneGrid.innerHTML = '';
+            
+            // Add All Zones option
+            const allZonesBtn = document.createElement('div');
+            allZonesBtn.className = 'modal-zone-item';
+            allZonesBtn.textContent = t('allZones');
+            allZonesBtn.dataset.zone = 'All Zones';
+            
+            if (modalSelectedZone === 'All Zones') {
+                allZonesBtn.classList.add('selected');
             }
             
-            sidebarToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                sidebar.classList.toggle('hidden');
-                const isHidden = sidebar.classList.contains('hidden');
+            allZonesBtn.addEventListener('click', () => {
+                modalSelectedZone = 'All Zones';
+                modalSelectedPhc = null;
+                populateModalZones();
+                populateModalPhcs();
+            });
+            
+            zoneGrid.appendChild(allZonesBtn);
+            
+            // Add other zones
+            Object.keys(zonesData).sort().forEach(zone => {
+                if (zone === 'All Zones' || zone === 'Unknown') return;
                 
-                // Update button text based on state
-                if (isHidden) {
-                    sidebarToggle.textContent = '‹';
-                } else {
-                    sidebarToggle.textContent = '›';
+                const zoneBtn = document.createElement('div');
+                zoneBtn.className = 'modal-zone-item';
+                zoneBtn.textContent = getZoneDisplayName(zone);
+                zoneBtn.dataset.zone = zone;
+                
+                if (modalSelectedZone === zone) {
+                    zoneBtn.classList.add('selected');
                 }
                 
-                localStorage.setItem('sidebarHidden', isHidden);
+                zoneBtn.addEventListener('click', () => {
+                    modalSelectedZone = zone;
+                    modalSelectedPhc = null;
+                    populateModalZones();
+                    populateModalPhcs();
+                });
+                
+                zoneGrid.appendChild(zoneBtn);
             });
+        }
+        
+        function populateModalPhcs() {
+            const phcList = document.getElementById('modalPhcList');
+            const phcSection = document.getElementById('modalPhcSection');
+            if (!phcList || !phcSection) return;
+            
+            phcList.innerHTML = '';
+            
+            if (!modalSelectedZone) {
+                phcSection.style.display = 'none';
+                return;
+            }
+            
+            phcSection.style.display = 'block';
+            
+            let phcs = [];
+            
+            if (modalSelectedZone === 'All Zones') {
+                // Show "All Zones" overall option
+                const allZonesOverall = calculateAllZonesOverall();
+                phcs = [allZonesOverall];
+            } else {
+                // Show zone overall + individual PHCs
+                const zoneData = zonesData[modalSelectedZone];
+                if (zoneData && zoneData.phcs) {
+                    phcs = zoneData.phcs;
+                }
+            }
+            
+            phcs.forEach((phc, index) => {
+                const phcItem = document.createElement('div');
+                phcItem.className = 'modal-phc-item';
+                
+                // Check if closed
+                if (isPhcClosed(phc.name)) {
+                    phcItem.classList.add('closed');
+                }
+                
+                // Check if selected
+                if (modalSelectedPhc && modalSelectedPhc.name === phc.name) {
+                    phcItem.classList.add('selected');
+                }
+                
+                // Set PHC name
+                phcItem.textContent = phc.name;
+                
+                phcItem.dataset.phcIndex = index;
+                
+                phcItem.addEventListener('click', () => {
+                    modalSelectedPhc = phc;
+                    populateModalPhcs();
+                });
+                
+                phcList.appendChild(phcItem);
+            });
+        }
+        
+        function updateLocationDisplay() {
+            const locationText = document.getElementById('currentLocationText');
+            if (!locationText) return;
+            
+            let displayText = '';
+            
+            if (selectedPhc && selectedPhc.name) {
+                // Show PHC name
+                displayText = selectedPhc.name;
+            } else if (selectedZone) {
+                // Show zone name
+                displayText = selectedZone === 'All Zones' ? t('allZones') : getZoneDisplayName(selectedZone);
+            } else {
+                displayText = t('allZones');
+            }
+            
+            locationText.textContent = displayText;
         }
         
         // Initialize on load
         init();
         initDarkMode();
         initLanguageToggle();
-        initSidebarToggle();
+        initLocationModal();
         initLast7DaysCard();
         initTop7PhcsCard();
     </script>
