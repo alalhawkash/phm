@@ -1407,6 +1407,10 @@
         let globalPatientRecords = {}; // Store patient records globally for last 7 days calculation
         let globalPatientOrganizations = {}; // Store patient organizations globally
         
+        // Performance optimization: Pre-indexed patient data
+        let patientIdsByZone = {}; // { "BGH": [patientId1, patientId2, ...], ... }
+        let patientIdsByPhc = {}; // { "BGH_AL-qarn": [patientId1, ...], ... }
+        
         // Normalize organization name function
         function normalizeOrgName(org) {
             if (!org) return "";
@@ -1791,7 +1795,104 @@
         }
         
         // Calculate daily counts for today and yesterday (for daily change comparison)
+        // Cache for yesterday metrics
+        let yesterdayMetricsCache = {
+            cacheKey: null,
+            data: null
+        };
+        
+        // Function to clear all performance caches
+        function clearAllPerformanceCaches() {
+            yesterdayMetricsCache.cacheKey = null;
+            yesterdayMetricsCache.data = null;
+            todayMetricsCache.cacheKey = null;
+            todayMetricsCache.data = null;
+            last7DaysCache.cacheKey = null;
+            last7DaysCache.data = null;
+        }
+        
+        // Build patient indexes for fast filtering (called once when data loads)
+        function buildPatientIndexes() {
+            console.time('Building patient indexes');
+            patientIdsByZone = {};
+            patientIdsByPhc = {};
+            
+            for (const [patientId, records] of Object.entries(globalPatientRecords)) {
+                const org = globalPatientOrganizations[patientId] || '';
+                const zone = inferZone(org);
+                const orgNormalized = normalizeOrgName(org);
+                
+                // Index by zone
+                if (!patientIdsByZone[zone]) {
+                    patientIdsByZone[zone] = [];
+                }
+                patientIdsByZone[zone].push(patientId);
+                
+                // Index by PHC (zone + org combination)
+                const phcKey = `${zone}_${orgNormalized}`;
+                if (!patientIdsByPhc[phcKey]) {
+                    patientIdsByPhc[phcKey] = [];
+                }
+                patientIdsByPhc[phcKey].push(patientId);
+            }
+            
+            console.timeEnd('Building patient indexes');
+            console.log('Patient indexes built:', {
+                zones: Object.keys(patientIdsByZone).length,
+                phcs: Object.keys(patientIdsByPhc).length,
+                totalPatients: Object.keys(globalPatientRecords).length
+            });
+        }
+        
+        // Fast filtering using pre-built indexes (replaces slow nested loops)
+        function getFilteredPatientRecords(currentZone, currentPhc) {
+            const filteredPatientRecords = {};
+            let patientIds = [];
+            
+            // Check if currentPhc is an overall object
+            const isOverall = currentPhc && (
+                currentPhc.name === t('zoneOverall') || 
+                currentPhc.name === t('allZonesOverall') ||
+                currentPhc.name === 'Zone Overall' ||
+                currentPhc.name === 'All Zones'
+            );
+            
+            if (currentPhc && currentPhc.name && !isOverall) {
+                // Specific PHC selected - use PHC index
+                const orgNormalized = normalizeOrgName(currentPhc.name);
+                const zone = currentZone || inferZone(currentPhc.name);
+                const phcKey = `${zone}_${orgNormalized}`;
+                patientIds = patientIdsByPhc[phcKey] || [];
+            } else if (isOverall && currentZone === 'All Zones') {
+                // All Zones Overall - use all records
+                return globalPatientRecords;
+            } else if (currentZone && currentZone !== 'All Zones') {
+                // Zone selected - use zone index
+                patientIds = patientIdsByZone[currentZone] || [];
+            } else {
+                // Fallback - use all records
+                return globalPatientRecords;
+            }
+            
+            // Build filtered records object from patient IDs
+            for (const patientId of patientIds) {
+                if (globalPatientRecords[patientId]) {
+                    filteredPatientRecords[patientId] = globalPatientRecords[patientId];
+                }
+            }
+            
+            return filteredPatientRecords;
+        }
+        
         function calculateYesterdayMetrics(currentZone, currentPhc) {
+            // Create a cache key based on selection
+            const cacheKey = `${currentZone}_${currentPhc?.name || 'none'}`;
+            
+            // Return cached result if available
+            if (yesterdayMetricsCache.cacheKey === cacheKey && yesterdayMetricsCache.data) {
+                return yesterdayMetricsCache.data;
+            }
+            
             const SCREENING_START_DATE = new Date("2025-01-01");
             const DM_THRESHOLDS = { "HBA1C": 6.5, "FASTING": 7.0 };
             const CONTROL_MAX = { "HBA1C": 8.0, "FASTING": 9.0 };
@@ -1808,54 +1909,8 @@
             const yesterdayEnd = new Date(yesterdayStart);
             yesterdayEnd.setHours(23, 59, 59, 999);
             
-            // Filter patient records based on current selection
-            let filteredPatientRecords = {};
-            
-            // Check if currentPhc is an overall object
-            const isOverall = currentPhc && (
-                currentPhc.name === t('zoneOverall') || 
-                currentPhc.name === t('allZonesOverall') ||
-                currentPhc.name === 'Zone Overall' ||
-                currentPhc.name === 'All Zones'
-            );
-            
-            if (currentPhc && currentPhc.name && !isOverall) {
-                const orgNormalized = normalizeOrgName(currentPhc.name);
-                const zone = currentZone || inferZone(currentPhc.name);
-                
-                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
-                    const org = globalPatientOrganizations[patientId] || '';
-                    const patientOrgNormalized = normalizeOrgName(org);
-                    const patientZone = inferZone(org);
-                    
-                    if ((patientOrgNormalized === orgNormalized && patientZone === zone) || 
-                        (!org && orgNormalized === 'Unknown' && zone === 'Unknown')) {
-                        filteredPatientRecords[patientId] = records;
-                    }
-                }
-            } else if (isOverall && currentZone === 'All Zones') {
-                filteredPatientRecords = globalPatientRecords;
-            } else if (isOverall && currentZone && currentZone !== 'All Zones') {
-                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
-                    const org = globalPatientOrganizations[patientId] || '';
-                    const zone = inferZone(org);
-                    
-                    if (zone === currentZone || (!org && zone === 'Unknown' && currentZone === 'Unknown')) {
-                        filteredPatientRecords[patientId] = records;
-                    }
-                }
-            } else if (currentZone && currentZone !== 'All Zones' && currentZone !== null) {
-                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
-                    const org = globalPatientOrganizations[patientId] || '';
-                    const zone = inferZone(org);
-                    
-                    if (zone === currentZone || (!org && zone === 'Unknown' && currentZone === 'Unknown')) {
-                        filteredPatientRecords[patientId] = records;
-                    }
-                }
-            } else {
-                filteredPatientRecords = globalPatientRecords;
-            }
+            // Filter patient records based on current selection (OPTIMIZED with pre-built indexes)
+            const filteredPatientRecords = getFilteredPatientRecords(currentZone, currentPhc);
             
             // Calculate DAILY counts for yesterday (screenings that happened on yesterday's date)
             let screenedYesterday = 0;
@@ -1955,15 +2010,35 @@
                 }
             }
             
-                return {
+            const result = {
                 screened: screenedYesterday,
                 controlled: controlledYesterday,
                 uncontrolled: uncontrolledYesterday
             };
+            
+            // Cache the result
+            yesterdayMetricsCache.cacheKey = cacheKey;
+            yesterdayMetricsCache.data = result;
+            
+            return result;
         }
+        
+        // Cache for today metrics
+        let todayMetricsCache = {
+            cacheKey: null,
+            data: null
+        };
         
         // Calculate today's daily counts (for daily change comparison)
         function calculateTodayDailyMetrics(currentZone, currentPhc) {
+            // Create a cache key based on selection
+            const cacheKey = `${currentZone}_${currentPhc?.name || 'none'}`;
+            
+            // Return cached result if available
+            if (todayMetricsCache.cacheKey === cacheKey && todayMetricsCache.data) {
+                return todayMetricsCache.data;
+            }
+            
             const SCREENING_START_DATE = new Date("2025-01-01");
             const DM_THRESHOLDS = { "HBA1C": 6.5, "FASTING": 7.0 };
             const CONTROL_MAX = { "HBA1C": 8.0, "FASTING": 9.0 };
@@ -1975,53 +2050,8 @@
             const todayEnd = new Date(today);
             todayEnd.setHours(23, 59, 59, 999);
             
-            // Filter patient records based on current selection (same logic as calculateYesterdayMetrics)
-            let filteredPatientRecords = {};
-            
-            const isOverall = currentPhc && (
-                currentPhc.name === t('zoneOverall') || 
-                currentPhc.name === t('allZonesOverall') ||
-                currentPhc.name === 'Zone Overall' ||
-                currentPhc.name === 'All Zones'
-            );
-            
-            if (currentPhc && currentPhc.name && !isOverall) {
-                const orgNormalized = normalizeOrgName(currentPhc.name);
-                const zone = currentZone || inferZone(currentPhc.name);
-                
-                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
-                    const org = globalPatientOrganizations[patientId] || '';
-                    const patientOrgNormalized = normalizeOrgName(org);
-                    const patientZone = inferZone(org);
-                    
-                    if ((patientOrgNormalized === orgNormalized && patientZone === zone) || 
-                        (!org && orgNormalized === 'Unknown' && zone === 'Unknown')) {
-                        filteredPatientRecords[patientId] = records;
-                    }
-                }
-            } else if (isOverall && currentZone === 'All Zones') {
-                filteredPatientRecords = globalPatientRecords;
-            } else if (isOverall && currentZone && currentZone !== 'All Zones') {
-                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
-                    const org = globalPatientOrganizations[patientId] || '';
-                    const zone = inferZone(org);
-                    
-                    if (zone === currentZone || (!org && zone === 'Unknown' && currentZone === 'Unknown')) {
-                        filteredPatientRecords[patientId] = records;
-                    }
-                }
-            } else if (currentZone && currentZone !== 'All Zones' && currentZone !== null) {
-                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
-                    const org = globalPatientOrganizations[patientId] || '';
-                    const zone = inferZone(org);
-                    
-                    if (zone === currentZone || (!org && zone === 'Unknown' && currentZone === 'Unknown')) {
-                        filteredPatientRecords[patientId] = records;
-                    }
-                }
-            } else {
-                filteredPatientRecords = globalPatientRecords;
-            }
+            // Filter patient records based on current selection (OPTIMIZED with pre-built indexes)
+            const filteredPatientRecords = getFilteredPatientRecords(currentZone, currentPhc);
             
             // Calculate DAILY counts for today (screenings that happened on today's date)
             let screenedToday = 0;
@@ -2118,11 +2148,17 @@
                 }
             }
             
-            return {
+            const result = {
                 screened: screenedToday,
                 controlled: controlledToday,
                 uncontrolled: uncontrolledToday
             };
+            
+            // Cache the result
+            todayMetricsCache.cacheKey = cacheKey;
+            todayMetricsCache.data = result;
+            
+            return result;
         }
         
         // Format and display daily change
@@ -2205,9 +2241,13 @@
             // Debounced to avoid lag on rapid zone switching
             if (window.dailyChangeTimeout) clearTimeout(window.dailyChangeTimeout);
             window.dailyChangeTimeout = setTimeout(() => {
-                const yesterdayMetrics = calculateYesterdayMetrics(selectedZone, zoneOverall);
-                const todayMetrics = calculateTodayDailyMetrics(selectedZone, zoneOverall);
-                updateDailyChange(todayMetrics.screened, yesterdayMetrics.screened, 'metricScreenedChange');
+                // Use requestIdleCallback if available, otherwise requestAnimationFrame
+                const scheduleCalculation = window.requestIdleCallback || requestAnimationFrame;
+                scheduleCalculation(() => {
+                    const yesterdayMetrics = calculateYesterdayMetrics(selectedZone, zoneOverall);
+                    const todayMetrics = calculateTodayDailyMetrics(selectedZone, zoneOverall);
+                    updateDailyChange(todayMetrics.screened, yesterdayMetrics.screened, 'metricScreenedChange');
+                });
             }, 100);
         }
         
@@ -2818,6 +2858,12 @@
                     populateZonesDataFromProcessedData(zoneOrgCounts, zonePredmOrgCounts, zoneOrgScreened);
                     
                     console.log('Zones data after population:', zonesData);
+                    
+                    // Build patient indexes for fast filtering
+                    buildPatientIndexes();
+                    
+                    // Clear performance caches when new data is loaded
+                    clearAllPerformanceCaches();
                     
                     // Initialize UI after data is loaded
                     initUI();
@@ -3548,8 +3594,22 @@
             return lastUpdateDate;
         }
         
+        // Cache for last 7 days calculations
+        let last7DaysCache = {
+            cacheKey: null,
+            data: null
+        };
+        
         // Calculate last 7 days screening data
         function calculateLast7DaysScreening(currentZone, currentPhc) {
+            // Create a cache key based on selection
+            const cacheKey = `${currentZone}_${currentPhc?.name || 'none'}`;
+            
+            // Return cached result if available
+            if (last7DaysCache.cacheKey === cacheKey && last7DaysCache.data) {
+                return last7DaysCache.data;
+            }
+            
             const SCREENING_START_DATE = new Date("2025-01-01");
             const lastUpdateDate = getLastUpdateDate();
             
@@ -3569,60 +3629,8 @@
                 dailyCounts[dateStr] = 0;
             });
             
-            // Filter patient records based on current selection
-            let filteredPatientRecords = {};
-            
-            // Check if currentPhc is an overall object (not a specific PHC)
-            // Overall objects have names like "Zone Overall" or "All Zones"
-            const isOverall = currentPhc && (
-                currentPhc.name === t('zoneOverall') || 
-                currentPhc.name === t('allZonesOverall') ||
-                currentPhc.name === 'Zone Overall' ||
-                currentPhc.name === 'All Zones'
-            );
-            
-            if (currentPhc && currentPhc.name && !isOverall) {
-                // Filter by specific PHC
-                const orgNormalized = normalizeOrgName(currentPhc.name);
-                const zone = currentZone || inferZone(currentPhc.name);
-                
-                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
-                    const org = globalPatientOrganizations[patientId] || '';
-                    const patientOrgNormalized = normalizeOrgName(org);
-                    const patientZone = inferZone(org);
-                    
-                    if ((patientOrgNormalized === orgNormalized && patientZone === zone) || 
-                        (!org && orgNormalized === 'Unknown' && zone === 'Unknown')) {
-                        filteredPatientRecords[patientId] = records;
-                    }
-                }
-            } else if (isOverall && currentZone === 'All Zones') {
-                // All Zones Overall - use all records
-                filteredPatientRecords = globalPatientRecords;
-            } else if (isOverall && currentZone && currentZone !== 'All Zones') {
-                // Zone Overall for a specific zone - filter by that zone
-                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
-                    const org = globalPatientOrganizations[patientId] || '';
-                    const zone = inferZone(org);
-                    
-                    if (zone === currentZone || (!org && zone === 'Unknown' && currentZone === 'Unknown')) {
-                        filteredPatientRecords[patientId] = records;
-                    }
-                }
-            } else if (currentZone && currentZone !== 'All Zones' && currentZone !== null) {
-                // Filter by zone (fallback case)
-                for (const [patientId, records] of Object.entries(globalPatientRecords)) {
-                    const org = globalPatientOrganizations[patientId] || '';
-                    const zone = inferZone(org);
-                    
-                    if (zone === currentZone || (!org && zone === 'Unknown' && currentZone === 'Unknown')) {
-                        filteredPatientRecords[patientId] = records;
-                    }
-                }
-            } else {
-                // All zones or no zone selected - use all records
-                filteredPatientRecords = globalPatientRecords;
-            }
+            // Filter patient records based on current selection (OPTIMIZED with pre-built indexes)
+            const filteredPatientRecords = getFilteredPatientRecords(currentZone, currentPhc);
             
             // Count screenings by day
             // Get the date range for last 7 days (from 6 days ago to last update date)
@@ -3681,6 +3689,10 @@
                 };
             }).reverse(); // Reverse to show most recent first
             
+            // Cache the result
+            last7DaysCache.cacheKey = cacheKey;
+            last7DaysCache.data = result;
+            
             return result;
         }
         
@@ -3703,35 +3715,41 @@
                     if (top7PhcsCard && top7PhcsCard.classList.contains('show')) {
                         top7PhcsCard.classList.remove('show');
                         if (dmCard) dmCard.classList.remove('expanded');
-                setTimeout(() => {
+                        setTimeout(() => {
                             top7PhcsCard.style.display = 'none';
                         }, 400);
                     }
                     
-                    // Show card - calculate and display last 7 days
-                    const last7Days = calculateLast7DaysScreening(selectedZone, selectedPhc);
-                    const contentContainer = document.getElementById('last7DaysContent');
-                    
-                    if (contentContainer) {
-                        if (last7Days.length === 0) {
-                            contentContainer.innerHTML = '<div class="daily-item"><span class="daily-date">No data available</span></div>';
-                        } else {
-                            contentContainer.innerHTML = last7Days.map(day => `
-                                <div class="daily-item">
-                                    <span class="daily-date">${day.date}:</span>
-                                    <span class="daily-count">${day.count}</span>
-                                </div>
-                            `).join('');
-                        }
-                    }
-                    
-                    // Add expanded class to first card to adjust border radius
+                    // Show card first with loading state
                     screenedCard.classList.add('expanded');
                     last7DaysCard.style.display = 'block';
+                    const contentContainer = document.getElementById('last7DaysContent');
+                    if (contentContainer) {
+                        contentContainer.innerHTML = '<div class="daily-item"><span class="daily-date">Loading...</span></div>';
+                    }
+                    
                     // Use setTimeout to ensure display is set before adding show class
                     setTimeout(() => {
                         last7DaysCard.classList.add('show');
                     }, 10);
+                    
+                    // Calculate data asynchronously to avoid blocking UI
+                    requestAnimationFrame(() => {
+                        const last7Days = calculateLast7DaysScreening(selectedZone, selectedPhc);
+                        
+                        if (contentContainer) {
+                            if (last7Days.length === 0) {
+                                contentContainer.innerHTML = '<div class="daily-item"><span class="daily-date">No data available</span></div>';
+                            } else {
+                                contentContainer.innerHTML = last7Days.map(day => `
+                                    <div class="daily-item">
+                                        <span class="daily-date">${day.date}:</span>
+                                        <span class="daily-count">${day.count}</span>
+                                    </div>
+                                `).join('');
+                            }
+                        }
+                    });
                 } else {
                     // Hide card
                     last7DaysCard.classList.remove('show');
