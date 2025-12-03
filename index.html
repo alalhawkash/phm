@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PHC Viewer</title>
+    <title>PHC Viewer v2.1 (First Visit Logic)</title>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <style>
         * {
@@ -1163,6 +1163,7 @@
     <footer class="footer">
         <span class="footer-label" id="lastUpdatedLabel">Last update:</span>
         <span id="lastUpdatedValue">—</span>
+        <span style="margin-left: 15px; opacity: 0.6; font-size: 11px;">v2.1 (First Visit Logic)</span>
     </footer>
     
     <script>
@@ -1177,7 +1178,7 @@
             'https://api.codetabs.com/v1/proxy?quest='
         ];
         const csvG1Url = `${csvUrl}&range=G1`;
-        const CACHE_KEY = 'glass_phc_cache_v1';
+        const CACHE_KEY = 'glass_phc_cache_v2_first_visit_only';
         const MAX_CACHE_AGE = 24 * 60 * 60 * 1000; // 24 hours
         
         // Real PHC data structure from ORG_TARGETS_DATA
@@ -1860,16 +1861,25 @@
             let screenedYesterday = 0;
             const screenedSetYesterday = new Set();
             
-            // Count screenings that happened on yesterday
+            // Count patients whose FIRST screening happened on yesterday
             for (const [patientId, records] of Object.entries(filteredPatientRecords)) {
-                const recordsOnYesterday = records.filter(r => {
-                    if (!r.resultDate || isNaN(r.resultDate.getTime())) return false;
-                    const recordDate = new Date(r.resultDate);
-                    recordDate.setHours(0, 0, 0, 0);
-                    return recordDate.getTime() === yesterdayStart.getTime() && r.resultDate >= SCREENING_START_DATE;
-                });
+                // Sort records by date (earliest first) to find FIRST screening
+                const sortedRecords = records
+                    .filter(r => r.resultDate && !isNaN(r.resultDate.getTime()))
+                    .sort((a, b) => a.resultDate - b.resultDate);
                 
-                if (recordsOnYesterday.length > 0) {
+                if (sortedRecords.length === 0) continue;
+                
+                // Find the FIRST screening after Jan 1, 2025
+                const firstAfter2025 = sortedRecords.find(r => r.resultDate >= SCREENING_START_DATE);
+                
+                if (!firstAfter2025) continue;
+                
+                // Check if this FIRST screening happened on yesterday
+                const firstScreeningDate = new Date(firstAfter2025.resultDate);
+                firstScreeningDate.setHours(0, 0, 0, 0);
+                
+                if (firstScreeningDate.getTime() === yesterdayStart.getTime()) {
                     screenedSetYesterday.add(patientId);
                 }
             }
@@ -2017,15 +2027,25 @@
             let screenedToday = 0;
             const screenedSetToday = new Set();
             
+            // Count patients whose FIRST screening happened on today
             for (const [patientId, records] of Object.entries(filteredPatientRecords)) {
-                const recordsOnToday = records.filter(r => {
-                    if (!r.resultDate || isNaN(r.resultDate.getTime())) return false;
-                    const recordDate = new Date(r.resultDate);
-                    recordDate.setHours(0, 0, 0, 0);
-                    return recordDate.getTime() === todayStart.getTime() && r.resultDate >= SCREENING_START_DATE;
-                });
+                // Sort records by date (earliest first) to find FIRST screening
+                const sortedRecords = records
+                    .filter(r => r.resultDate && !isNaN(r.resultDate.getTime()))
+                    .sort((a, b) => a.resultDate - b.resultDate);
                 
-                if (recordsOnToday.length > 0) {
+                if (sortedRecords.length === 0) continue;
+                
+                // Find the FIRST screening after Jan 1, 2025
+                const firstAfter2025 = sortedRecords.find(r => r.resultDate >= SCREENING_START_DATE);
+                
+                if (!firstAfter2025) continue;
+                
+                // Check if this FIRST screening happened on today
+                const firstScreeningDate = new Date(firstAfter2025.resultDate);
+                firstScreeningDate.setHours(0, 0, 0, 0);
+                
+                if (firstScreeningDate.getTime() === todayStart.getTime()) {
                     screenedSetToday.add(patientId);
                 }
             }
@@ -3616,26 +3636,29 @@
                 // const age = records[0]?.age || 0;
                 // if (age <= 34) continue;
                 
-                // Filter records that are valid and within the last 7 days
-                const validRecords = records.filter(r => {
-                    if (!r.resultDate || isNaN(r.resultDate.getTime())) return false;
-                    const recordDate = new Date(r.resultDate);
-                    recordDate.setHours(0, 0, 0, 0);
-                    // Must be after start date and within last 7 days (inclusive, ending at last update date)
-                    return recordDate >= SCREENING_START_DATE && recordDate >= sevenDaysAgo && recordDate <= lastUpdateStart;
-                });
+                // Sort records by date (earliest first) to find FIRST screening
+                const sortedRecords = records
+                    .filter(r => r.resultDate && !isNaN(r.resultDate.getTime()))
+                    .sort((a, b) => a.resultDate - b.resultDate);
                 
-                // Count each screening in the last 7 days
-                validRecords.forEach(record => {
-                    const screeningDate = new Date(record.resultDate);
-                    screeningDate.setHours(0, 0, 0, 0);
-                    const dateStr = screeningDate.toISOString().split('T')[0];
-                    
-                    // Check if this date is within last 7 days
+                if (sortedRecords.length === 0) continue;
+                
+                // Find the FIRST screening after Jan 1, 2025
+                const firstAfter2025 = sortedRecords.find(r => r.resultDate >= SCREENING_START_DATE);
+                
+                if (!firstAfter2025) continue; // Patient has no screening after start date
+                
+                // Check if this FIRST screening is within the last 7 days
+                const firstScreeningDate = new Date(firstAfter2025.resultDate);
+                firstScreeningDate.setHours(0, 0, 0, 0);
+                
+                // Only count if the FIRST screening is within last 7 days
+                if (firstScreeningDate >= sevenDaysAgo && firstScreeningDate <= lastUpdateStart) {
+                    const dateStr = firstScreeningDate.toISOString().split('T')[0];
                     if (dailyCounts.hasOwnProperty(dateStr)) {
                         dailyCounts[dateStr]++;
                     }
-                });
+                }
             }
             
             // Format results for display (reverse to show most recent first)
