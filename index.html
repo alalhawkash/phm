@@ -67,7 +67,7 @@
         }
 
 .carousel-wrapper {
-    display: flex;
+            display: flex;
     width: 100%;
     height: 100%;
     position: relative;
@@ -275,13 +275,14 @@
             color: #333;
             min-width: 60px;
         }
-
+        
         .zone-value {
             font-size: 14px;
             font-weight: 600;
             color: #667eea;
             min-width: 50px;
-            text-align: right;
+            text-align: center;
+            flex: 0 0 80px;
         }
 
         .zone-7d-indicator {
@@ -564,87 +565,10 @@
                                     </span>
         </div>
                             </div>
-                            <div class="zones-ranking">
+                            <div class="zones-ranking" id="screeningZonesList">
                                 <div class="zones-title">Zone Rankings (Top 10)</div>
                                 <div class="zone-item">
-                                    <span class="zone-rank">1</span>
-                                    <span class="zone-name">Zone A</span>
-                                    <span class="zone-value">98.5%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-up">↑</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">2</span>
-                                    <span class="zone-name">Zone B</span>
-                                    <span class="zone-value">96.2%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-up">↑</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">3</span>
-                                    <span class="zone-name">Zone C</span>
-                                    <span class="zone-value">94.8%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">4</span>
-                                    <span class="zone-name">Zone D</span>
-                                    <span class="zone-value">93.1%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-up">↑</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">5</span>
-                                    <span class="zone-name">Zone E</span>
-                                    <span class="zone-value">91.7%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">6</span>
-                                    <span class="zone-name">Zone F</span>
-                                    <span class="zone-value">89.3%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-up">↑</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">7</span>
-                                    <span class="zone-name">Zone G</span>
-                                    <span class="zone-value">87.6%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">8</span>
-                                    <span class="zone-name">Zone H</span>
-                                    <span class="zone-value">85.2%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-up">↑</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">9</span>
-                                    <span class="zone-name">Zone I</span>
-                                    <span class="zone-value">83.9%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">10</span>
-                                    <span class="zone-name">Zone J</span>
-                                    <span class="zone-value">82.1%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-up">↑</span>
-                                    </div>
+                                    <span class="zone-name">Loading...</span>
                                 </div>
                             </div>
                         </div>
@@ -1065,6 +989,71 @@
             goToSlide(0, false);
         })();
 
+        const SCREENING_ZONE_START_ROW = 10; // B11 -> zero-indexed row 10
+        const SCREENING_ZONE_NAME_COL = 1; // column B
+        const SCREENING_ZONE_VALUE_COL = 2; // column C (achieved)
+        const SCREENING_ZONE_TARGET_COL = 3; // column D
+        const SCREENING_ZONE_INDICATOR_COL = 4; // column E
+        const SCREENING_ZONE_LIMIT = 10;
+
+        function populateScreeningZones(rows) {
+            const container = document.getElementById('screeningZonesList');
+            if (!container) return;
+
+            let html = '<div class="zones-title">Zone Rankings (Top 10)</div>';
+            let rank = 1;
+
+            for (let i = SCREENING_ZONE_START_ROW; i < rows.length; i++) {
+                const row = rows[i] || [];
+                const zoneName = (row[SCREENING_ZONE_NAME_COL] || '').trim();
+                const achievedRaw = (row[SCREENING_ZONE_VALUE_COL] || '').trim();
+                const targetRaw = (row[SCREENING_ZONE_TARGET_COL] || '').trim();
+                const indicatorRaw = (row[SCREENING_ZONE_INDICATOR_COL] || '').toString().trim();
+                const indicatorNum = parseFloat(indicatorRaw);
+
+                const achievedNum = parseFloat(achievedRaw.replace(/,/g, ''));
+                const targetNum = parseFloat(targetRaw.replace(/,/g, ''));
+                let zoneValueText = achievedRaw;
+                if (!isNaN(achievedNum) && !isNaN(targetNum) && targetNum !== 0) {
+                    const percent = ((achievedNum / targetNum) * 100).toFixed(1);
+                    zoneValueText = `${percent}%`;
+                }
+
+                let indicatorArrow = '•';
+                let indicatorClass = 'zone-arrow';
+                let indicatorText = '';
+                if (!isNaN(indicatorNum) && indicatorNum !== 0) {
+                    indicatorArrow = indicatorNum > 0 ? '↑' : '↓';
+                    indicatorClass = indicatorNum > 0 ? 'zone-arrow zone-arrow-up' : 'zone-arrow zone-arrow-down';
+                    indicatorText = Math.abs(indicatorNum).toLocaleString();
+                }
+
+                if (!zoneName) break;
+
+                html += `
+                    <div class="zone-item">
+                        <span class="zone-rank">${rank}</span>
+                        <span class="zone-name">${zoneName}</span>
+                        <span class="zone-value">${zoneValue}</span>
+                        <div class="zone-7d-indicator">
+                            <span class="${indicatorClass}">
+                                ${indicatorArrow}${indicatorText ? ` ${indicatorText}` : ''}
+                            </span>
+                        </div>
+                                </div>
+                `;
+
+                rank++;
+                if (rank > SCREENING_ZONE_LIMIT) break;
+            }
+
+            if (rank === 1) {
+                html += '<div class="zone-item"><span class="zone-name">No zone data</span></div>';
+            }
+
+            container.innerHTML = html;
+        }
+
         // Load data from Google Sheets
         (function() {
             const SHEET_ID = '1v5hh2tu53eVMPRLE3tCk_Gf39Rb2Rt1sseZHCdyGzvE';
@@ -1223,6 +1212,8 @@
                     
                     rowIndex++;
                 }
+
+                populateScreeningZones(data);
             }
             
             // Load data when page loads
