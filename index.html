@@ -12,7 +12,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #4c76f7 100%);
@@ -72,11 +72,13 @@
     height: 100%;
     position: relative;
     overflow: hidden;
+    padding: 0 8px;
+    box-sizing: border-box;
 }
 
 .carousel-dots {
-    display: flex;
-    justify-content: center;
+            display: flex;
+            justify-content: center;
     gap: 8px;
     padding: 12px 0;
     position: absolute;
@@ -101,21 +103,21 @@
     background: #ffffff;
 }
 
-        .carousel {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: transform;
-            cursor: grab;
-            touch-action: pan-x pan-y;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        
-        .carousel:active {
-            cursor: grabbing;
-        }
+.carousel {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    touch-action: pan-y pinch-zoom;
+    scrollbar-width: none;
+}
+.carousel::-webkit-scrollbar {
+    display: none;
+}
 
         .card {
             background: rgba(255, 255, 255, 0.95);
@@ -130,10 +132,11 @@
             display: flex;
             flex-direction: column;
             min-height: 0;
-            margin: 0 5px;
+            margin: 0;
             box-sizing: border-box;
             max-height: 100%;
             overflow: hidden;
+            scroll-snap-align: start;
         }
 
         .card-content {
@@ -402,7 +405,7 @@
         .predm-week-indicator {
             display: flex;
             align-items: center;
-            gap: 6px;
+                gap: 6px;
             font-size: 16px;
             font-weight: 600;
             margin-left: 8px;
@@ -447,7 +450,7 @@
             .metric-row {
                 padding: 6px 0;
             }
-
+            
             .metric-label {
                 font-size: 13px;
             }
@@ -539,27 +542,27 @@
                             <div class="template-header">
                                 <h2>Screen Count</h2>
                                 <div class="subtitle">Performance Overview</div>
-                            </div>
+            </div>
                             <div class="metrics-section">
                                 <div class="metric-row">
                                     <span class="metric-label">Target</span>
                                     <span class="metric-value target-value" id="targetValue">1,250</span>
-                                </div>
+        </div>
                                 <div class="metric-row">
                                     <span class="metric-label">Current</span>
                                     <span class="metric-value percentage-value" id="currentValue">1,180</span>
-                                </div>
+    </div>
                                 <div class="metric-row">
                                     <span class="metric-label">Percentage</span>
                                     <span class="metric-value percentage-value" id="percentageValue">94.4%</span>
-                                </div>
+        </div>
                                 <div class="metric-row">
                                     <span class="metric-label">From Last Week</span>
                                     <span class="week-indicator indicator-positive" id="weekIndicator">
                                         <span class="indicator-icon">+</span>
                                         <span id="weekChange">5.2%</span>
                                     </span>
-                                </div>
+        </div>
                             </div>
                             <div class="zones-ranking">
                                 <div class="zones-title">Zone Rankings (Top 10)</div>
@@ -662,8 +665,8 @@
                                         <span class="dm-week-indicator indicator-positive" id="dmPatientsIndicator">
                                             <span class="indicator-icon">+</span>
                                             <span id="dmPatientsChange">0%</span>
-                                        </span>
-                                    </div>
+                            </span>
+                        </div>
                                 </div>
                                 <div class="dm-metric-row">
                                     <span class="dm-metric-label">Controlled DM</span>
@@ -672,9 +675,9 @@
                                         <span class="dm-week-indicator indicator-positive" id="controlledDMIndicator">
                                             <span class="indicator-icon">+</span>
                                             <span id="controlledDMChange">0%</span>
-                                        </span>
-                                    </div>
-                                </div>
+                            </span>
+                        </div>
+            </div>
                                 <div class="dm-metric-row">
                                     <span class="dm-metric-label">Uncontrolled DM</span>
                                     <div class="dm-metric-value-container">
@@ -683,9 +686,9 @@
                                             <span class="indicator-icon">-</span>
                                             <span id="uncontrolledDMChange">0%</span>
                                         </span>
-                                    </div>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+            </div>
                             <div class="zones-ranking">
                                 <div class="zones-title">Zone Rankings - Uncontrolled DM % (Top 10)</div>
                                 <div class="zone-item">
@@ -694,7 +697,7 @@
                                     <span class="zone-value" style="color: #f44336;">15.2%</span>
                                     <div class="zone-7d-indicator">
                                         <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
+                </div>
                                 </div>
                                 <div class="zone-item">
                                     <span class="zone-rank">2</span>
@@ -795,10 +798,10 @@
                                         <span class="predm-week-indicator indicator-negative" id="preDMNoFollowupIndicator">
                                             <span class="indicator-icon">-</span>
                                             <span id="preDMNoFollowupChange">0%</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                    </span>
+                </div>
+            </div>
+                    </div>
                             <div class="zones-ranking">
                                 <div class="zones-title">Zone Rankings - No Follow-up % (Top 10)</div>
                                 <div class="zone-item">
@@ -807,32 +810,32 @@
                                     <span class="zone-value" style="color: #f44336;">12.5%</span>
                                     <div class="zone-7d-indicator">
                                         <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
-                                </div>
+                </div>
+            </div>
                                 <div class="zone-item">
                                     <span class="zone-rank">2</span>
                                     <span class="zone-name">Zone B</span>
                                     <span class="zone-value" style="color: #f44336;">15.3%</span>
                                     <div class="zone-7d-indicator">
                                         <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
-                                </div>
+                </div>
+                </div>
                                 <div class="zone-item">
                                     <span class="zone-rank">3</span>
                                     <span class="zone-name">Zone C</span>
                                     <span class="zone-value" style="color: #f44336;">18.7%</span>
                                     <div class="zone-7d-indicator">
                                         <span class="zone-arrow zone-arrow-up">↑</span>
-                                    </div>
-                                </div>
+            </div>
+        </div>
                                 <div class="zone-item">
                                     <span class="zone-rank">4</span>
                                     <span class="zone-name">Zone D</span>
                                     <span class="zone-value" style="color: #f44336;">21.2%</span>
                                     <div class="zone-7d-indicator">
                                         <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
-                                </div>
+    </div>
+    </div>
                                 <div class="zone-item">
                                     <span class="zone-rank">5</span>
                                     <span class="zone-name">Zone E</span>
@@ -896,214 +899,170 @@
         (function() {
             const carousel = document.getElementById('carousel');
             const dotsContainer = document.getElementById('carouselDots');
-            const cards = carousel.querySelectorAll('.card');
+            const cards = Array.from(carousel.querySelectorAll('.card'));
+            const dots = [];
+
+            if (dotsContainer) {
+                cards.forEach((_, i) => {
+                    const dot = document.createElement('button');
+                    dot.type = 'button';
+                    dot.className = 'carousel-dot';
+                    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                    dot.addEventListener('click', () => {
+                        carousel.scrollTo({
+                            left: i * carousel.clientWidth,
+                            behavior: 'smooth'
+                        });
+                    });
+                    dotsContainer.appendChild(dot);
+                    dots.push(dot);
+                });
+            }
+
+            const updateDots = () => {
+                const index = Math.round(carousel.scrollLeft / carousel.clientWidth);
+                dots.forEach((dot, idx) => dot.classList.toggle('active', idx === index));
+            };
+
+            let scrollTimeout;
+            carousel.addEventListener('scroll', () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(updateDots, 50);
+            }, { passive: true });
+
+            window.addEventListener('resize', () => {
+                carousel.scrollTo({
+                    left: Math.round(carousel.scrollLeft / carousel.clientWidth) * carousel.clientWidth,
+                    behavior: 'auto'
+                });
+                updateDots();
+            });
+
+            updateDots();
+        })();
+    </script>
+    <script>
+        (function() {
+            const carousel = document.getElementById('carousel');
+            const dotsContainer = document.getElementById('carouselDots');
+            const cards = Array.from(carousel.querySelectorAll('.card'));
             const totalCards = cards.length;
             let currentIndex = 0;
-            let startX = 0;
-            let currentX = 0;
+            let startPos = 0;
+            let currentTranslate = 0;
+            let previousTranslate = 0;
             let isDragging = false;
-            let offset = 0;
+            let animationFrame;
 
-            // Create navigation dots
+            // dots
             const dots = [];
             if (dotsContainer) {
                 for (let i = 0; i < totalCards; i++) {
                     const dot = document.createElement('button');
-                    dot.setAttribute('type', 'button');
+                    dot.type = 'button';
                     dot.className = 'carousel-dot';
-                    dot.setAttribute('aria-label', `Go to card ${i + 1}`);
-                    dot.addEventListener('click', () => {
-                        currentIndex = i;
-                        updateCarousel();
-                    });
+                    dot.addEventListener('click', () => goToSlide(i));
                     dotsContainer.appendChild(dot);
                     dots.push(dot);
                 }
             }
 
-            function updateDots() {
-                if (!dots.length) return;
-                const activeIndex = ((currentIndex % totalCards) + totalCards) % totalCards;
-                dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === activeIndex);
-                });
+            const carouselWidth = () => carousel.parentElement.offsetWidth;
+
+            function setActiveDot() {
+                dots.forEach((dot, index) => dot.classList.toggle('active', index === currentIndex));
             }
 
-            function updateCarousel(animate = true) {
-                if (!animate) {
+            function goToSlide(index, animate = true) {
+                currentIndex = Math.max(0, Math.min(index, totalCards - 1));
+                previousTranslate = -currentIndex * carouselWidth();
+                if (animate) {
+                    carousel.style.transition = 'transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1)';
+                } else {
                     carousel.style.transition = 'none';
-                } else {
-                    carousel.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                 }
-                
-                const cardWidthPercent = 100; // 100% per card
-                const translateX = -(currentIndex) * cardWidthPercent;
-                carousel.style.transform = `translateX(${translateX}%)`;
-                updateDots();
+                carousel.style.transform = `translateX(${previousTranslate}px)`;
+                setActiveDot();
             }
 
-            function nextCard() {
-                if (currentIndex >= totalCards - 1) {
-                    // bounce effect
-                    carousel.style.transition = 'transform 0.15s ease';
-                    carousel.style.transform = `translateX(${-(currentIndex * 100) - 3}%)`;
-                    setTimeout(() => updateCarousel(), 150);
-                    return;
-                }
-                currentIndex++;
-                updateCarousel();
+            function touchStart(index) {
+                return function(event) {
+                    currentIndex = index;
+                    startPos = getPositionX(event);
+                    isDragging = true;
+                    carousel.style.transition = 'none';
+                    animationFrame = requestAnimationFrame(animation);
+                };
             }
 
-            function prevCard() {
-                if (currentIndex <= 0) {
-                    carousel.style.transition = 'transform 0.15s ease';
-                    carousel.style.transform = `translateX(${-(currentIndex * 100) + 3}%)`;
-                    setTimeout(() => updateCarousel(), 150);
-                    return;
-                }
-                currentIndex--;
-                updateCarousel();
+            function touchMove(event) {
+                if (!isDragging) return;
+                const currentPosition = getPositionX(event);
+                currentTranslate = previousTranslate + currentPosition - startPos;
             }
 
-            // Touch events
-            let startY = 0;
-            let touchStartTime = 0;
-            let isVerticalScroll = false;
-            let lastTouchX = 0;
-            let lastTouchTime = 0;
-            
+            function touchEnd() {
+                cancelAnimationFrame(animationFrame);
+                if (!isDragging) return;
+                isDragging = false;
+                const movedBy = currentTranslate - previousTranslate;
+
+                if (movedBy < -carouselWidth() * 0.2) {
+                    currentIndex = Math.min(currentIndex + 1, totalCards - 1);
+                }
+
+                if (movedBy > carouselWidth() * 0.2) {
+                    currentIndex = Math.max(currentIndex - 1, 0);
+                }
+
+                goToSlide(currentIndex);
+            }
+
+            function getPositionX(event) {
+                return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+            }
+
+            function animation() {
+                carousel.style.transform = `translateX(${currentTranslate}px)`;
+                if (isDragging) requestAnimationFrame(animation);
+            }
+
+            function addGlobalListeners(index) {
+                currentIndex = index;
+                const onTouchMove = (e) => touchMove(e);
+                const onTouchEnd = () => {
+                    touchEnd();
+                    carousel.removeEventListener('touchmove', onTouchMove);
+                    carousel.removeEventListener('touchend', onTouchEnd);
+                };
+                carousel.addEventListener('touchmove', onTouchMove, { passive: false });
+                carousel.addEventListener('touchend', onTouchEnd);
+            }
+
             carousel.addEventListener('touchstart', (e) => {
-                startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
-                touchStartTime = Date.now();
-                lastTouchX = startX;
-                lastTouchTime = touchStartTime;
-                isDragging = true;
-                isVerticalScroll = false;
-                carousel.style.transition = 'none';
-            }, { passive: false });
-
-            carousel.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                
-                currentX = e.touches[0].clientX;
-                const currentY = e.touches[0].clientY;
-                const deltaX = Math.abs(currentX - startX);
-                const deltaY = Math.abs(currentY - startY);
-                
-                // Determine if this is a vertical scroll or horizontal swipe
-                // If vertical movement is significantly more than horizontal, it's a scroll
-                if (deltaY > deltaX && deltaY > 10) {
-                    isVerticalScroll = true;
-                    isDragging = false;
-                    return;
-                }
-                
-                // Horizontal swipe - prevent default and move carousel
-                if (deltaX > 5) {
-                    e.preventDefault();
-                    offset = currentX - startX;
-                    const cardWidth = carousel.offsetWidth;
-                    const translateX = -(currentIndex) * cardWidth + (offset / cardWidth) * 100;
-                    carousel.style.transform = `translateX(${translateX}%)`;
-
-                    lastTouchX = currentX;
-                    lastTouchTime = Date.now();
-                }
-            }, { passive: false });
-
-            carousel.addEventListener('touchend', () => {
-                if (!isDragging || isVerticalScroll) {
-                    isDragging = false;
-                    isVerticalScroll = false;
-                    offset = 0;
-                    return;
-                }
-                
-                isDragging = false;
-                const cardWidth = carousel.offsetWidth;
-                const threshold = cardWidth * 0.12; // 12% swipe threshold for sensitivity
-
-                const elapsed = Date.now() - touchStartTime;
-                const travel = lastTouchX - startX;
-                const velocity = Math.abs(travel) / Math.max(elapsed, 1); // px per ms
-                const velocityThreshold = 0.5; // quick flick
-
-                if (Math.abs(offset) > threshold || velocity > velocityThreshold) {
-                    if (offset > 0) {
-                        // Swiped right - go to previous card
-                        prevCard();
-                    } else {
-                        // Swiped left - go to next card
-                        nextCard();
-                    }
-                } else {
-                    // Snap back
-                    updateCarousel();
-                }
-                
-                offset = 0;
-                isVerticalScroll = false;
-            });
-
-            // Mouse events for desktop testing (optional)
-            let startYMouse = 0;
-            
-            carousel.addEventListener('mousedown', (e) => {
-                startX = e.clientX;
-                startYMouse = e.clientY;
+                const index = Math.round(Math.abs(previousTranslate) / carouselWidth());
+                startPos = getPositionX(e);
                 isDragging = true;
                 carousel.style.transition = 'none';
-                carousel.style.cursor = 'grabbing';
-                touchStartTime = Date.now();
-                document.body.style.userSelect = 'none';
+                animationFrame = requestAnimationFrame(animation);
+                addGlobalListeners(index);
+            }, { passive: false });
+
+            carousel.addEventListener('mousedown', touchStart(currentIndex));
+            carousel.addEventListener('mousemove', touchMove);
+            carousel.addEventListener('mouseup', () => {
+                touchEnd();
+                carousel.removeEventListener('mousemove', touchMove);
+            });
+            carousel.addEventListener('mouseleave', () => {
+                if (isDragging) touchEnd();
             });
 
-            document.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                currentX = e.clientX;
-                const currentY = e.clientY;
-                const deltaX = Math.abs(currentX - startX);
-                const deltaY = Math.abs(currentY - startYMouse);
-                
-                if (deltaX > deltaY) {
-                    offset = currentX - startX;
-                    const cardWidth = carousel.offsetWidth;
-                    const translateX = -(currentIndex) * cardWidth + (offset / cardWidth) * 100;
-                    carousel.style.transform = `translateX(${translateX}%)`;
-                }
+            window.addEventListener('resize', () => {
+                goToSlide(currentIndex, false);
             });
 
-            document.addEventListener('mouseup', () => {
-                if (!isDragging) return;
-                isDragging = false;
-                carousel.style.cursor = 'grab';
-                document.body.style.userSelect = '';
-                
-                const cardWidth = carousel.offsetWidth;
-                const threshold = cardWidth * 0.12;
-                const elapsed = Date.now() - touchStartTime;
-                const velocity = Math.abs(offset) / Math.max(elapsed,1);
-                const velocityThreshold = 0.5;
-                
-                if (Math.abs(offset) > threshold || velocity > velocityThreshold) {
-                    if (offset > 0) {
-                        prevCard();
-                    } else {
-                        nextCard();
-                    }
-                } else {
-                    updateCarousel();
-                }
-                
-                offset = 0;
-            });
-
-            // Initialize
-            updateCarousel(false);
-            setTimeout(() => {
-                updateCarousel();
-            }, 100);
+            goToSlide(0, false);
         })();
 
         // Load data from Google Sheets
@@ -1130,7 +1089,7 @@
                             } else if (char === ',' && !inQuotes) {
                                 row.push(current.trim());
                                 current = '';
-                            } else {
+                } else {
                                 current += char;
                             }
                         }
@@ -1187,7 +1146,7 @@
                             if (sheetData.length > 0) {
                                 updateMobileAppData(sheetData);
                                 console.log('✓ Data loaded successfully from Google Sheets');
-                            } else {
+                        } else {
                                 throw new Error('No data parsed');
                             }
                         })
