@@ -66,71 +66,13 @@
             min-height: 0;
         }
 
-        .carousel-wrapper {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 44px;
-            height: 44px;
-            border: none;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.92);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            color: #333;
-            cursor: pointer;
-            z-index: 6;
-            transition: background 0.2s ease, transform 0.2s ease;
-        }
-
-        .nav-button:active {
-            transform: translateY(-50%) scale(0.95);
-        }
-
-        .nav-button.prev {
-            left: 12px;
-        }
-
-        .nav-button.next {
-            right: 12px;
-        }
-
-        .carousel-dots {
-            position: absolute;
-            bottom: 14px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-            z-index: 6;
-        }
-
-        .carousel-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 999px;
-            border: none;
-            background: rgba(255, 255, 255, 0.5);
-            transition: all 0.2s ease;
-            cursor: pointer;
-            padding: 0;
-        }
-
-        .carousel-dot.active {
-            width: 26px;
-            background: #ffffff;
-        }
+.carousel-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
 
         .carousel {
             display: flex;
@@ -461,27 +403,6 @@
                 padding: 14px;
                 border-radius: 12px;
                 margin: 0 4px;
-            }
-
-            .nav-button {
-                width: 38px;
-                height: 38px;
-                font-size: 20px;
-                left: 6px;
-                right: 6px;
-            }
-
-            .nav-button.prev {
-                left: 6px;
-            }
-
-            .nav-button.next {
-                right: 6px;
-            }
-
-            .carousel-dots {
-                bottom: 10px;
-                gap: 6px;
             }
 
             .screen-count-template {
@@ -938,9 +859,6 @@
                     </div>
                 </div>
             </div>
-            <button class="nav-button prev" id="prevButton" aria-label="Previous card">&#8249;</button>
-            <button class="nav-button next" id="nextButton" aria-label="Next card">&#8250;</button>
-            <div class="carousel-dots" id="carouselDots" aria-label="Carousel navigation"></div>
         </div>
     </div>
     <footer>
@@ -951,9 +869,6 @@
             const carousel = document.getElementById('carousel');
             const originalCards = carousel.querySelectorAll('.card');
             const totalCards = originalCards.length;
-            const prevButton = document.getElementById('prevButton');
-            const nextButton = document.getElementById('nextButton');
-            const dotsContainer = document.getElementById('carouselDots');
             let currentIndex = 0;
             let startX = 0;
             let currentX = 0;
@@ -969,31 +884,6 @@
             // Now get all cards including clones
             const allCards = carousel.querySelectorAll('.card');
             const totalCardsWithClones = allCards.length;
-            const dots = [];
-
-            // Create dots for touch navigation
-            if (dotsContainer) {
-                for (let i = 0; i < totalCards; i++) {
-                    const dot = document.createElement('button');
-                    dot.type = 'button';
-                    dot.className = 'carousel-dot';
-                    dot.setAttribute('aria-label', `Go to card ${i + 1}`);
-                    dot.addEventListener('click', () => {
-                        currentIndex = i;
-                        updateCarousel();
-                    });
-                    dotsContainer.appendChild(dot);
-                    dots.push(dot);
-                }
-            }
-
-            function updateDots() {
-                if (!dots.length) return;
-                const activeIndex = ((currentIndex % totalCards) + totalCards) % totalCards;
-                dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === activeIndex);
-                });
-            }
 
             function updateCarousel(animate = true) {
                 if (!animate) {
@@ -1002,10 +892,9 @@
                     carousel.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                 }
                 
-                const cardWidth = 100; // 100% per card
-                const translateX = -(currentIndex + 1) * cardWidth;
+                const cardWidthPercent = 100; // 100% per card
+                const translateX = -(currentIndex + 1) * cardWidthPercent;
                 carousel.style.transform = `translateX(${translateX}%)`;
-                updateDots();
             }
 
             function nextCard() {
@@ -1056,11 +945,15 @@
             let startY = 0;
             let touchStartTime = 0;
             let isVerticalScroll = false;
+            let lastTouchX = 0;
+            let lastTouchTime = 0;
             
             carousel.addEventListener('touchstart', (e) => {
                 startX = e.touches[0].clientX;
                 startY = e.touches[0].clientY;
                 touchStartTime = Date.now();
+                lastTouchX = startX;
+                lastTouchTime = touchStartTime;
                 isDragging = true;
                 isVerticalScroll = false;
                 carousel.style.transition = 'none';
@@ -1089,6 +982,9 @@
                     const cardWidth = carousel.offsetWidth;
                     const translateX = -(currentIndex + 1) * cardWidth + (offset / cardWidth) * 100;
                     carousel.style.transform = `translateX(${translateX}%)`;
+
+                    lastTouchX = currentX;
+                    lastTouchTime = Date.now();
                 }
             }, { passive: false });
 
@@ -1102,9 +998,14 @@
                 
                 isDragging = false;
                 const cardWidth = carousel.offsetWidth;
-                const threshold = cardWidth * 0.2; // 20% swipe threshold (more sensitive)
-                
-                if (Math.abs(offset) > threshold) {
+                const threshold = cardWidth * 0.12; // 12% swipe threshold for sensitivity
+
+                const elapsed = Date.now() - touchStartTime;
+                const travel = lastTouchX - startX;
+                const velocity = Math.abs(travel) / Math.max(elapsed, 1); // px per ms
+                const velocityThreshold = 0.5; // quick flick
+
+                if (Math.abs(offset) > threshold || velocity > velocityThreshold) {
                     if (offset > 0) {
                         // Swiped right - go to previous card
                         prevCard();
@@ -1121,7 +1022,7 @@
                 isVerticalScroll = false;
             });
 
-            // Mouse events for desktop testing
+            // Mouse events for desktop testing (optional)
             let startYMouse = 0;
             
             carousel.addEventListener('mousedown', (e) => {
@@ -1130,7 +1031,8 @@
                 isDragging = true;
                 carousel.style.transition = 'none';
                 carousel.style.cursor = 'grabbing';
-                e.preventDefault();
+                touchStartTime = Date.now();
+                document.body.style.userSelect = 'none';
             });
 
             document.addEventListener('mousemove', (e) => {
@@ -1140,7 +1042,6 @@
                 const deltaX = Math.abs(currentX - startX);
                 const deltaY = Math.abs(currentY - startYMouse);
                 
-                // Only drag if horizontal movement is dominant
                 if (deltaX > deltaY) {
                     offset = currentX - startX;
                     const cardWidth = carousel.offsetWidth;
@@ -1153,20 +1054,21 @@
                 if (!isDragging) return;
                 isDragging = false;
                 carousel.style.cursor = 'grab';
+                document.body.style.userSelect = '';
                 
                 const cardWidth = carousel.offsetWidth;
-                const threshold = cardWidth * 0.2; // 20% swipe threshold
+                const threshold = cardWidth * 0.12;
+                const elapsed = Date.now() - touchStartTime;
+                const velocity = Math.abs(offset) / Math.max(elapsed,1);
+                const velocityThreshold = 0.5;
                 
-                if (Math.abs(offset) > threshold) {
+                if (Math.abs(offset) > threshold || velocity > velocityThreshold) {
                     if (offset > 0) {
-                        // Swiped right - go to previous card
                         prevCard();
                     } else {
-                        // Swiped left - go to next card
                         nextCard();
                     }
                 } else {
-                    // Snap back
                     updateCarousel();
                 }
                 
