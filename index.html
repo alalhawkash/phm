@@ -74,6 +74,33 @@
     overflow: hidden;
 }
 
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 0;
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+}
+
+.carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.6);
+    transition: width 0.2s ease, background 0.2s ease;
+}
+
+.carousel-dot.active {
+    width: 20px;
+    border-radius: 999px;
+    background: #ffffff;
+}
+
         .carousel {
             display: flex;
             width: 100%;
@@ -178,7 +205,7 @@
         }
 
         .percentage-value {
-            color: #764ba2;
+            color: #7caae6;
         }
 
         .week-indicator {
@@ -859,6 +886,7 @@
                     </div>
                 </div>
             </div>
+            <div class="carousel-dots" id="carouselDots"></div>
         </div>
     </div>
     <footer>
@@ -867,6 +895,7 @@
     <script>
         (function() {
             const carousel = document.getElementById('carousel');
+            const dotsContainer = document.getElementById('carouselDots');
             const originalCards = carousel.querySelectorAll('.card');
             const totalCards = originalCards.length;
             let currentIndex = 0;
@@ -885,6 +914,31 @@
             const allCards = carousel.querySelectorAll('.card');
             const totalCardsWithClones = allCards.length;
 
+            // Create navigation dots
+            const dots = [];
+            if (dotsContainer) {
+                for (let i = 0; i < totalCards; i++) {
+                    const dot = document.createElement('button');
+                    dot.setAttribute('type', 'button');
+                    dot.className = 'carousel-dot';
+                    dot.setAttribute('aria-label', `Go to card ${i + 1}`);
+                    dot.addEventListener('click', () => {
+                        currentIndex = i;
+                        updateCarousel();
+                    });
+                    dotsContainer.appendChild(dot);
+                    dots.push(dot);
+                }
+            }
+
+            function updateDots() {
+                if (!dots.length) return;
+                const activeIndex = ((currentIndex % totalCards) + totalCards) % totalCards;
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === activeIndex);
+                });
+            }
+
             function updateCarousel(animate = true) {
                 if (!animate) {
                     carousel.style.transition = 'none';
@@ -895,6 +949,7 @@
                 const cardWidthPercent = 100; // 100% per card
                 const translateX = -(currentIndex + 1) * cardWidthPercent;
                 carousel.style.transform = `translateX(${translateX}%)`;
+                updateDots();
             }
 
             function nextCard() {
