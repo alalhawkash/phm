@@ -15,12 +15,27 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #4c76f7 100%);
+            background: #4A90E2;
+            background: linear-gradient(135deg, #4A90E2 0%, #5BA3F5 50%, #4A90E2 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             padding: 0;
             overflow: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         header {
@@ -38,6 +53,15 @@
             font-weight: 600;
             color: #333;
             text-align: center;
+            margin: 0;
+        }
+
+        header .subtitle {
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+            margin-top: 2px;
+            font-weight: 400;
         }
 
         footer {
@@ -614,7 +638,8 @@
 </head>
 <body>
     <header>
-        <h1>Mobile App</h1>
+        <h1>MANHAL</h1>
+        <div class="subtitle">WHERE DATA FLOWS CLEARLY</div>
     </header>
     <div class="container">
         <div class="carousel-wrapper">
