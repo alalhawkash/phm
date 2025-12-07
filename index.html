@@ -259,7 +259,7 @@
             border-radius: 8px;
             border-left: 4px solid #667eea;
             flex-shrink: 0;
-            gap: 8px;
+            gap: 12px;
         }
 
         .zone-rank {
@@ -280,9 +280,9 @@
             font-size: 14px;
             font-weight: 600;
             color: #667eea;
-            min-width: 50px;
+            min-width: 70px;
             text-align: center;
-            flex: 0 0 80px;
+            flex: 0 0 90px;
         }
 
         .zone-7d-indicator {
@@ -290,6 +290,38 @@
             align-items: center;
             justify-content: center;
             min-width: 30px;
+        }
+
+        .zone-item--screening {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 90px 70px;
+            gap: 12px;
+        }
+
+        .zone-item--screening .zone-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .zone-item--screening .zone-name-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .zone-item--screening .zone-rank {
+            min-width: 24px;
+        }
+
+        .zone-item--screening .zone-value {
+            flex: initial;
+            min-width: 0;
+            text-align: center;
+        }
+
+        .zone-item--screening .zone-7d-indicator {
+            justify-content: center;
         }
 
         .zone-arrow {
@@ -556,13 +588,6 @@
                                 <div class="metric-row">
                                     <span class="metric-label">Percentage</span>
                                     <span class="metric-value percentage-value" id="percentageValue">94.4%</span>
-        </div>
-                                <div class="metric-row">
-                                    <span class="metric-label">From Last Week</span>
-                                    <span class="week-indicator indicator-positive" id="weekIndicator">
-                                        <span class="indicator-icon">+</span>
-                                        <span id="weekChange">5.2%</span>
-                                    </span>
         </div>
                             </div>
                             <div class="zones-ranking" id="screeningZonesList">
@@ -996,6 +1021,18 @@
         const SCREENING_ZONE_INDICATOR_COL = 4; // column E
         const SCREENING_ZONE_LIMIT = 10;
 
+        let screeningTargetTotal = null;
+        let screeningCurrentTotal = null;
+
+        function updateScreeningPercentage() {
+            const percentEl = document.getElementById('percentageValue');
+            if (!percentEl) return;
+            if (screeningTargetTotal && screeningCurrentTotal !== null) {
+                const percent = (screeningCurrentTotal / screeningTargetTotal) * 100;
+                percentEl.textContent = `${percent.toFixed(1)}%`;
+            }
+        }
+
         function populateScreeningZones(rows) {
             const container = document.getElementById('screeningZonesList');
             if (!container) return;
@@ -1031,10 +1068,12 @@
                 if (!zoneName) break;
 
                 html += `
-                    <div class="zone-item">
-                        <span class="zone-rank">${rank}</span>
-                        <span class="zone-name">${zoneName}</span>
-                        <span class="zone-value">${zoneValue}</span>
+                    <div class="zone-item zone-item--screening">
+                        <div class="zone-name">
+                            <span class="zone-rank">${rank}</span>
+                            <span class="zone-name-text">${zoneName}</span>
+                        </div>
+                        <span class="zone-value">${zoneValueText}</span>
                         <div class="zone-7d-indicator">
                             <span class="${indicatorClass}">
                                 ${indicatorArrow}${indicatorText ? ` ${indicatorText}` : ''}
@@ -1180,9 +1219,19 @@
                     // Parse Screening Overview
                     if (currentSection === 'screening') {
                         if (firstCell === 'Target' && row[1]) {
-                            document.getElementById('targetValue').textContent = parseInt(row[1]).toLocaleString();
+                            const targetNum = parseInt((row[1] || '').replace(/,/g, ''), 10);
+                            if (!isNaN(targetNum)) {
+                                screeningTargetTotal = targetNum;
+                                document.getElementById('targetValue').textContent = targetNum.toLocaleString();
+                                updateScreeningPercentage();
+                            }
                         } else if (firstCell === 'Current' && row[1]) {
-                            document.getElementById('currentValue').textContent = parseInt(row[1]).toLocaleString();
+                            const currentNum = parseInt((row[1] || '').replace(/,/g, ''), 10);
+                            if (!isNaN(currentNum)) {
+                                screeningCurrentTotal = currentNum;
+                                document.getElementById('currentValue').textContent = currentNum.toLocaleString();
+                                updateScreeningPercentage();
+                            }
                         } else if (firstCell === 'Not Screened (Remaining)' && row[1]) {
                             // This is the remaining count
                         }
