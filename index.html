@@ -68,6 +68,7 @@
 
 .carousel-wrapper {
             display: flex;
+            flex-direction: column;
     width: 100%;
     height: 100%;
     position: relative;
@@ -81,10 +82,8 @@
             justify-content: center;
     gap: 8px;
     padding: 12px 0;
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: relative;
+    flex-shrink: 0;
     z-index: 5;
 }
 
@@ -106,7 +105,8 @@
 .carousel {
     display: flex;
     width: 100%;
-    height: 100%;
+    flex: 1;
+    min-height: 0;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
@@ -209,14 +209,6 @@
 
         .percentage-value {
             color: #7caae6;
-        }
-
-        .week-indicator {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 18px;
-            font-weight: 600;
         }
 
         .indicator-positive {
@@ -336,6 +328,10 @@
 
         .zone-arrow-down {
             color: #f44336;
+        }
+
+        .zone-arrow-neutral {
+            color: #999;
         }
 
         /* DM Patients Template Styles */
@@ -492,10 +488,6 @@
                 font-size: 16px;
             }
 
-            .week-indicator {
-                font-size: 15px;
-            }
-
             .zones-title {
                 font-size: 14px;
                 margin-bottom: 4px;
@@ -579,15 +571,15 @@
                             <div class="metrics-section">
                                 <div class="metric-row">
                                     <span class="metric-label">Target</span>
-                                    <span class="metric-value target-value" id="targetValue">1,250</span>
+                                    <span class="metric-value target-value" id="targetValue">0</span>
         </div>
                                 <div class="metric-row">
                                     <span class="metric-label">Current</span>
-                                    <span class="metric-value percentage-value" id="currentValue">1,180</span>
+                                    <span class="metric-value percentage-value" id="currentValue">0</span>
     </div>
                                 <div class="metric-row">
                                     <span class="metric-label">Percentage</span>
-                                    <span class="metric-value percentage-value" id="percentageValue">94.4%</span>
+                                    <span class="metric-value percentage-value" id="percentageValue">0%</span>
         </div>
                             </div>
                             <div class="zones-ranking" id="screeningZonesList">
@@ -638,87 +630,10 @@
                     </div>
                 </div>
             </div>
-                            <div class="zones-ranking">
+                            <div class="zones-ranking" id="dmZonesList">
                                 <div class="zones-title">Zone Rankings - Uncontrolled DM % (Top 10)</div>
                                 <div class="zone-item">
-                                    <span class="zone-rank">1</span>
-                                    <span class="zone-name">Zone A</span>
-                                    <span class="zone-value" style="color: #f44336;">15.2%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">2</span>
-                                    <span class="zone-name">Zone B</span>
-                                    <span class="zone-value" style="color: #f44336;">18.5%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">3</span>
-                                    <span class="zone-name">Zone C</span>
-                                    <span class="zone-value" style="color: #f44336;">22.1%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-up">↑</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">4</span>
-                                    <span class="zone-name">Zone D</span>
-                                    <span class="zone-value" style="color: #f44336;">24.3%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">5</span>
-                                    <span class="zone-name">Zone E</span>
-                                    <span class="zone-value" style="color: #f44336;">26.8%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-up">↑</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">6</span>
-                                    <span class="zone-name">Zone F</span>
-                                    <span class="zone-value" style="color: #f44336;">28.5%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">7</span>
-                                    <span class="zone-name">Zone G</span>
-                                    <span class="zone-value" style="color: #f44336;">31.2%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-up">↑</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">8</span>
-                                    <span class="zone-name">Zone H</span>
-                                    <span class="zone-value" style="color: #f44336;">33.7%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">9</span>
-                                    <span class="zone-name">Zone I</span>
-                                    <span class="zone-value" style="color: #f44336;">35.9%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-up">↑</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">10</span>
-                                    <span class="zone-name">Zone J</span>
-                                    <span class="zone-value" style="color: #f44336;">38.4%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
+                                    <span class="zone-name">Loading...</span>
                                 </div>
                             </div>
                         </div>
@@ -751,87 +666,10 @@
                 </div>
             </div>
                     </div>
-                            <div class="zones-ranking">
+                            <div class="zones-ranking" id="predmZonesList">
                                 <div class="zones-title">Zone Rankings - No Follow-up % (Top 10)</div>
                                 <div class="zone-item">
-                                    <span class="zone-rank">1</span>
-                                    <span class="zone-name">Zone A</span>
-                                    <span class="zone-value" style="color: #f44336;">12.5%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                </div>
-            </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">2</span>
-                                    <span class="zone-name">Zone B</span>
-                                    <span class="zone-value" style="color: #f44336;">15.3%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                </div>
-                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">3</span>
-                                    <span class="zone-name">Zone C</span>
-                                    <span class="zone-value" style="color: #f44336;">18.7%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-up">↑</span>
-            </div>
-        </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">4</span>
-                                    <span class="zone-name">Zone D</span>
-                                    <span class="zone-value" style="color: #f44336;">21.2%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-    </div>
-    </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">5</span>
-                                    <span class="zone-name">Zone E</span>
-                                    <span class="zone-value" style="color: #f44336;">24.6%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-up">↑</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">6</span>
-                                    <span class="zone-name">Zone F</span>
-                                    <span class="zone-value" style="color: #f44336;">27.8%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">7</span>
-                                    <span class="zone-name">Zone G</span>
-                                    <span class="zone-value" style="color: #f44336;">30.1%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-up">↑</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">8</span>
-                                    <span class="zone-name">Zone H</span>
-                                    <span class="zone-value" style="color: #f44336;">33.5%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">9</span>
-                                    <span class="zone-name">Zone I</span>
-                                    <span class="zone-value" style="color: #f44336;">36.9%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-up">↑</span>
-                                    </div>
-                                </div>
-                                <div class="zone-item">
-                                    <span class="zone-rank">10</span>
-                                    <span class="zone-name">Zone J</span>
-                                    <span class="zone-value" style="color: #f44336;">40.2%</span>
-                                    <div class="zone-7d-indicator">
-                                        <span class="zone-arrow zone-arrow-down">↓</span>
-                                    </div>
+                                    <span class="zone-name">Loading...</span>
                                 </div>
                             </div>
                         </div>
@@ -891,135 +729,19 @@
         })();
     </script>
     <script>
-        (function() {
-            const carousel = document.getElementById('carousel');
-            const dotsContainer = document.getElementById('carouselDots');
-            const cards = Array.from(carousel.querySelectorAll('.card'));
-            const totalCards = cards.length;
-            let currentIndex = 0;
-            let startPos = 0;
-            let currentTranslate = 0;
-            let previousTranslate = 0;
-            let isDragging = false;
-            let animationFrame;
-
-            // dots
-            const dots = [];
-            if (dotsContainer) {
-                for (let i = 0; i < totalCards; i++) {
-                    const dot = document.createElement('button');
-                    dot.type = 'button';
-                    dot.className = 'carousel-dot';
-                    dot.addEventListener('click', () => goToSlide(i));
-                    dotsContainer.appendChild(dot);
-                    dots.push(dot);
-                }
-            }
-
-            const carouselWidth = () => carousel.parentElement.offsetWidth;
-
-            function setActiveDot() {
-                dots.forEach((dot, index) => dot.classList.toggle('active', index === currentIndex));
-            }
-
-            function goToSlide(index, animate = true) {
-                currentIndex = Math.max(0, Math.min(index, totalCards - 1));
-                previousTranslate = -currentIndex * carouselWidth();
-                if (animate) {
-                    carousel.style.transition = 'transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1)';
-                } else {
-                    carousel.style.transition = 'none';
-                }
-                carousel.style.transform = `translateX(${previousTranslate}px)`;
-                setActiveDot();
-            }
-
-            function touchStart(index) {
-                return function(event) {
-                    currentIndex = index;
-                    startPos = getPositionX(event);
-                    isDragging = true;
-                    carousel.style.transition = 'none';
-                    animationFrame = requestAnimationFrame(animation);
-                };
-            }
-
-            function touchMove(event) {
-                if (!isDragging) return;
-                const currentPosition = getPositionX(event);
-                currentTranslate = previousTranslate + currentPosition - startPos;
-            }
-
-            function touchEnd() {
-                cancelAnimationFrame(animationFrame);
-                if (!isDragging) return;
-                isDragging = false;
-                const movedBy = currentTranslate - previousTranslate;
-
-                if (movedBy < -carouselWidth() * 0.2) {
-                    currentIndex = Math.min(currentIndex + 1, totalCards - 1);
-                }
-
-                if (movedBy > carouselWidth() * 0.2) {
-                    currentIndex = Math.max(currentIndex - 1, 0);
-                }
-
-                goToSlide(currentIndex);
-            }
-
-            function getPositionX(event) {
-                return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
-            }
-
-            function animation() {
-                carousel.style.transform = `translateX(${currentTranslate}px)`;
-                if (isDragging) requestAnimationFrame(animation);
-            }
-
-            function addGlobalListeners(index) {
-                currentIndex = index;
-                const onTouchMove = (e) => touchMove(e);
-                const onTouchEnd = () => {
-                    touchEnd();
-                    carousel.removeEventListener('touchmove', onTouchMove);
-                    carousel.removeEventListener('touchend', onTouchEnd);
-                };
-                carousel.addEventListener('touchmove', onTouchMove, { passive: false });
-                carousel.addEventListener('touchend', onTouchEnd);
-            }
-
-            carousel.addEventListener('touchstart', (e) => {
-                const index = Math.round(Math.abs(previousTranslate) / carouselWidth());
-                startPos = getPositionX(e);
-                isDragging = true;
-                carousel.style.transition = 'none';
-                animationFrame = requestAnimationFrame(animation);
-                addGlobalListeners(index);
-            }, { passive: false });
-
-            carousel.addEventListener('mousedown', touchStart(currentIndex));
-            carousel.addEventListener('mousemove', touchMove);
-            carousel.addEventListener('mouseup', () => {
-                touchEnd();
-                carousel.removeEventListener('mousemove', touchMove);
-            });
-            carousel.addEventListener('mouseleave', () => {
-                if (isDragging) touchEnd();
-            });
-
-            window.addEventListener('resize', () => {
-                goToSlide(currentIndex, false);
-            });
-
-            goToSlide(0, false);
-        })();
-
         const SCREENING_ZONE_START_ROW = 10; // B11 -> zero-indexed row 10
         const SCREENING_ZONE_NAME_COL = 1; // column B
         const SCREENING_ZONE_VALUE_COL = 2; // column C (achieved)
         const SCREENING_ZONE_TARGET_COL = 3; // column D
         const SCREENING_ZONE_INDICATOR_COL = 4; // column E
         const SCREENING_ZONE_LIMIT = 10;
+
+        const DM_ZONE_START_ROW = 94; // B95 -> zero-indexed row 94
+        const DM_ZONE_NAME_COL = 1; // column B
+        const DM_ZONE_TOTAL_COL = 2; // column C (total DM)
+        const DM_ZONE_CONTROLLED_COL = 3; // column D (controlled DM)
+        const DM_ZONE_INDICATOR_COL = 5; // column F
+        const DM_ZONE_LIMIT = 10;
 
         let screeningTargetTotal = null;
         let screeningCurrentTotal = null;
@@ -1056,13 +778,15 @@
                     zoneValueText = `${percent}%`;
                 }
 
-                let indicatorArrow = '•';
-                let indicatorClass = 'zone-arrow';
+                let indicatorArrow = '-';
+                let indicatorClass = 'zone-arrow zone-arrow-neutral';
                 let indicatorText = '';
                 if (!isNaN(indicatorNum) && indicatorNum !== 0) {
                     indicatorArrow = indicatorNum > 0 ? '↑' : '↓';
                     indicatorClass = indicatorNum > 0 ? 'zone-arrow zone-arrow-up' : 'zone-arrow zone-arrow-down';
                     indicatorText = Math.abs(indicatorNum).toLocaleString();
+                } else if (!isNaN(indicatorNum) && indicatorNum === 0) {
+                    indicatorText = '0';
                 }
 
                 if (!zoneName) break;
@@ -1084,6 +808,69 @@
 
                 rank++;
                 if (rank > SCREENING_ZONE_LIMIT) break;
+            }
+
+            if (rank === 1) {
+                html += '<div class="zone-item"><span class="zone-name">No zone data</span></div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        function populateDMZones(rows) {
+            const container = document.getElementById('dmZonesList');
+            if (!container) return;
+
+            let html = '<div class="zones-title">Zone Rankings - Uncontrolled DM % (Top 10)</div>';
+            let rank = 1;
+
+            for (let i = DM_ZONE_START_ROW; i < rows.length; i++) {
+                const row = rows[i] || [];
+                const zoneName = (row[DM_ZONE_NAME_COL] || '').trim();
+                const totalRaw = (row[DM_ZONE_TOTAL_COL] || '').trim();
+                const controlledRaw = (row[DM_ZONE_CONTROLLED_COL] || '').trim();
+                const indicatorRaw = (row[DM_ZONE_INDICATOR_COL] || '').toString().trim();
+                const indicatorNum = parseFloat(indicatorRaw);
+
+                const totalNum = parseFloat(totalRaw.replace(/,/g, ''));
+                const controlledNum = parseFloat(controlledRaw.replace(/,/g, ''));
+                
+                let zoneValueText = '0%';
+                if (!isNaN(totalNum) && !isNaN(controlledNum) && totalNum !== 0) {
+                    const percent = ((controlledNum / totalNum) * 100).toFixed(1);
+                    zoneValueText = `${percent}%`;
+                }
+
+                let indicatorArrow = '-';
+                let indicatorClass = 'zone-arrow zone-arrow-neutral';
+                let indicatorText = '';
+                if (!isNaN(indicatorNum) && indicatorNum !== 0) {
+                    indicatorArrow = indicatorNum > 0 ? '↑' : '↓';
+                    indicatorClass = indicatorNum > 0 ? 'zone-arrow zone-arrow-up' : 'zone-arrow zone-arrow-down';
+                    indicatorText = Math.abs(indicatorNum).toLocaleString();
+                } else if (!isNaN(indicatorNum) && indicatorNum === 0) {
+                    indicatorText = '0';
+                }
+
+                if (!zoneName) break;
+
+                html += `
+                    <div class="zone-item zone-item--screening">
+                        <div class="zone-name">
+                            <span class="zone-rank">${rank}</span>
+                            <span class="zone-name-text">${zoneName}</span>
+                        </div>
+                        <span class="zone-value">${zoneValueText}</span>
+                        <div class="zone-7d-indicator">
+                            <span class="${indicatorClass}">
+                                ${indicatorArrow}${indicatorText ? ` ${indicatorText}` : ''}
+                            </span>
+                        </div>
+                    </div>
+                `;
+
+                rank++;
+                if (rank > DM_ZONE_LIMIT) break;
             }
 
             if (rank === 1) {
@@ -1263,6 +1050,7 @@
                 }
 
                 populateScreeningZones(data);
+                populateDMZones(data);
             }
             
             // Load data when page loads
