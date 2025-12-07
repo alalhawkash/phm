@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Mobile App</title>
+    <meta name="apple-mobile-web-app-title" content="MANHAL">
+    <link rel="apple-touch-icon" href="icon-180.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <title>MANHAL</title>
     <style>
         * {
             margin: 0;
@@ -95,7 +100,7 @@
             flex-direction: column;
     width: 100%;
     height: 100%;
-    position: relative;
+            position: relative;
     overflow: hidden;
     padding: 0 8px;
     box-sizing: border-box;
@@ -104,9 +109,9 @@
 .carousel-dots {
             display: flex;
             justify-content: center;
-    gap: 8px;
+            gap: 8px;
     padding: 12px 0;
-    position: relative;
+            position: relative;
     flex-shrink: 0;
     z-index: 5;
 }
@@ -115,7 +120,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    border: none;
+            border: none;
     background: rgba(255, 255, 255, 0.6);
     transition: width 0.2s ease, background 0.2s ease;
 }
@@ -140,7 +145,7 @@
     scrollbar-width: none;
 }
 .carousel::-webkit-scrollbar {
-    display: none;
+            display: none;
 }
 
         .card {
@@ -188,7 +193,7 @@
             border-bottom: 2px solid #e0e0e0;
             flex-shrink: 0;
         }
-
+        
         .template-header h2 {
             font-size: 22px;
             font-weight: 700;
@@ -466,7 +471,7 @@
         .dm-week-indicator {
             display: flex;
             align-items: center;
-            gap: 6px;
+                gap: 6px;
             font-size: 16px;
             font-weight: 600;
             margin-left: 8px;
@@ -664,13 +669,13 @@
                                     <span class="metric-label">Percentage</span>
                                     <span class="metric-value percentage-value" id="percentageValue">0%</span>
         </div>
-                            </div>
+        </div>
                             <div class="zones-ranking" id="screeningZonesList">
                                 <div class="zone-item">
                                     <span class="zone-name">Loading...</span>
-                                </div>
-                            </div>
                         </div>
+                        </div>
+            </div>
                     </div>
                 </div>
                 <div class="card">
@@ -679,42 +684,42 @@
                             <div class="template-header">
                                 <h2>DM Patients</h2>
                                 <div class="subtitle">Diabetes Management Overview</div>
-                            </div>
+            </div>
                             <div class="metrics-section">
                                 <div class="dm-metric-row">
                                     <span class="dm-metric-label">DM Patients</span>
                                     <span class="dm-metric-value dm-value" id="dmPatientsValue">0</span>
-                                </div>
+                </div>
                                 <div class="dm-metric-row">
                                     <span class="dm-metric-label">Controlled DM</span>
                                     <div class="dm-metric-value-container">
                                         <span class="dm-metric-value controlled-value" id="controlledDMValue">0</span>
                                         <span class="dm-metric-value controlled-value" id="controlledDMPercent">0%</span>
-                                    </div>
+                </div>
             </div>
                                 <div class="dm-metric-row">
                                     <span class="dm-metric-label">Uncontrolled DM</span>
                                     <div class="dm-metric-value-container">
                                         <span class="dm-metric-value uncontrolled-value" id="uncontrolledDMValue">0</span>
                                         <span class="dm-metric-value uncontrolled-value" id="uncontrolledDMPercent">0%</span>
-                                    </div>
+                    </div>
                 </div>
             </div>
                             <div class="zones-ranking" id="dmZonesList">
                                 <div class="zone-item">
                                     <span class="zone-name">Loading...</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+                </div>
+            </div>
+        </div>
+    </div>
                 <div class="card">
                     <div class="card-content">
                         <div class="predm-template">
                             <div class="template-header">
                                 <h2>Pre-DM Patients</h2>
                                 <div class="subtitle">Pre-Diabetes Management Overview</div>
-                            </div>
+    </div>
                             <div class="metrics-section">
                                 <div class="predm-metric-row">
                                     <span class="predm-metric-label">Pre-DM Patients</span>
@@ -1086,7 +1091,7 @@
                             } else if (char === ',' && !inQuotes) {
                                 row.push(current.trim());
                                 current = '';
-                } else {
+            } else {
                                 current += char;
                             }
                         }
@@ -1125,9 +1130,9 @@
                             'Make sure the Google Sheet is set to "Anyone with the link can view"';
                         console.log(errorMsg);
                         // Don't show alert as it's annoying, just log to console
-                        return;
-                    }
-                    
+                return;
+            }
+            
                     fetch(proxies[index])
                         .then(response => {
                             if (!response.ok) {
@@ -1165,9 +1170,9 @@
                     const row = data[rowIndex];
                     if (row.length === 0) {
                         rowIndex++;
-                        continue;
-                    }
-                    
+                            continue;
+                        }
+                        
                     const firstCell = String(row[0] || '').trim();
                     
                     // Detect section headers
@@ -1182,9 +1187,9 @@
                     } else if (firstCell.includes('PRE-DM PATIENTS OVERVIEW')) {
                         currentSection = 'predm';
                         rowIndex++;
-                        continue;
-                    }
-                    
+                            continue;
+                        }
+                        
                     // Parse Screening Overview
                     if (currentSection === 'screening') {
                         if (firstCell === 'Target' && row[1]) {
