@@ -74,6 +74,64 @@
             overflow: hidden;
         }
 
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #333;
+            cursor: pointer;
+            z-index: 6;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .nav-button:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .nav-button.prev {
+            left: 12px;
+        }
+
+        .nav-button.next {
+            right: 12px;
+        }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 6;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            border: none;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .carousel-dot.active {
+            width: 26px;
+            background: #ffffff;
+        }
+
         .carousel {
             display: flex;
             width: 100%;
@@ -403,6 +461,27 @@
                 padding: 14px;
                 border-radius: 12px;
                 margin: 0 4px;
+            }
+
+            .nav-button {
+                width: 38px;
+                height: 38px;
+                font-size: 20px;
+                left: 6px;
+                right: 6px;
+            }
+
+            .nav-button.prev {
+                left: 6px;
+            }
+
+            .nav-button.next {
+                right: 6px;
+            }
+
+            .carousel-dots {
+                bottom: 10px;
+                gap: 6px;
             }
 
             .screen-count-template {
@@ -859,6 +938,9 @@
                     </div>
                 </div>
             </div>
+            <button class="nav-button prev" id="prevButton" aria-label="Previous card">&#8249;</button>
+            <button class="nav-button next" id="nextButton" aria-label="Next card">&#8250;</button>
+            <div class="carousel-dots" id="carouselDots" aria-label="Carousel navigation"></div>
         </div>
     </div>
     <footer>
@@ -869,6 +951,9 @@
             const carousel = document.getElementById('carousel');
             const originalCards = carousel.querySelectorAll('.card');
             const totalCards = originalCards.length;
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+            const dotsContainer = document.getElementById('carouselDots');
             let currentIndex = 0;
             let startX = 0;
             let currentX = 0;
@@ -884,6 +969,31 @@
             // Now get all cards including clones
             const allCards = carousel.querySelectorAll('.card');
             const totalCardsWithClones = allCards.length;
+            const dots = [];
+
+            // Create dots for touch navigation
+            if (dotsContainer) {
+                for (let i = 0; i < totalCards; i++) {
+                    const dot = document.createElement('button');
+                    dot.type = 'button';
+                    dot.className = 'carousel-dot';
+                    dot.setAttribute('aria-label', `Go to card ${i + 1}`);
+                    dot.addEventListener('click', () => {
+                        currentIndex = i;
+                        updateCarousel();
+                    });
+                    dotsContainer.appendChild(dot);
+                    dots.push(dot);
+                }
+            }
+
+            function updateDots() {
+                if (!dots.length) return;
+                const activeIndex = ((currentIndex % totalCards) + totalCards) % totalCards;
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === activeIndex);
+                });
+            }
 
             function updateCarousel(animate = true) {
                 if (!animate) {
@@ -895,6 +1005,7 @@
                 const cardWidth = 100; // 100% per card
                 const translateX = -(currentIndex + 1) * cardWidth;
                 carousel.style.transform = `translateX(${translateX}%)`;
+                updateDots();
             }
 
             function nextCard() {
@@ -927,6 +1038,18 @@
                         }, 50);
                     }, 300);
                 }
+            }
+
+            if (prevButton) {
+                prevButton.addEventListener('click', () => {
+                    prevCard();
+                });
+            }
+
+            if (nextButton) {
+                nextButton.addEventListener('click', () => {
+                    nextCard();
+                });
             }
 
             // Touch events
@@ -1223,4 +1346,3 @@
     </script>
 </body>
 </html>
-
