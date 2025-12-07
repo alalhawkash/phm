@@ -896,23 +896,13 @@
         (function() {
             const carousel = document.getElementById('carousel');
             const dotsContainer = document.getElementById('carouselDots');
-            const originalCards = carousel.querySelectorAll('.card');
-            const totalCards = originalCards.length;
+            const cards = carousel.querySelectorAll('.card');
+            const totalCards = cards.length;
             let currentIndex = 0;
             let startX = 0;
             let currentX = 0;
             let isDragging = false;
             let offset = 0;
-
-            // Clone cards for infinite loop
-            const firstCardClone = originalCards[0].cloneNode(true);
-            const lastCardClone = originalCards[totalCards - 1].cloneNode(true);
-            carousel.appendChild(firstCardClone);
-            carousel.insertBefore(lastCardClone, originalCards[0]);
-
-            // Now get all cards including clones
-            const allCards = carousel.querySelectorAll('.card');
-            const totalCardsWithClones = allCards.length;
 
             // Create navigation dots
             const dots = [];
@@ -947,41 +937,32 @@
                 }
                 
                 const cardWidthPercent = 100; // 100% per card
-                const translateX = -(currentIndex + 1) * cardWidthPercent;
+                const translateX = -(currentIndex) * cardWidthPercent;
                 carousel.style.transform = `translateX(${translateX}%)`;
                 updateDots();
             }
 
             function nextCard() {
+                if (currentIndex >= totalCards - 1) {
+                    // bounce effect
+                    carousel.style.transition = 'transform 0.15s ease';
+                    carousel.style.transform = `translateX(${-(currentIndex * 100) - 3}%)`;
+                    setTimeout(() => updateCarousel(), 150);
+                    return;
+                }
                 currentIndex++;
                 updateCarousel();
-                
-                // Handle loop: if we're at the cloned first card (index = totalCards), jump to real first
-                if (currentIndex >= totalCards) {
-                    setTimeout(() => {
-                        currentIndex = 0;
-                        updateCarousel(false);
-                        setTimeout(() => {
-                            updateCarousel();
-                        }, 50);
-                    }, 300);
-                }
             }
 
             function prevCard() {
+                if (currentIndex <= 0) {
+                    carousel.style.transition = 'transform 0.15s ease';
+                    carousel.style.transform = `translateX(${-(currentIndex * 100) + 3}%)`;
+                    setTimeout(() => updateCarousel(), 150);
+                    return;
+                }
                 currentIndex--;
                 updateCarousel();
-                
-                // Handle loop: if we're at the cloned last card (index = -1), jump to real last
-                if (currentIndex < 0) {
-                    setTimeout(() => {
-                        currentIndex = totalCards - 1;
-                        updateCarousel(false);
-                        setTimeout(() => {
-                            updateCarousel();
-                        }, 50);
-                    }, 300);
-                }
             }
 
             // Touch events
@@ -1023,7 +1004,7 @@
                     e.preventDefault();
                     offset = currentX - startX;
                     const cardWidth = carousel.offsetWidth;
-                    const translateX = -(currentIndex + 1) * cardWidth + (offset / cardWidth) * 100;
+                    const translateX = -(currentIndex) * cardWidth + (offset / cardWidth) * 100;
                     carousel.style.transform = `translateX(${translateX}%)`;
 
                     lastTouchX = currentX;
@@ -1088,7 +1069,7 @@
                 if (deltaX > deltaY) {
                     offset = currentX - startX;
                     const cardWidth = carousel.offsetWidth;
-                    const translateX = -(currentIndex + 1) * cardWidth + (offset / cardWidth) * 100;
+                    const translateX = -(currentIndex) * cardWidth + (offset / cardWidth) * 100;
                     carousel.style.transform = `translateX(${translateX}%)`;
                 }
             });
