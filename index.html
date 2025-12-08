@@ -57,8 +57,8 @@
         }
 
         .header-logo {
-            width: 72px;
-            height: 72px;
+            width: 70px;
+            height: 70px;
             object-fit: contain;
         }
 
@@ -277,7 +277,7 @@
             color: #bfc7d1;
         }
 
-        .dark-mode .percentage-value {
+        .dark-mode .percentage-value:not(.orange):not(.green):not(.blue) {
             color: #e8e8e8;
         }
 
@@ -346,7 +346,7 @@
         footer {
             background: #ffffff;
             border-top: 1px solid #e0e0e0;
-            padding: 12px 20px;
+            padding: 24px 20px;
             box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
             z-index: 10;
         }
@@ -513,6 +513,30 @@
 
         .percentage-value {
             color: #333;
+        }
+
+        .percentage-value.orange {
+            color: #ff9500;
+        }
+
+        .percentage-value.green {
+            color: #4a9e5f;
+        }
+
+        .percentage-value.blue {
+            color: #007AFF;
+        }
+
+        .dark-mode .percentage-value.orange {
+            color: #ff9500;
+        }
+
+        .dark-mode .percentage-value.green {
+            color: #4a9e5f;
+        }
+
+        .dark-mode .percentage-value.blue {
+            color: #0A84FF;
         }
 
         .indicator-positive {
@@ -875,6 +899,7 @@
         #zoneDetailView .carousel-wrapper {
             flex: 1;
             min-height: 0;
+            padding-top: 16px;
         }
 
         /* DM Patients Template Styles */
@@ -994,7 +1019,7 @@
             }
 
             footer {
-                padding: 8px 16px;
+                padding: 16px 16px;
             }
 
             .container {
@@ -1159,7 +1184,7 @@
     </div>
     <header>
         <div class="header-brand">
-            <img src="loading-logo.gif" alt="PHM Logo" class="header-logo">
+            <img src="nhc-logo.png" alt="Najran Health Cluster Logo" class="header-logo">
             <div class="header-text">
                 <div class="header-title">Najran Health Cluster</div>
                 <div class="header-meta">
@@ -1696,6 +1721,18 @@
             if (screeningTargetTotal && screeningCurrentTotal !== null) {
                 const percent = (screeningCurrentTotal / screeningTargetTotal) * 100;
                 percentEl.textContent = `${percent.toFixed(1)}%`;
+                
+                // Remove existing color classes
+                percentEl.classList.remove('orange', 'green', 'blue');
+                
+                // Apply color based on percentage
+                if (percent >= 50 && percent <= 70) {
+                    percentEl.classList.add('orange');
+                } else if (percent > 70 && percent <= 100) {
+                    percentEl.classList.add('green');
+                } else if (percent > 100) {
+                    percentEl.classList.add('blue');
+                }
             }
         }
 
