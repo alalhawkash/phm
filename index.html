@@ -1339,38 +1339,47 @@
         const SCREENING_ZONE_LIMIT = 10;
 
         // PHC Rankings rows (after zone rankings)
-        const SCREENING_PHC_START_ROW = 25; // Approximate - will need to find dynamically
+        const SCREENING_PHC_START_ROW = 23; // B24 -> zero-indexed row 23
         const SCREENING_PHC_NAME_COL = 1; // column B
         const SCREENING_PHC_VALUE_COL = 2; // column C (screened)
         const SCREENING_PHC_TARGET_COL = 3; // column D
         const SCREENING_PHC_INDICATOR_COL = 4; // column E
 
-        const DM_PHC_START_ROW = 110; // Approximate - will need to find dynamically
+        const DM_PHC_START_ROW = 111; // B112 -> zero-indexed row 111
         const DM_PHC_NAME_COL = 1; // column B
         const DM_PHC_TOTAL_COL = 2; // column C (total DM)
         const DM_PHC_CONTROLLED_COL = 3; // column D (controlled DM)
         const DM_PHC_INDICATOR_COL = 5; // column F
 
-        const PREDM_PHC_START_ROW = 193; // Approximate - will need to find dynamically
+        const PREDM_PHC_START_ROW = 192; // B193 -> zero-indexed row 192
         const PREDM_PHC_NAME_COL = 1; // column B
         const PREDM_PHC_TOTAL_COL = 2; // column C (total pre-DM)
         const PREDM_PHC_NORMAL_COL = 3; // column D (come to normal)
         const PREDM_PHC_FOLLOWUP_COL = 4; // column E (need follow up)
         const PREDM_PHC_INDICATOR_COL = 5; // column F
 
-        const DM_ZONE_START_ROW = 94; // B95 -> zero-indexed row 94
+        const DM_ZONE_START_ROW = 98; // B99 -> zero-indexed row 98
         const DM_ZONE_NAME_COL = 1; // column B
         const DM_ZONE_TOTAL_COL = 2; // column C (total DM)
         const DM_ZONE_CONTROLLED_COL = 3; // column D (controlled DM)
         const DM_ZONE_INDICATOR_COL = 5; // column F
         const DM_ZONE_LIMIT = 10;
 
-        const PREDM_PATIENTS_ROW = 171; // B172 -> zero-indexed row 171
-        const PREDM_TO_NORMAL_ROW = 172; // B173 -> zero-indexed row 172
-        const PREDM_NO_FOLLOWUP_ROW = 173; // B174 -> zero-indexed row 173
+        // Explicit overview rows
+        const SCREENING_TARGET_ROW = 4; // B5 -> zero-indexed 4
+        const SCREENING_CURRENT_ROW = 5; // B6 -> zero-indexed 5
+        const SCREENING_REMAINING_ROW = 6; // B7 -> zero-indexed 6
+
+        const DM_PATIENTS_ROW = 92; // B93 -> zero-indexed 92
+        const DM_CONTROLLED_ROW = 90; // B91 -> zero-indexed 90
+        const DM_UNCONTROLLED_ROW = 94; // B95 -> zero-indexed 94
+
+        const PREDM_PATIENTS_ROW = 173; // B174 -> zero-indexed row 173
+        const PREDM_TO_NORMAL_ROW = 174; // B175 -> zero-indexed row 174
+        const PREDM_NO_FOLLOWUP_ROW = 175; // B176 -> zero-indexed row 175
         const PREDM_VALUE_COL = 1; // column B
 
-        const PREDM_ZONE_START_ROW = 177; // B178 -> zero-indexed row 177
+        const PREDM_ZONE_START_ROW = 179; // B180 -> zero-indexed row 179
         const PREDM_ZONE_NAME_COL = 1; // column B
         const PREDM_ZONE_TOTAL_COL = 2; // column C (total pre-DM)
         const PREDM_ZONE_NORMAL_COL = 3; // column D (come to normal)
@@ -1714,7 +1723,7 @@
                 tryProxy(0);
             }
             
-            function updateMobileAppData(data) {
+        function updateMobileAppData(data) {
         // Update last updated timestamp from cell I1 (row 0, column 8)
         const lastUpdatedCell = data && data[0] && typeof data[0][8] !== 'undefined' ? data[0][8] : '';
         const lastUpdatedEl = document.getElementById('lastUpdated');
@@ -1774,7 +1783,10 @@
                                 updateScreeningPercentage();
                             }
                         } else if (firstCell === 'Not Screened (Remaining)' && row[1]) {
-                            // This is the remaining count
+                            const remainingNum = parseInt((row[1] || '').replace(/,/g, ''), 10);
+                            if (!isNaN(remainingNum)) {
+                                // Could be used later if needed
+                            }
                         }
                     }
                     
@@ -1850,6 +1862,48 @@
                 populateScreeningZones(data);
                 populateDMZones(data);
                 populatePreDMZones(data);
+
+                // Fallback: explicit rows if section headers are missing
+                // Screening overview
+                if (screeningTargetTotal === null && data[SCREENING_TARGET_ROW] && data[SCREENING_TARGET_ROW][1]) {
+                    const val = parseInt((data[SCREENING_TARGET_ROW][1] || '').replace(/,/g, ''), 10);
+                    if (!isNaN(val)) {
+                        screeningTargetTotal = val;
+                        document.getElementById('targetValue').textContent = val.toLocaleString();
+                    }
+                }
+                if (screeningCurrentTotal === null && data[SCREENING_CURRENT_ROW] && data[SCREENING_CURRENT_ROW][1]) {
+                    const val = parseInt((data[SCREENING_CURRENT_ROW][1] || '').replace(/,/g, ''), 10);
+                    if (!isNaN(val)) {
+                        screeningCurrentTotal = val;
+                        document.getElementById('currentValue').textContent = val.toLocaleString();
+                    }
+                }
+                updateScreeningPercentage();
+
+                // DM overview
+                if (dmPatientsTotal === null && data[DM_PATIENTS_ROW] && data[DM_PATIENTS_ROW][1]) {
+                    const val = parseInt((data[DM_PATIENTS_ROW][1] || '').replace(/,/g, ''), 10);
+                    if (!isNaN(val)) {
+                        dmPatientsTotal = val;
+                        document.getElementById('dmPatientsValue').textContent = val.toLocaleString();
+                    }
+                }
+                if (controlledDMTotal === null && data[DM_CONTROLLED_ROW] && data[DM_CONTROLLED_ROW][1]) {
+                    const val = parseInt((data[DM_CONTROLLED_ROW][1] || '').replace(/,/g, ''), 10);
+                    if (!isNaN(val)) {
+                        controlledDMTotal = val;
+                        document.getElementById('controlledDMValue').textContent = val.toLocaleString();
+                    }
+                }
+                if (uncontrolledDMTotal === null && data[DM_UNCONTROLLED_ROW] && data[DM_UNCONTROLLED_ROW][1]) {
+                    const val = parseInt((data[DM_UNCONTROLLED_ROW][1] || '').replace(/,/g, ''), 10);
+                    if (!isNaN(val)) {
+                        uncontrolledDMTotal = val;
+                        document.getElementById('uncontrolledDMValue').textContent = val.toLocaleString();
+                    }
+                }
+                updateDMPercentages();
             }
             
             // Load data when page loads
@@ -2278,7 +2332,9 @@
         }
 
         const savedTheme = localStorage.getItem(THEME_KEY);
-        applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
+        // Default to light if nothing saved or value is invalid
+        const initialTheme = savedTheme === 'dark' ? 'dark' : 'light';
+        applyTheme(initialTheme);
 
         if (themeToggle) {
             themeToggle.addEventListener('click', () => {
