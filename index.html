@@ -20,10 +20,7 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: #4A90E2;
-            background: linear-gradient(135deg, #4A90E2 0%, #5BA3F5 50%, #4A90E2 100%);
-            background-size: 200% 200%;
-            animation: gradientShift 8s ease infinite;
+            background: #f5f5f5;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -31,57 +28,42 @@
             overflow: hidden;
         }
 
-        @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
 
         header {
-            background: rgba(255, 255, 255, 0.95);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
             padding: 16px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             z-index: 10;
         }
 
         header h1 {
             font-size: 20px;
             font-weight: 600;
-            color: #333;
+            color: #1a1a1a;
             text-align: center;
             margin: 0;
         }
 
         header .subtitle {
             font-size: 10px;
-            color: #666;
+            color: #888;
             text-align: center;
             margin-top: 2px;
             font-weight: 400;
         }
 
         footer {
-            background: rgba(255, 255, 255, 0.95);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            background: #ffffff;
+            border-top: 1px solid #e0e0e0;
             padding: 12px 20px;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
             z-index: 10;
         }
 
         footer p {
             font-size: 12px;
-            color: #666;
+            color: #888;
             text-align: center;
         }
 
@@ -93,6 +75,11 @@
             align-items: stretch;
             padding: 10px;
             min-height: 0;
+        }
+
+        .container > .main-view {
+            width: 100%;
+            height: 100%;
         }
 
 .carousel-wrapper {
@@ -121,14 +108,14 @@
     height: 8px;
     border-radius: 50%;
             border: none;
-    background: rgba(255, 255, 255, 0.6);
+    background: #d0d0d0;
     transition: width 0.2s ease, background 0.2s ease;
 }
 
 .carousel-dot.active {
     width: 20px;
     border-radius: 999px;
-    background: #ffffff;
+    background: #666;
 }
 
 .carousel {
@@ -149,13 +136,11 @@
 }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 16px;
+            background: #ffffff;
+            border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e8e8e8;
             flex: 0 0 100%;
             width: 100%;
             display: flex;
@@ -196,14 +181,14 @@
         
         .template-header h2 {
             font-size: 22px;
-            font-weight: 700;
-            color: #333;
+            font-weight: 600;
+            color: #1a1a1a;
             margin-bottom: 6px;
         }
 
         .template-header .subtitle {
             font-size: 13px;
-            color: #666;
+            color: #888;
         }
 
         .metrics-section {
@@ -222,30 +207,30 @@
 
         .metric-label {
             font-size: 16px;
-            color: #555;
+            color: #666;
             font-weight: 500;
         }
 
         .metric-value {
             font-size: 20px;
-            font-weight: 700;
-            color: #333;
+            font-weight: 600;
+            color: #1a1a1a;
         }
 
         .target-value {
-            color: #667eea;
+            color: #555;
         }
 
         .percentage-value {
-            color: #7caae6;
+            color: #333;
         }
 
         .indicator-positive {
-            color: #4caf50;
+            color: #4a9e5f;
         }
 
         .indicator-negative {
-            color: #f44336;
+            color: #c85a5a;
         }
 
         .indicator-icon {
@@ -267,7 +252,7 @@
         .zones-title {
             font-size: 16px;
             font-weight: 600;
-            color: #333;
+            color: #1a1a1a;
             margin-bottom: 6px;
             flex-shrink: 0;
         }
@@ -277,12 +262,12 @@
             grid-template-columns: 1fr 1fr 1fr;
             gap: 12px;
             padding: 8px 10px;
-            background: #e8e8e8;
-            border-radius: 8px;
+            background: #f8f8f8;
+            border-radius: 6px;
             margin-bottom: 8px;
             font-size: 13px;
-            font-weight: 600;
-            color: #555;
+            font-weight: 500;
+            color: #666;
             flex-shrink: 0;
         }
 
@@ -302,31 +287,43 @@
             display: flex;
             align-items: center;
             padding: 8px 10px;
-            background: #f5f5f5;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
+            background: #fafafa;
+            border-radius: 6px;
+            border-left: 3px solid #999;
             flex-shrink: 0;
             gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+
+        .zone-item:hover {
+            background: #f0f0f0;
+            transform: translateX(2px);
+        }
+
+        .zone-item:active {
+            transform: translateX(0);
+            background: #e8e8e8;
         }
 
         .zone-rank {
             font-size: 16px;
-            font-weight: 700;
-            color: #667eea;
+            font-weight: 600;
+            color: #666;
             min-width: 30px;
         }
 
         .zone-name {
             flex: 1;
             font-size: 14px;
-            color: #333;
+            color: #1a1a1a;
             min-width: 60px;
         }
         
         .zone-value {
             font-size: 14px;
-            font-weight: 600;
-            color: #667eea;
+            font-weight: 500;
+            color: #333;
             min-width: 70px;
             text-align: center;
             flex: 0 0 90px;
@@ -410,15 +407,144 @@
         }
 
         .zone-arrow-up {
-            color: #4caf50;
+            color: #4a9e5f;
         }
 
         .zone-arrow-down {
-            color: #f44336;
+            color: #c85a5a;
         }
 
         .zone-arrow-neutral {
             color: #999;
+        }
+
+        /* Zone Detail Page Styles */
+        .zone-detail-page {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            gap: 16px;
+            min-height: 0;
+        }
+
+        .zone-detail-page.active {
+            display: flex;
+        }
+
+        .zone-detail-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e0e0e0;
+            flex-shrink: 0;
+        }
+
+        .back-button {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .back-button:hover {
+            background: #e8e8e8;
+        }
+
+        .back-button:active {
+            background: #ddd;
+        }
+
+        .zone-detail-title {
+            flex: 1;
+        }
+
+        .zone-detail-title h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+
+        .zone-detail-title .subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .zone-detail-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            min-height: 0;
+        }
+
+        .zone-detail-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .zone-detail-metric {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .zone-detail-metric-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .zone-detail-metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .main-view {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+
+        .main-view.hidden {
+            display: none;
+        }
+
+        #zoneDetailView {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 20;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        #zoneDetailView .zone-detail-header {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #zoneDetailView .carousel-wrapper {
+            flex: 1;
+            min-height: 0;
         }
 
         /* DM Patients Template Styles */
@@ -457,15 +583,15 @@
         }
 
         .dm-value {
-            color: #0066FF;
+            color: #333;
         }
 
         .controlled-value {
-            color: #4caf50;
+            color: #4a9e5f;
         }
 
         .uncontrolled-value {
-            color: #f44336;
+            color: #c85a5a;
         }
 
         .dm-week-indicator {
@@ -507,15 +633,15 @@
         }
 
         .predm-value {
-            color: #FF9800;
+            color: #333;
         }
 
         .predm-normal-value {
-            color: #4caf50;
+            color: #4a9e5f;
         }
 
         .predm-nofollowup-value {
-            color: #f44336;
+            color: #c85a5a;
         }
 
         .predm-week-indicator {
@@ -647,9 +773,10 @@
         <div class="subtitle">WHERE DATA FLOWS CLEARLY</div>
     </header>
     <div class="container">
-        <div class="carousel-wrapper">
-            <div class="carousel" id="carousel">
-                <div class="card">
+        <div class="main-view" id="mainView">
+            <div class="carousel-wrapper">
+                <div class="carousel" id="carousel">
+                    <div class="card">
                     <div class="card-content">
                         <div class="screen-count-template">
                             <div class="template-header">
@@ -751,6 +878,66 @@
             </div>
             <div class="carousel-dots" id="carouselDots"></div>
         </div>
+        </div>
+        <div class="main-view" id="zoneDetailView" style="display: none;">
+            <div class="zone-detail-header" style="padding: 16px 20px; background: #ffffff; border-bottom: 1px solid #e0e0e0;">
+                <button class="back-button" onclick="goBackToMain()">← Back</button>
+                <div class="zone-detail-title" style="flex: 1; text-align: center;">
+                    <h2 id="zoneDetailTitle" style="margin: 0; font-size: 20px; font-weight: 600; color: #1a1a1a;">Zone Details</h2>
+                    <div class="subtitle" style="font-size: 10px; color: #888; margin-top: 2px;">PHC Performance</div>
+                </div>
+            </div>
+            <div class="carousel-wrapper">
+                <div class="carousel" id="zoneDetailCarousel">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="screen-count-template">
+                                <div class="template-header">
+                                    <h2>Screen Count</h2>
+                                    <div class="subtitle">Performance Overview</div>
+                                </div>
+                                <div class="zones-ranking" id="zoneDetailScreeningPHCs">
+                                    <div class="zone-item">
+                                        <span class="zone-name">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="dm-template">
+                                <div class="template-header">
+                                    <h2>DM Patients</h2>
+                                    <div class="subtitle">Diabetes Management Overview</div>
+                                </div>
+                                <div class="zones-ranking" id="zoneDetailDMPHCs">
+                                    <div class="zone-item">
+                                        <span class="zone-name">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="predm-template">
+                                <div class="template-header">
+                                    <h2>Pre-DM Patients</h2>
+                                    <div class="subtitle">Pre-Diabetes Management Overview</div>
+                                </div>
+                                <div class="zones-ranking" id="zoneDetailPreDMPHCs">
+                                    <div class="zone-item">
+                                        <span class="zone-name">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-dots" id="zoneDetailCarouselDots"></div>
+            </div>
+        </div>
     </div>
     <footer>
         <p>2025 Alhaalha</p>
@@ -802,12 +989,104 @@
         })();
     </script>
     <script>
+        // PHC to Zone mapping
+        const PHC_ZONE_MAP = {
+            "AL- qarn": "BGH",
+            "Hadadah health center": "BGH",
+            "Primary Care Alkhaniq": "BGH",
+            "alrehab Primary care center": "BGH",
+            "bader aljanoob primary health care": "BGH",
+            "maleha public health center": "BGH",
+            "AL JAFFAH PHCC": "HGH",
+            "ALMONTSHER  PHCC": "HGH",
+            "Habuna primary Health Care Center": "HGH",
+            "al harshar phcc": "HGH",
+            "dekah": "HGH",
+            "majma": "HGH",
+            "AL-SHARAA": "KGH",
+            "KHUBASH Health center": "KGH",
+            "Primary Health Care Center GOILLA": "KGH",
+            "junoob matar": "KGH",
+            "mishaliya": "KGH",
+            "taslal health center": "KGH",
+            "ALDUBAT PHCC": "KKH",
+            "Al Faisaliah Health Center": "KKH",
+            "Aqfah phcc": "KKH",
+            "Biraskar phcc": "KKH",
+            "Primary Health Care Center DIYAFA": "KKH",
+            "al contub": "KKH",
+            "khaldiya health center": "KKH",
+            "primary health care center north": "KKH",
+            "prince mishal health center": "KKH",
+            "al fahad al janubi phcc": "MCH",
+            "atheabah phcc": "MCH",
+            "Al Safa Health Center": "WNH",
+            "Al muratah phcc": "WNH",
+            "Alhadan PHCC": "WNH",
+            "Health Center algabil": "WNH",
+            "Health center in aljurbah": "WNH",
+            "PHCC Abasoud": "WNH",
+            "albalad": "WNH",
+            "dahada helth center": "WNH",
+            "eam phcc reer": "WNH",
+            "health center al mufja": "WNH",
+            "Primary Health Care Center in Nhogah": "WNH",
+            "Shebhan phcc": "WNH",
+            "Al Arisa Health Center": "NNGH",
+            "Alhamar phcc": "NNGH",
+            "HUSSAINIAH PHCC": "NNGH",
+            "RIJLA PHcc": "NNGH",
+            "primary health care center barrk": "NNGH",
+            "primary health care center of shurfa": "NNGH",
+            "Wadi Riman Health Center": "NNGH",
+            "Alakashim Health Center": "SGH",
+            "Aziziyah PHCC Sharoora": "SGH",
+            "RAWDAH phcc Sharoora": "SGH",
+            "Security Forces PHCC Sharoora": "SGH",
+            "Sultanaa PHCC Sharoora": "SGH",
+            "Tamani phcc Sharoura": "SGH",
+            "alwadia phcc sharoora": "SGH",
+            "khaldiya sharoorah health center": "SGH",
+            "hema phcc": "TGH",
+            "naiwan phcc": "TGH",
+            "qattan phcc": "TGH",
+            "suffah phcc": "TGH",
+            "talham phcc": "TGH",
+            "thar phcc": "TGH",
+            "tilah phcc": "TGH",
+            "legam primary health care center": "YGH",
+            "mohammadia phcc": "YGH",
+            "sultana primaryhealth care center": "YGH",
+            "wadi wasat": "YGH",
+            "yadama primary health care center": "YGH"
+        };
+
         const SCREENING_ZONE_START_ROW = 10; // B11 -> zero-indexed row 10
         const SCREENING_ZONE_NAME_COL = 1; // column B
         const SCREENING_ZONE_VALUE_COL = 2; // column C (achieved)
         const SCREENING_ZONE_TARGET_COL = 3; // column D
         const SCREENING_ZONE_INDICATOR_COL = 4; // column E
         const SCREENING_ZONE_LIMIT = 10;
+
+        // PHC Rankings rows (after zone rankings)
+        const SCREENING_PHC_START_ROW = 25; // Approximate - will need to find dynamically
+        const SCREENING_PHC_NAME_COL = 1; // column B
+        const SCREENING_PHC_VALUE_COL = 2; // column C (screened)
+        const SCREENING_PHC_TARGET_COL = 3; // column D
+        const SCREENING_PHC_INDICATOR_COL = 4; // column E
+
+        const DM_PHC_START_ROW = 110; // Approximate - will need to find dynamically
+        const DM_PHC_NAME_COL = 1; // column B
+        const DM_PHC_TOTAL_COL = 2; // column C (total DM)
+        const DM_PHC_CONTROLLED_COL = 3; // column D (controlled DM)
+        const DM_PHC_INDICATOR_COL = 5; // column F
+
+        const PREDM_PHC_START_ROW = 193; // Approximate - will need to find dynamically
+        const PREDM_PHC_NAME_COL = 1; // column B
+        const PREDM_PHC_TOTAL_COL = 2; // column C (total pre-DM)
+        const PREDM_PHC_NORMAL_COL = 3; // column D (come to normal)
+        const PREDM_PHC_FOLLOWUP_COL = 4; // column E (need follow up)
+        const PREDM_PHC_INDICATOR_COL = 5; // column F
 
         const DM_ZONE_START_ROW = 94; // B95 -> zero-indexed row 94
         const DM_ZONE_NAME_COL = 1; // column B
@@ -837,6 +1116,7 @@
         let predmPatientsTotal = null;
         let predmToNormalTotal = null;
         let predmNoFollowupTotal = null;
+        let globalSheetData = null; // Store sheet data globally
 
         function updateScreeningPercentage() {
             const percentEl = document.getElementById('percentageValue');
@@ -909,8 +1189,9 @@
 
                 if (!zoneName) break;
 
+                const escapedZoneName = zoneName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 html += `
-                    <div class="zone-item zone-item--screening">
+                    <div class="zone-item zone-item--screening" onclick="navigateToZone('${escapedZoneName}', 'screening', ${achievedNum || 0}, ${targetNum || 0}, ${indicatorNum || 0})">
                         <div class="zone-name">
                             <span class="zone-name-text">${zoneName}</span>
                         </div>
@@ -971,8 +1252,9 @@
 
                 if (!zoneName) break;
 
+                const escapedZoneName = zoneName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 html += `
-                    <div class="zone-item zone-item--screening">
+                    <div class="zone-item zone-item--screening" onclick="navigateToZone('${escapedZoneName}', 'dm', ${totalNum || 0}, ${controlledNum || 0}, ${indicatorNum || 0})">
                         <div class="zone-name">
                             <span class="zone-name-text">${zoneName}</span>
                         </div>
@@ -1041,13 +1323,14 @@
 
                 if (!zoneName) break;
 
+                const escapedZoneName = zoneName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 html += `
-                    <div class="zone-item zone-item--predm">
+                    <div class="zone-item zone-item--predm" onclick="navigateToZone('${escapedZoneName}', 'predm', ${totalNum || 0}, ${normalNum || 0}, ${followupNum || 0}, ${indicatorNum || 0})">
                         <div class="zone-name">
                             <span class="zone-name-text">${zoneName}</span>
                         </div>
-                        <span class="zone-value" style="color: #4caf50;">${normalPercentText}</span>
-                        <span class="zone-value" style="color: #f44336;">${followupPercentText}</span>
+                        <span class="zone-value" style="color: #4a9e5f;">${normalPercentText}</span>
+                        <span class="zone-value" style="color: #c85a5a;">${followupPercentText}</span>
                         <div class="zone-7d-indicator">
                             <span class="${indicatorClass}">
                                 ${indicatorArrow}${indicatorText ? ` ${indicatorText}` : ''}
@@ -1162,6 +1445,9 @@
             }
             
             function updateMobileAppData(data) {
+                // Store data globally for zone detail view
+                globalSheetData = data;
+                
                 // Find sections in the data
                 let currentSection = '';
                 let rowIndex = 0;
@@ -1288,6 +1574,358 @@
             // Load data when page loads
             loadDataFromGoogleSheets();
         })();
+
+        // Helper function to normalize PHC names for matching
+        function normalizePHC(phc) {
+            if (!phc) return '';
+            return phc.trim().toLowerCase().replace(/\s+/g, ' ');
+        }
+
+        // Find PHC rankings section in data
+        function findPHCRankingsSection(data, sectionName) {
+            let found = false;
+            let startRow = -1;
+            
+            for (let i = 0; i < data.length; i++) {
+                const row = data[i] || [];
+                const firstCell = String(row[0] || '').trim().toUpperCase();
+                const searchName = sectionName.toUpperCase();
+                
+                // Look for section header (e.g., "PHC Rankings - Screening")
+                if (firstCell.includes(searchName) || 
+                    (firstCell.includes('PHC') && firstCell.includes('RANKING'))) {
+                    // Look for the next row that has column headers
+                    for (let j = i + 1; j < Math.min(i + 5, data.length); j++) {
+                        const nextRow = data[j] || [];
+                        const nextFirstCell = String(nextRow[0] || '').trim().toUpperCase();
+                        // Check if this looks like a header row (contains "Rank", "PHC", etc.)
+                        if (nextFirstCell.includes('RANK') || nextFirstCell.includes('PHC') || 
+                            nextFirstCell === '' || nextFirstCell === '1') {
+                            found = true;
+                            // Start from the row after headers (skip empty row and header row)
+                            startRow = j + 1;
+                            // If first cell is a number (rank), start from that row
+                            if (!isNaN(parseInt(nextFirstCell))) {
+                                startRow = j;
+                            }
+                            break;
+                        }
+                    }
+                    if (found) break;
+                }
+            }
+            
+            return { found, startRow };
+        }
+
+        // Populate PHCs for a specific zone
+        function populateZonePHCs(data, zoneName, context) {
+            let sectionName = '';
+            let nameCol, valueCol, targetCol, indicatorCol, controlledCol, normalCol, followupCol;
+            
+            if (context === 'screening') {
+                sectionName = 'PHC Rankings - Screening';
+                nameCol = SCREENING_PHC_NAME_COL;
+                valueCol = SCREENING_PHC_VALUE_COL;
+                targetCol = SCREENING_PHC_TARGET_COL;
+                indicatorCol = SCREENING_PHC_INDICATOR_COL;
+            } else if (context === 'dm') {
+                sectionName = 'PHC Rankings - Uncontrolled DM';
+                nameCol = DM_PHC_NAME_COL;
+                valueCol = DM_PHC_TOTAL_COL;
+                controlledCol = DM_PHC_CONTROLLED_COL;
+                indicatorCol = DM_PHC_INDICATOR_COL;
+            } else if (context === 'predm') {
+                sectionName = 'PHC Rankings - No Follow-up';
+                nameCol = PREDM_PHC_NAME_COL;
+                valueCol = PREDM_PHC_TOTAL_COL;
+                normalCol = PREDM_PHC_NORMAL_COL;
+                followupCol = PREDM_PHC_FOLLOWUP_COL;
+                indicatorCol = PREDM_PHC_INDICATOR_COL;
+            }
+            
+            const { found, startRow } = findPHCRankingsSection(data, sectionName);
+            if (!found || startRow < 0) return [];
+            
+            const phcs = [];
+            for (let i = startRow; i < data.length; i++) {
+                const row = data[i] || [];
+                const phcName = (row[nameCol] || '').trim();
+                
+                if (!phcName || phcName === '') break;
+                
+                // Check if this PHC belongs to the selected zone
+                let phcZone = PHC_ZONE_MAP[phcName];
+                
+                // If not found, try case-insensitive matching
+                if (!phcZone) {
+                    const normalizedPhcName = normalizePHC(phcName);
+                    const matchingKey = Object.keys(PHC_ZONE_MAP).find(key => 
+                        normalizePHC(key) === normalizedPhcName
+                    );
+                    if (matchingKey) {
+                        phcZone = PHC_ZONE_MAP[matchingKey];
+                    }
+                }
+                
+                if (phcZone === zoneName) {
+                    if (context === 'screening') {
+                        const achievedRaw = (row[valueCol] || '').trim();
+                        const targetRaw = (row[targetCol] || '').trim();
+                        const indicatorRaw = (row[indicatorCol] || '').toString().trim();
+                        
+                        const achievedNum = parseFloat(achievedRaw.replace(/,/g, ''));
+                        const targetNum = parseFloat(targetRaw.replace(/,/g, ''));
+                        const indicatorNum = parseFloat(indicatorRaw);
+                        
+                        let valueText = achievedRaw;
+                        if (!isNaN(achievedNum) && !isNaN(targetNum) && targetNum !== 0) {
+                            const percent = ((achievedNum / targetNum) * 100).toFixed(1);
+                            valueText = `${percent}%`;
+                        }
+                        
+                        phcs.push({
+                            name: phcName,
+                            value: valueText,
+                            achieved: achievedNum,
+                            target: targetNum,
+                            indicator: indicatorNum
+                        });
+                    } else if (context === 'dm') {
+                        const totalRaw = (row[valueCol] || '').trim();
+                        const controlledRaw = (row[controlledCol] || '').trim();
+                        const indicatorRaw = (row[indicatorCol] || '').toString().trim();
+                        
+                        const totalNum = parseFloat(totalRaw.replace(/,/g, ''));
+                        const controlledNum = parseFloat(controlledRaw.replace(/,/g, ''));
+                        const indicatorNum = parseFloat(indicatorRaw);
+                        
+                        let valueText = '0%';
+                        if (!isNaN(totalNum) && !isNaN(controlledNum) && totalNum !== 0) {
+                            const percent = ((controlledNum / totalNum) * 100).toFixed(1);
+                            valueText = `${percent}%`;
+                        }
+                        
+                        phcs.push({
+                            name: phcName,
+                            value: valueText,
+                            total: totalNum,
+                            controlled: controlledNum,
+                            indicator: indicatorNum
+                        });
+                    } else if (context === 'predm') {
+                        const totalRaw = (row[valueCol] || '').trim();
+                        const normalRaw = (row[normalCol] || '').trim();
+                        const followupRaw = (row[followupCol] || '').trim();
+                        const indicatorRaw = (row[indicatorCol] || '').toString().trim();
+                        
+                        const totalNum = parseFloat(totalRaw.replace(/,/g, ''));
+                        const normalNum = parseFloat(normalRaw.replace(/,/g, ''));
+                        const followupNum = parseFloat(followupRaw.replace(/,/g, ''));
+                        const indicatorNum = parseFloat(indicatorRaw);
+                        
+                        let normalPercentText = '0%';
+                        if (!isNaN(totalNum) && !isNaN(normalNum) && totalNum !== 0) {
+                            const percent = ((normalNum / totalNum) * 100).toFixed(1);
+                            normalPercentText = `${percent}%`;
+                        }
+                        
+                        let followupPercentText = '0%';
+                        if (!isNaN(totalNum) && !isNaN(followupNum) && totalNum !== 0) {
+                            const percent = ((followupNum / totalNum) * 100).toFixed(1);
+                            followupPercentText = `${percent}%`;
+                        }
+                        
+                        phcs.push({
+                            name: phcName,
+                            normalPercent: normalPercentText,
+                            followupPercent: followupPercentText,
+                            total: totalNum,
+                            normal: normalNum,
+                            followup: followupNum,
+                            indicator: indicatorNum
+                        });
+                    }
+                }
+            }
+            
+            return phcs;
+        }
+
+        // Render PHC list for zone detail view
+        function renderZonePHCList(containerId, phcs, context) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            let html = '';
+            
+            if (context === 'screening') {
+                html = '<div class="zone-header"><div class="zone-header-item">PHC</div><div class="zone-header-item">Coverage %</div><div class="zone-header-item">Weekly</div></div>';
+                phcs.forEach(phc => {
+                    const indicatorNum = phc.indicator || 0;
+                    let indicatorArrow = '-';
+                    let indicatorClass = 'zone-arrow zone-arrow-neutral';
+                    let indicatorText = '';
+                    if (!isNaN(indicatorNum) && indicatorNum !== 0) {
+                        indicatorArrow = indicatorNum > 0 ? '↑' : '↓';
+                        indicatorClass = indicatorNum > 0 ? 'zone-arrow zone-arrow-up' : 'zone-arrow zone-arrow-down';
+                        indicatorText = Math.abs(indicatorNum).toLocaleString();
+                    } else if (!isNaN(indicatorNum) && indicatorNum === 0) {
+                        indicatorText = '0';
+                    }
+                    
+                    html += `
+                        <div class="zone-item zone-item--screening">
+                            <div class="zone-name">
+                                <span class="zone-name-text">${phc.name}</span>
+                            </div>
+                            <span class="zone-value">${phc.value}</span>
+                            <div class="zone-7d-indicator">
+                                <span class="${indicatorClass}">
+                                    ${indicatorArrow}${indicatorText ? ` ${indicatorText}` : ''}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else if (context === 'dm') {
+                html = '<div class="zone-header"><div class="zone-header-item">PHC</div><div class="zone-header-item">Controlled %</div><div class="zone-header-item">Weekly</div></div>';
+                phcs.forEach(phc => {
+                    const indicatorNum = phc.indicator || 0;
+                    let indicatorArrow = '-';
+                    let indicatorClass = 'zone-arrow zone-arrow-neutral';
+                    let indicatorText = '';
+                    if (!isNaN(indicatorNum) && indicatorNum !== 0) {
+                        indicatorArrow = indicatorNum > 0 ? '↑' : '↓';
+                        indicatorClass = indicatorNum > 0 ? 'zone-arrow zone-arrow-up' : 'zone-arrow zone-arrow-down';
+                        indicatorText = Math.abs(indicatorNum).toLocaleString();
+                    } else if (!isNaN(indicatorNum) && indicatorNum === 0) {
+                        indicatorText = '0';
+                    }
+                    
+                    html += `
+                        <div class="zone-item zone-item--screening">
+                            <div class="zone-name">
+                                <span class="zone-name-text">${phc.name}</span>
+                            </div>
+                            <span class="zone-value">${phc.value}</span>
+                            <div class="zone-7d-indicator">
+                                <span class="${indicatorClass}">
+                                    ${indicatorArrow}${indicatorText ? ` ${indicatorText}` : ''}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else if (context === 'predm') {
+                html = '<div class="zone-header zone-header--predm"><div class="zone-header-item">PHC</div><div class="zone-header-item">% Normal</div><div class="zone-header-item">% Follow-up</div><div class="zone-header-item">Weekly</div></div>';
+                phcs.forEach(phc => {
+                    const indicatorNum = phc.indicator || 0;
+                    let indicatorArrow = '-';
+                    let indicatorClass = 'zone-arrow zone-arrow-neutral';
+                    let indicatorText = '';
+                    if (!isNaN(indicatorNum) && indicatorNum !== 0) {
+                        indicatorArrow = indicatorNum > 0 ? '↑' : '↓';
+                        indicatorClass = indicatorNum > 0 ? 'zone-arrow zone-arrow-up' : 'zone-arrow zone-arrow-down';
+                        indicatorText = Math.abs(indicatorNum).toLocaleString();
+                    } else if (!isNaN(indicatorNum) && indicatorNum === 0) {
+                        indicatorText = '0';
+                    }
+                    
+                    html += `
+                        <div class="zone-item zone-item--predm">
+                            <div class="zone-name">
+                                <span class="zone-name-text">${phc.name}</span>
+                            </div>
+                            <span class="zone-value" style="color: #4a9e5f;">${phc.normalPercent}</span>
+                            <span class="zone-value" style="color: #c85a5a;">${phc.followupPercent}</span>
+                            <div class="zone-7d-indicator">
+                                <span class="${indicatorClass}">
+                                    ${indicatorArrow}${indicatorText ? ` ${indicatorText}` : ''}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            if (phcs.length === 0) {
+                html += '<div class="zone-item"><span class="zone-name">No PHC data available</span></div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Zone navigation functions
+        function navigateToZone(zoneName, context, value1, value2, value3, value4) {
+            // Hide main view and show zone detail view
+            const mainView = document.getElementById('mainView');
+            const zoneDetailView = document.getElementById('zoneDetailView');
+            
+            if (mainView) mainView.classList.add('hidden');
+            if (zoneDetailView) zoneDetailView.style.display = 'flex';
+
+            // Update zone detail page title
+            const titleEl = document.getElementById('zoneDetailTitle');
+            if (titleEl) titleEl.textContent = zoneName;
+
+            // Initialize carousel for zone detail view
+            const zoneCarousel = document.getElementById('zoneDetailCarousel');
+            const zoneDotsContainer = document.getElementById('zoneDetailCarouselDots');
+            
+            if (zoneCarousel && zoneDotsContainer) {
+                // Clear existing dots
+                zoneDotsContainer.innerHTML = '';
+                const zoneCards = Array.from(zoneCarousel.querySelectorAll('.card'));
+                zoneCards.forEach((_, i) => {
+                    const dot = document.createElement('button');
+                    dot.type = 'button';
+                    dot.className = 'carousel-dot';
+                    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                    dot.addEventListener('click', () => {
+                        zoneCarousel.scrollTo({
+                            left: i * zoneCarousel.clientWidth,
+                            behavior: 'smooth'
+                        });
+                    });
+                    zoneDotsContainer.appendChild(dot);
+                });
+                
+                // Update dots on scroll
+                const updateZoneDots = () => {
+                    const index = Math.round(zoneCarousel.scrollLeft / zoneCarousel.clientWidth);
+                    const dots = zoneDotsContainer.querySelectorAll('.carousel-dot');
+                    dots.forEach((dot, idx) => dot.classList.toggle('active', idx === index));
+                };
+                
+                let zoneScrollTimeout;
+                zoneCarousel.addEventListener('scroll', () => {
+                    clearTimeout(zoneScrollTimeout);
+                    zoneScrollTimeout = setTimeout(updateZoneDots, 50);
+                }, { passive: true });
+                
+                updateZoneDots();
+            }
+
+            // Populate PHCs for the selected zone
+            if (globalSheetData) {
+                const screeningPHCs = populateZonePHCs(globalSheetData, zoneName, 'screening');
+                const dmPHCs = populateZonePHCs(globalSheetData, zoneName, 'dm');
+                const predmPHCs = populateZonePHCs(globalSheetData, zoneName, 'predm');
+                
+                renderZonePHCList('zoneDetailScreeningPHCs', screeningPHCs, 'screening');
+                renderZonePHCList('zoneDetailDMPHCs', dmPHCs, 'dm');
+                renderZonePHCList('zoneDetailPreDMPHCs', predmPHCs, 'predm');
+            }
+        }
+
+        function goBackToMain() {
+            const mainView = document.getElementById('mainView');
+            const zoneDetailView = document.getElementById('zoneDetailView');
+            
+            if (mainView) mainView.classList.remove('hidden');
+            if (zoneDetailView) zoneDetailView.style.display = 'none';
+        }
     </script>
 </body>
 </html>
