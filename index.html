@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="MANHAL">
-    <link rel="apple-touch-icon" href="icon-180.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-    <title>MANHAL</title>
+    <meta name="apple-mobile-web-app-title" content="PHM">
+    <link rel="apple-touch-icon" href="loading-logo.gif">
+    <link rel="apple-touch-icon" sizes="180x180" href="loading-logo.gif">
+    <link rel="icon" type="image/gif" href="loading-logo.gif">
+    <title>PHM</title>
     <style>
         * {
             margin: 0;
@@ -43,6 +42,25 @@
             color: #1a1a1a;
             text-align: center;
             margin: 0;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .header-logo {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
         }
 
         header .subtitle {
@@ -769,7 +787,10 @@
 </head>
 <body>
     <header>
-        <h1>MANHAL</h1>
+        <div class="header-brand">
+            <img src="loading-logo.gif" alt="PHC Logo" class="header-logo">
+            <span class="header-title">PHC</span>
+        </div>
         <div class="subtitle">WHERE DATA FLOWS CLEARLY</div>
     </header>
     <div class="container">
@@ -896,6 +917,20 @@
                                     <h2>Screen Count</h2>
                                     <div class="subtitle">Performance Overview</div>
                                 </div>
+                                <div class="metrics-section">
+                                    <div class="metric-row">
+                                        <span class="metric-label">Target</span>
+                                        <span class="metric-value target-value" id="zoneDetailTargetValue">0</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Current</span>
+                                        <span class="metric-value percentage-value" id="zoneDetailCurrentValue">0</span>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Percentage</span>
+                                        <span class="metric-value percentage-value" id="zoneDetailPercentageValue">0%</span>
+                                    </div>
+                                </div>
                                 <div class="zones-ranking" id="zoneDetailScreeningPHCs">
                                     <div class="zone-item">
                                         <span class="zone-name">Loading...</span>
@@ -911,6 +946,26 @@
                                     <h2>DM Patients</h2>
                                     <div class="subtitle">Diabetes Management Overview</div>
                                 </div>
+                                <div class="metrics-section">
+                                    <div class="dm-metric-row">
+                                        <span class="dm-metric-label">DM Patients</span>
+                                        <span class="dm-metric-value dm-value" id="zoneDetailDMPatientsValue">0</span>
+                                    </div>
+                                    <div class="dm-metric-row">
+                                        <span class="dm-metric-label">Controlled DM</span>
+                                        <div class="dm-metric-value-container">
+                                            <span class="dm-metric-value controlled-value" id="zoneDetailControlledDMValue">0</span>
+                                            <span class="dm-metric-value controlled-value" id="zoneDetailControlledDMPercent">0%</span>
+                                        </div>
+                                    </div>
+                                    <div class="dm-metric-row">
+                                        <span class="dm-metric-label">Uncontrolled DM</span>
+                                        <div class="dm-metric-value-container">
+                                            <span class="dm-metric-value uncontrolled-value" id="zoneDetailUncontrolledDMValue">0</span>
+                                            <span class="dm-metric-value uncontrolled-value" id="zoneDetailUncontrolledDMPercent">0%</span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="zones-ranking" id="zoneDetailDMPHCs">
                                     <div class="zone-item">
                                         <span class="zone-name">Loading...</span>
@@ -925,6 +980,26 @@
                                 <div class="template-header">
                                     <h2>Pre-DM Patients</h2>
                                     <div class="subtitle">Pre-Diabetes Management Overview</div>
+                                </div>
+                                <div class="metrics-section">
+                                    <div class="predm-metric-row">
+                                        <span class="predm-metric-label">Pre-DM Patients</span>
+                                        <span class="predm-metric-value predm-value" id="zoneDetailPreDMPatientsValue">0</span>
+                                    </div>
+                                    <div class="predm-metric-row">
+                                        <span class="predm-metric-label">Pre-DM to Normal</span>
+                                        <div class="dm-metric-value-container">
+                                            <span class="predm-metric-value predm-normal-value" id="zoneDetailPreDMToNormalValue">0</span>
+                                            <span class="predm-metric-value predm-normal-value" id="zoneDetailPreDMToNormalPercent">0%</span>
+                                        </div>
+                                    </div>
+                                    <div class="predm-metric-row">
+                                        <span class="predm-metric-label">Pre-DM No Follow-up</span>
+                                        <div class="dm-metric-value-container">
+                                            <span class="predm-metric-value predm-nofollowup-value" id="zoneDetailPreDMNoFollowupValue">0</span>
+                                            <span class="predm-metric-value predm-nofollowup-value" id="zoneDetailPreDMNoFollowupPercent">0%</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="zones-ranking" id="zoneDetailPreDMPHCs">
                                     <div class="zone-item">
@@ -1912,6 +1987,54 @@
                 const screeningPHCs = populateZonePHCs(globalSheetData, zoneName, 'screening');
                 const dmPHCs = populateZonePHCs(globalSheetData, zoneName, 'dm');
                 const predmPHCs = populateZonePHCs(globalSheetData, zoneName, 'predm');
+                
+                // Calculate and display zone overview metrics for Screening
+                let zoneTargetTotal = 0;
+                let zoneCurrentTotal = 0;
+                screeningPHCs.forEach(phc => {
+                    if (!isNaN(phc.target)) zoneTargetTotal += phc.target;
+                    if (!isNaN(phc.achieved)) zoneCurrentTotal += phc.achieved;
+                });
+                const zonePercentage = zoneTargetTotal > 0 ? ((zoneCurrentTotal / zoneTargetTotal) * 100).toFixed(1) : 0;
+                
+                document.getElementById('zoneDetailTargetValue').textContent = zoneTargetTotal.toLocaleString();
+                document.getElementById('zoneDetailCurrentValue').textContent = zoneCurrentTotal.toLocaleString();
+                document.getElementById('zoneDetailPercentageValue').textContent = `${zonePercentage}%`;
+                
+                // Calculate and display zone overview metrics for DM
+                let zoneDMTotal = 0;
+                let zoneControlledTotal = 0;
+                dmPHCs.forEach(phc => {
+                    if (!isNaN(phc.total)) zoneDMTotal += phc.total;
+                    if (!isNaN(phc.controlled)) zoneControlledTotal += phc.controlled;
+                });
+                const zoneUncontrolledTotal = zoneDMTotal - zoneControlledTotal;
+                const zoneControlledPercent = zoneDMTotal > 0 ? ((zoneControlledTotal / zoneDMTotal) * 100).toFixed(1) : 0;
+                const zoneUncontrolledPercent = zoneDMTotal > 0 ? ((zoneUncontrolledTotal / zoneDMTotal) * 100).toFixed(1) : 0;
+                
+                document.getElementById('zoneDetailDMPatientsValue').textContent = zoneDMTotal.toLocaleString();
+                document.getElementById('zoneDetailControlledDMValue').textContent = zoneControlledTotal.toLocaleString();
+                document.getElementById('zoneDetailControlledDMPercent').textContent = `${zoneControlledPercent}%`;
+                document.getElementById('zoneDetailUncontrolledDMValue').textContent = zoneUncontrolledTotal.toLocaleString();
+                document.getElementById('zoneDetailUncontrolledDMPercent').textContent = `${zoneUncontrolledPercent}%`;
+                
+                // Calculate and display zone overview metrics for Pre-DM
+                let zonePreDMTotal = 0;
+                let zoneNormalTotal = 0;
+                let zoneFollowupTotal = 0;
+                predmPHCs.forEach(phc => {
+                    if (!isNaN(phc.total)) zonePreDMTotal += phc.total;
+                    if (!isNaN(phc.normal)) zoneNormalTotal += phc.normal;
+                    if (!isNaN(phc.followup)) zoneFollowupTotal += phc.followup;
+                });
+                const zoneNormalPercent = zonePreDMTotal > 0 ? ((zoneNormalTotal / zonePreDMTotal) * 100).toFixed(1) : 0;
+                const zoneFollowupPercent = zonePreDMTotal > 0 ? ((zoneFollowupTotal / zonePreDMTotal) * 100).toFixed(1) : 0;
+                
+                document.getElementById('zoneDetailPreDMPatientsValue').textContent = zonePreDMTotal.toLocaleString();
+                document.getElementById('zoneDetailPreDMToNormalValue').textContent = zoneNormalTotal.toLocaleString();
+                document.getElementById('zoneDetailPreDMToNormalPercent').textContent = `${zoneNormalPercent}%`;
+                document.getElementById('zoneDetailPreDMNoFollowupValue').textContent = zoneFollowupTotal.toLocaleString();
+                document.getElementById('zoneDetailPreDMNoFollowupPercent').textContent = `${zoneFollowupPercent}%`;
                 
                 renderZonePHCList('zoneDetailScreeningPHCs', screeningPHCs, 'screening');
                 renderZonePHCList('zoneDetailDMPHCs', dmPHCs, 'dm');
