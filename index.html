@@ -175,7 +175,8 @@
         .dark-mode .header-title,
         .dark-mode header h1,
         .dark-mode .subtitle,
-        .dark-mode .last-updated {
+        .dark-mode .last-updated,
+        .dark-mode .header-meta {
             color: #e8e8e8;
         }
 
@@ -238,6 +239,14 @@
             color: #e8e8e8;
         }
 
+        .dark-mode .zone-item:hover {
+            background: #252b35;
+        }
+
+        .dark-mode .zone-item:active {
+            background: #1d222b;
+        }
+
         .dark-mode .zone-header {
             background: #1d222b;
             color: #d8deea;
@@ -252,8 +261,86 @@
             color: #e8e8e8;
         }
 
+        .dark-mode .zone-rank {
+            color: #bfc7d1;
+        }
+
         .dark-mode .zone-value {
             color: #f6c37f;
+        }
+
+        .dark-mode .metric-value {
+            color: #e8e8e8;
+        }
+
+        .dark-mode .target-value {
+            color: #bfc7d1;
+        }
+
+        .dark-mode .percentage-value {
+            color: #e8e8e8;
+        }
+
+        .dark-mode .dm-metric-value {
+            color: #e8e8e8;
+        }
+
+        .dark-mode .dm-value {
+            color: #e8e8e8;
+        }
+
+        .dark-mode .predm-metric-value {
+            color: #e8e8e8;
+        }
+
+        .dark-mode .predm-value {
+            color: #e8e8e8;
+        }
+
+        .dark-mode .zone-detail-header {
+            background: #161a20 !important;
+            border-bottom-color: #262c36 !important;
+        }
+
+        .dark-mode .zone-detail-title h2 {
+            color: #e8e8e8 !important;
+        }
+
+        .dark-mode .zone-detail-title .subtitle,
+        .dark-mode #zoneDetailView .subtitle {
+            color: #bfc7d1 !important;
+        }
+
+        .dark-mode .back-button {
+            background: transparent;
+            color: #0A84FF;
+            border: none;
+        }
+
+        .dark-mode .back-button:hover {
+            opacity: 0.7;
+        }
+
+        .dark-mode .back-button:active {
+            opacity: 0.5;
+            background-color: rgba(10, 132, 255, 0.15);
+        }
+
+        .dark-mode .zone-detail-metric {
+            background: #1d222b;
+            border-left-color: #8aa2ff;
+        }
+
+        .dark-mode .zone-detail-metric-label {
+            color: #d3d8df;
+        }
+
+        .dark-mode .zone-detail-metric-value {
+            color: #e8e8e8;
+        }
+
+        .dark-mode #zoneDetailView {
+            background: #0f1115;
         }
 
         footer {
@@ -497,6 +584,34 @@
             gap: 12px;
             cursor: pointer;
             transition: background 0.2s ease, transform 0.1s ease;
+            outline: none;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+        
+        .zone-item:focus {
+            outline: none;
+        }
+        
+        .zone-item * {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .zone-item .zone-name,
+        .zone-item .zone-name-text,
+        .zone-item .zone-value {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         .zone-item:hover {
@@ -644,28 +759,39 @@
         }
 
         .back-button {
-            background: #f0f0f0;
-            color: #333;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            padding: 8px 16px;
-            font-size: 14px;
-            font-weight: 500;
+            background: transparent;
+            color: #007AFF;
+            border: none;
+            border-radius: 0;
+            padding: 8px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
             flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .back-button svg {
+            width: 24px;
+            height: 24px;
         }
 
         .back-button:hover {
-            background: #e8e8e8;
+            opacity: 0.7;
         }
 
         .back-button:active {
-            background: #ddd;
+            opacity: 0.5;
+            background-color: rgba(0, 122, 255, 0.1);
         }
 
         .zone-detail-title {
             flex: 1;
+            text-align: left;
         }
 
         .zone-detail-title h2 {
@@ -673,6 +799,7 @@
             font-weight: 700;
             color: #333;
             margin: 0;
+            text-align: left;
         }
 
         .zone-detail-title .subtitle {
@@ -968,9 +1095,68 @@
                 font-size: 14px;
             }
         }
+
+        /* Loading Overlay Styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .loading-logo {
+            width: 324px;
+            height: 324px;
+            object-fit: contain;
+        }
+
+        .loading-text {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .dark-mode .loading-text {
+            color: #e8e8e8;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <img src="loading-logo.gif" alt="Loading" class="loading-logo">
+            <p class="loading-text">Loading data...</p>
+        </div>
+    </div>
     <header>
         <div class="header-brand">
             <img src="loading-logo.gif" alt="PHM Logo" class="header-logo">
@@ -1097,8 +1283,12 @@
         </div>
         <div class="main-view" id="zoneDetailView" style="display: none;">
             <div class="zone-detail-header" style="padding: 16px 20px; background: #ffffff; border-bottom: 1px solid #e0e0e0;">
-                <button class="back-button" onclick="goBackToMain()">← Back</button>
-                <div class="zone-detail-title" style="flex: 1; text-align: center;">
+                <button class="back-button" onclick="goBackToMain()" aria-label="Back">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="zone-detail-title" style="flex: 1; text-align: left;">
                     <h2 id="zoneDetailTitle" style="margin: 0; font-size: 20px; font-weight: 600; color: #1a1a1a;">Zone Details</h2>
                     <div class="subtitle" style="font-size: 10px; color: #888; margin-top: 2px;">PHC Performance</div>
                 </div>
@@ -1108,10 +1298,6 @@
                     <div class="card">
                         <div class="card-content">
                             <div class="screen-count-template">
-                                <div class="template-header">
-                                    <h2>Screen Count</h2>
-                                    <div class="subtitle">Performance Overview</div>
-                                </div>
                                 <div class="metrics-section">
                                     <div class="metric-row">
                                         <span class="metric-label">Target</span>
@@ -1137,10 +1323,6 @@
                     <div class="card">
                         <div class="card-content">
                             <div class="dm-template">
-                                <div class="template-header">
-                                    <h2>DM Patients</h2>
-                                    <div class="subtitle">Diabetes Management Overview</div>
-                                </div>
                                 <div class="metrics-section">
                                     <div class="dm-metric-row">
                                         <span class="dm-metric-label">DM Patients</span>
@@ -1172,10 +1354,6 @@
                     <div class="card">
                         <div class="card-content">
                             <div class="predm-template">
-                                <div class="template-header">
-                                    <h2>Pre-DM Patients</h2>
-                                    <div class="subtitle">Pre-Diabetes Management Overview</div>
-                                </div>
                                 <div class="metrics-section">
                                     <div class="predm-metric-row">
                                         <span class="predm-metric-label">Pre-DM Patients</span>
@@ -1259,6 +1437,121 @@
         })();
     </script>
     <script>
+        // Zone full names (use short code on main cards, full name in detail view)
+        const ZONE_FULL_NAMES = {
+            BGH: 'Bader Aljanoob General Hospital',
+            HGH: 'Hubona General Hospital',
+            KGH: 'Khubash General Hospital',
+            KKH: 'King Khaled Hospital',
+            WNH: 'West Najran General Hospital',
+            NNGH: 'New Najran General Hospital',
+            SGH: 'Sharourah General Hospital',
+            TGH: 'Thar General Hospital',
+            YGH: 'Yaddamah General Hospital', 
+            MCH: 'Maternity and Children Hospital'
+        };
+
+        // PHC display names (cleaner, shorter names for display)
+        const PHC_DISPLAY_NAMES = {
+            // BGH
+            "AL- qarn": "Al Qarn",
+            "Hadadah health center": "Hadadah",
+            "Primary Care Alkhaniq": "Al Khaniq",
+            "alrehab Primary care center": "Al Rehab",
+            "bader aljanoob primary health care": "Bader Al Janoob",
+            "maleha public health center": "Al Maleha",
+            // HGH
+            "AL JAFFAH PHCC": "Al Jaffah",
+            "ALMONTSHER PHCC": "Al Montasher",
+            "Habuna primary Health Care Center": "Habouna",
+            "al harshar phcc": "Al Harshaf",
+            "dekah": "Al Dekah",
+            "majma": "Al Majma",
+            // KGH
+            "AL-SHARAA": "Al Kharaa",
+            "KHUBASH Health center": "Khubash",
+            "Primary Health Care Center GOILLA": "Al Goilla",
+            "junoob matar": "Janoub Almatar",
+            "mishaliya": "Al Mashaliah",
+            "taslal health center": "Taslal",
+            // KKH
+            "ALDUBAT PHCC": "Al Dubat",
+            "Al Faisaliah Health Center": "Al Faisaliah",
+            "Aqfah phcc": "Aqfah",
+            "Biraskar phcc": "Bir Askar",
+            "Primary Health Care Center DIYAFA": "Al Diafah",
+            "al contub": "Al Cantoub",
+            "khaldiya health center": "AL Khaldiah",
+            "primary health care center north": "Al Fahad Alshmali",
+            "prince mishal health center": "Prince Mishal",
+            // MCH
+            "al fahad al janubi phcc": "Al Fahad Al Janoubi",
+            "atheabah phcc": "Al Athaibah",
+            // WNH
+            "Al Safa Health Center": "Al Safa",
+            "Al muratah phcc": "Al Muratah",
+            "Alhadan PHCC": "Al Hadan",
+            "Health Center algabil": "Al Gabil",
+            "Health center in aljurbah": "Al Jurbah",
+            "PHCC Abasoud": "Aba Soud",
+            "albalad": "Al Balad",
+            "dahada helth center": "Dahdah",
+            "eam phcc reer": "Rir",
+            "health center al mufja": "Al Mufija",
+            "Primary Health Care Center in Nhogah": "Nhogah",
+            "Shebhan phcc": "Shebhan",
+            // NNGH
+            "Al Arisa Health Center": "Al Arisa",
+            "Alhamar phcc": "Al Hamar",
+            "HUSSAINIAH PHCC": "Al Hussainiah",
+            "RIJLA PHcc": "Rijla",
+            "primary health care center barrk": "Birrk",
+            "primary health care center of shurfa": "Shurfah",
+            "Wadi Riman Health Center": "Wadi Riman",
+            // SGH
+            "Alakashim Health Center": "Al Akhashim",
+            "Aziziyah PHCC Sharoora": "Aziziyah",
+            "RAWDAH phcc Sharoora": "Rawdah",
+            "Security Forces PHCC Sharoora": "Security Forces",
+            "Sultanaa PHCC Sharoora": "Sultanaa",
+            "Tamani phcc Sharoura": "Tamani",
+            "alwadia phcc sharoora": "Al Wadiah",
+            "khaldiya sharoorah health center": "Khaldia",
+            // TGH
+            "hema phcc": "Hema",
+            "naiwan phcc": "Na'wan",
+            "qattan phcc": "Qattan",
+            "suffah phcc": "Suffah",
+            "talham phcc": "Talham",
+            "thar phcc": "Thar",
+            "tilah phcc": "Tla'a",
+            // YGH
+            "legam primary health care center": "Al Lejam",
+            "mohammadia phcc": "Mohammadiah",
+            "sultana primaryhealth care center": "Sultana",
+            "wadi wasat": "Wadi Wasat",
+            "yadama primary health care center": "Yaddamah"
+        };
+
+        // Helper function to get PHC display name
+        function getPHCDisplayName(phcName) {
+            if (!phcName) return phcName;
+            // Try exact match first
+            if (PHC_DISPLAY_NAMES[phcName]) {
+                return PHC_DISPLAY_NAMES[phcName];
+            }
+            // Try case-insensitive match
+            const normalizedPhcName = normalizePHC(phcName);
+            const matchingKey = Object.keys(PHC_DISPLAY_NAMES).find(key => 
+                normalizePHC(key) === normalizedPhcName
+            );
+            if (matchingKey) {
+                return PHC_DISPLAY_NAMES[matchingKey];
+            }
+            // Return original if no mapping found
+            return phcName;
+        }
+
         // PHC to Zone mapping
         const PHC_ZONE_MAP = {
             "AL- qarn": "BGH",
@@ -1432,6 +1725,16 @@
             }
         }
 
+        // Valid zone codes
+        const VALID_ZONES = ['BGH', 'HGH', 'KGH', 'KKH', 'MCH', 'WNH', 'NNGH', 'SGH', 'TGH', 'YGH'];
+
+        // Helper function to check if a name is a valid zone
+        function isValidZone(zoneName) {
+            if (!zoneName) return false;
+            const normalized = zoneName.trim().toUpperCase();
+            return VALID_ZONES.includes(normalized);
+        }
+
         function populateScreeningZones(rows) {
             const container = document.getElementById('screeningZonesList');
             if (!container) return;
@@ -1439,9 +1742,18 @@
             let html = '<div class="zone-header"><div class="zone-header-item">Zone</div><div class="zone-header-item">Coverage %</div><div class="zone-header-item">Weekly</div></div>';
             let rank = 1;
 
-            for (let i = SCREENING_ZONE_START_ROW; i < rows.length; i++) {
+            // Stop before PHC rows
+            const maxRow = Math.min(SCREENING_PHC_START_ROW, rows.length);
+
+            for (let i = SCREENING_ZONE_START_ROW; i < maxRow; i++) {
                 const row = rows[i] || [];
                 const zoneName = (row[SCREENING_ZONE_NAME_COL] || '').trim();
+                
+                // Skip if empty or not a valid zone
+                if (!zoneName || !isValidZone(zoneName)) {
+                    continue;
+                }
+
                 const achievedRaw = (row[SCREENING_ZONE_VALUE_COL] || '').trim();
                 const targetRaw = (row[SCREENING_ZONE_TARGET_COL] || '').trim();
                 const indicatorRaw = (row[SCREENING_ZONE_INDICATOR_COL] || '').toString().trim();
@@ -1465,8 +1777,6 @@
                 } else if (!isNaN(indicatorNum) && indicatorNum === 0) {
                     indicatorText = '0';
                 }
-
-                if (!zoneName) break;
 
                 const escapedZoneName = zoneName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 html += `
@@ -1501,9 +1811,18 @@
             let html = '<div class="zone-header"><div class="zone-header-item">Zone</div><div class="zone-header-item">Controlled %</div><div class="zone-header-item">Weekly</div></div>';
             let rank = 1;
 
-            for (let i = DM_ZONE_START_ROW; i < rows.length; i++) {
+            // Stop before PHC rows
+            const maxRow = Math.min(DM_PHC_START_ROW, rows.length);
+
+            for (let i = DM_ZONE_START_ROW; i < maxRow; i++) {
                 const row = rows[i] || [];
                 const zoneName = (row[DM_ZONE_NAME_COL] || '').trim();
+                
+                // Skip if empty or not a valid zone
+                if (!zoneName || !isValidZone(zoneName)) {
+                    continue;
+                }
+
                 const totalRaw = (row[DM_ZONE_TOTAL_COL] || '').trim();
                 const controlledRaw = (row[DM_ZONE_CONTROLLED_COL] || '').trim();
                 const indicatorRaw = (row[DM_ZONE_INDICATOR_COL] || '').toString().trim();
@@ -1528,8 +1847,6 @@
                 } else if (!isNaN(indicatorNum) && indicatorNum === 0) {
                     indicatorText = '0';
                 }
-
-                if (!zoneName) break;
 
                 const escapedZoneName = zoneName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 html += `
@@ -1564,9 +1881,18 @@
             let html = '<div class="zone-header zone-header--predm"><div class="zone-header-item">Zone</div><div class="zone-header-item">% Normal</div><div class="zone-header-item">% Follow-up</div><div class="zone-header-item">Weekly</div></div>';
             let rank = 1;
 
-            for (let i = PREDM_ZONE_START_ROW; i < rows.length; i++) {
+            // Stop before PHC rows
+            const maxRow = Math.min(PREDM_PHC_START_ROW, rows.length);
+
+            for (let i = PREDM_ZONE_START_ROW; i < maxRow; i++) {
                 const row = rows[i] || [];
                 const zoneName = (row[PREDM_ZONE_NAME_COL] || '').trim();
+                
+                // Skip if empty or not a valid zone
+                if (!zoneName || !isValidZone(zoneName)) {
+                    continue;
+                }
+
                 const totalRaw = (row[PREDM_ZONE_TOTAL_COL] || '').trim();
                 const normalRaw = (row[PREDM_ZONE_NORMAL_COL] || '').trim();
                 const followupRaw = (row[PREDM_ZONE_FOLLOWUP_COL] || '').trim();
@@ -1599,8 +1925,6 @@
                 } else if (!isNaN(indicatorNum) && indicatorNum === 0) {
                     indicatorText = '0';
                 }
-
-                if (!zoneName) break;
 
                 const escapedZoneName = zoneName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 html += `
@@ -1666,6 +1990,12 @@
             }
             
             function loadDataFromGoogleSheets() {
+                // Show loading overlay
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.classList.add('active');
+                }
+                
                 // Use CSV export which is more reliable for CORS
                 // First try: Published CSV export (requires sheet to be published)
                 const publishedUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
@@ -1684,6 +2014,11 @@
                 function tryProxy(index) {
                     if (index >= proxies.length) {
                         console.error('All proxy methods failed.');
+                        // Hide loading overlay on error
+                        const loadingOverlay = document.getElementById('loadingOverlay');
+                        if (loadingOverlay) {
+                            loadingOverlay.classList.remove('active');
+                        }
                         const errorMsg = 'Unable to load data from Google Sheets due to CORS restrictions.\n\n' +
                             'SOLUTION: Run a local web server:\n' +
                             '1. Double-click "start_server.bat" in this folder, OR\n' +
@@ -1715,6 +2050,13 @@
                             }
                         })
                         .catch(error => {
+                            // Hide loading overlay on fetch error (only if all proxies failed)
+                            if (index + 1 >= proxies.length) {
+                                const loadingOverlay = document.getElementById('loadingOverlay');
+                                if (loadingOverlay) {
+                                    loadingOverlay.classList.remove('active');
+                                }
+                            }
                             // Silently try next proxy - only log if all proxies fail
                             tryProxy(index + 1);
                         });
@@ -1904,6 +2246,12 @@
                     }
                 }
                 updateDMPercentages();
+                
+                // Hide loading overlay AFTER all cards are populated
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.classList.remove('active');
+                }
             }
             
             // Load data when page loads
@@ -2109,10 +2457,11 @@
                         indicatorText = '0';
                     }
                     
+                    const displayName = getPHCDisplayName(phc.name);
                     html += `
                         <div class="zone-item zone-item--screening">
                             <div class="zone-name">
-                                <span class="zone-name-text">${phc.name}</span>
+                                <span class="zone-name-text">${displayName}</span>
                             </div>
                             <span class="zone-value">${phc.value}</span>
                             <div class="zone-7d-indicator">
@@ -2138,10 +2487,11 @@
                         indicatorText = '0';
                     }
                     
+                    const displayName = getPHCDisplayName(phc.name);
                     html += `
                         <div class="zone-item zone-item--screening">
                             <div class="zone-name">
-                                <span class="zone-name-text">${phc.name}</span>
+                                <span class="zone-name-text">${displayName}</span>
                             </div>
                             <span class="zone-value">${phc.value}</span>
                             <div class="zone-7d-indicator">
@@ -2167,10 +2517,11 @@
                         indicatorText = '0';
                     }
                     
+                    const displayName = getPHCDisplayName(phc.name);
                     html += `
                         <div class="zone-item zone-item--predm">
                             <div class="zone-name">
-                                <span class="zone-name-text">${phc.name}</span>
+                                <span class="zone-name-text">${displayName}</span>
                             </div>
                             <span class="zone-value" style="color: #4a9e5f;">${phc.normalPercent}</span>
                             <span class="zone-value" style="color: #c85a5a;">${phc.followupPercent}</span>
@@ -2200,9 +2551,10 @@
             if (mainView) mainView.classList.add('hidden');
             if (zoneDetailView) zoneDetailView.style.display = 'flex';
 
-            // Update zone detail page title
+            // Update zone detail page title (use full name if available)
             const titleEl = document.getElementById('zoneDetailTitle');
-            if (titleEl) titleEl.textContent = zoneName;
+            const fullZoneName = ZONE_FULL_NAMES[zoneName] || ZONE_FULL_NAMES[zoneName?.toUpperCase?.()] || zoneName;
+            if (titleEl) titleEl.textContent = fullZoneName;
 
             // Initialize carousel for zone detail view
             const zoneCarousel = document.getElementById('zoneDetailCarousel');
