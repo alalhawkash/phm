@@ -227,7 +227,7 @@
         }
 
         .dark-mode .carousel-dot.active {
-            background: #8aa2ff;
+            background: #007aff;
         }
 
         .dark-mode .card {
@@ -269,7 +269,7 @@
 
         .dark-mode .zone-item {
             background: #1d222b;
-            border-left-color: #8aa2ff;
+            border-left-color: #007aff;
             color: #e8e8e8;
         }
 
@@ -418,20 +418,20 @@
 
         .template-header {
             text-align: center;
-            padding-bottom: 12px;
+            padding-bottom: 8px;
             border-bottom: 2px solid #e0e0e0;
             flex-shrink: 0;
         }
         
         .template-header h2 {
-            font-size: 22px;
+            font-size: 17px;
             font-weight: 600;
             color: #1a1a1a;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .template-header .subtitle {
-            font-size: 13px;
+            font-size: 11px;
             color: #888;
         }
 
@@ -650,7 +650,7 @@
         /* Ensure zone items and headers follow dark-mode background */
         .dark-mode .zone-item {
             background: #1d222b;
-            border-left-color: #8aa2ff;
+            border-left-color: #007aff;
         }
 
         .dark-mode .zone-item:hover {
@@ -841,24 +841,42 @@
         }
 
         .back-button {
-            background: #f0f0f0;
-            color: #333;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            padding: 8px 16px;
-            font-size: 14px;
-            font-weight: 500;
+            background: transparent;
+            border: none;
+            padding: 0;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: opacity 0.2s ease;
             flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
+        }
+
+        .back-button::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-left: 2px solid #007aff;
+            border-bottom: 2px solid #007aff;
+            transform: rotate(45deg);
+            margin-left: 3px;
         }
 
         .back-button:hover {
-            background: #e8e8e8;
+            opacity: 0.7;
         }
 
         .back-button:active {
-            background: #ddd;
+            opacity: 0.5;
+        }
+
+        .dark-mode .back-button::before {
+            border-left-color: #007aff;
+            border-bottom-color: #007aff;
         }
 
         /* Zone detail header (light and dark) */
@@ -956,6 +974,7 @@
         #zoneDetailView .carousel-wrapper {
             flex: 1;
             min-height: 0;
+            padding-top: 10px;
         }
 
         /* DM Patients Template Styles */
@@ -1331,8 +1350,8 @@
         </div>
         <div class="main-view" id="zoneDetailView" style="display: none;">
             <div class="zone-detail-header" style="padding: 16px 20px; background: #ffffff; border-bottom: 1px solid #e0e0e0;">
-                <button class="back-button" onclick="goBackToMain()">← Back</button>
-                <div class="zone-detail-title" style="flex: 1; text-align: center;">
+                <button class="back-button" onclick="goBackToMain()" aria-label="Go back"></button>
+                <div class="zone-detail-title" style="flex: 1; text-align: left;">
                     <h2 id="zoneDetailTitle" style="margin: 0; font-size: 20px; font-weight: 600; color: #1a1a1a;">Zone Details</h2>
                     <div class="subtitle" style="font-size: 10px; color: #888; margin-top: 2px;">PHC Performance</div>
                 </div>
@@ -1343,7 +1362,7 @@
                         <div class="card-content">
                             <div class="screen-count-template">
                                 <div class="template-header">
-                                    <h2 id="zoneDetailScreenTitle">Screen Count</h2>
+                                    <h2>Screen Count</h2>
                                     <div class="subtitle">Performance Overview</div>
                                 </div>
                                 <div class="metrics-section">
@@ -1493,6 +1512,20 @@
         })();
     </script>
     <script>
+        // Zone full names
+        const ZONE_FULL_NAMES = {
+            BGH: 'Bader Aljanoob General Hospital',
+            HGH: 'Hubona General Hospital',
+            KGH: 'Khubash General Hospital',
+            KKH: 'King Khaled Hospital',
+            MCH: 'Maternity and Children Hospital',
+            WNH: 'West Najran General Hospital',
+            NNGH: 'New Najran General Hospital',
+            SGH: 'Sharourah General Hospital',
+            TGH: 'Thar General Hospital',
+            YGH: 'Yaddamah General Hospital'
+        };
+
         // PHC to Zone mapping
         const PHC_ZONE_MAP = {
             "AL- qarn": "BGH",
@@ -1563,6 +1596,73 @@
             "sultana primaryhealth care center": "YGH",
             "wadi wasat": "YGH",
             "yadama primary health care center": "YGH"
+        };
+
+        // PHC Display Names mapping
+        const PHC_DISPLAY_NAMES = {
+            "hema phcc": "Hema",
+            "naiwan phcc": "Na'wan",
+            "qattan phcc": "Qattan",
+            "suffah phcc": "Suffah",
+            "talham phcc": "Talham",
+            "thar phcc": "Thar",
+            "tilah phcc": "Tila'h",
+            "Alhamar phcc": "Al Hamar",
+            "HUSSAINIAH PHCC": "Al Hussainiah",
+            "primary health care center barrk": "Berrk",
+            "primary health care center of shurfa": "Al Shurfah",
+            "RIJLA PHcc": "Rijla",
+            "Wadi Riman Health Center": "Wadi Riman",
+            "alrehab Primary care center": "Al Rehab",
+            "bader aljanoob primary health care": "Bader Al Janoob",
+            "Hadadah health center": "Hadadah",
+            "maleha public health center": "Al Maleha",
+            "Primary Care Alkhaniq": "Al Khaniq",
+            "al harshar phcc": "Al Harshaf",
+            "AL JAFFAH PHCC": "Al Jaffah",
+            "ALMONTSHER PHCC": "Al Montsher",
+            "dekah": "Al Dekah",
+            "Habuna primary Health Care Center": "Habuna",
+            "majma": "Al Majma",
+            "Al Faisaliah Health Center": "Al Faisaliah",
+            "ALDUBAT PHCC": "Al Dubat",
+            "Aqfah phcc": "Aqfah",
+            "Biraskar phcc": "Bir Askar",
+            "khaldiya health center": "Al Khaldiah",
+            "Primary Health Care Center DIYAFA": "Al Diyafah",
+            "primary health care center north": "Al Fahad Alshimaly",
+            "prince mishal health center": "Prince Mishal",
+            "Alakashim Health Center": "Al Akhashim",
+            "alwadia phcc sharoora": "Alwadia",
+            "Aziziyah PHCC Sharoora": "Aziziyah",
+            "khaldiya sharoorah health center": "Khaldiya",
+            "RAWDAH phcc Sharoora": "Rawdah",
+            "Security Forces PHCC Sharoora": "Security Forces",
+            "Sultanaa PHCC Sharoora": "Sultanah",
+            "Al muratah phcc": "Al Muratah",
+            "Al Safa Health Center": "Al Safa",
+            "albalad": "Albalad",
+            "Alhadan PHCC": "Alhadan",
+            "dahada helth center": "Dahada",
+            "eam phcc reer": "Rir",
+            "health center al mufja": "Al Mufja",
+            "Health Center algabil": "Al Gabil",
+            "Health center in aljurbah": "Al Jurbah",
+            "PHCC Abasoud": "Aba Saoud",
+            "Primary Health Care Center in Nhogah": "Nhogah",
+            "Shebhan phcc": "Shabhan",
+            "AL-SHARAA": "Al Kharaa",
+            "junoob matar": "Junoob Al Matar",
+            "KHUBASH Health center": "Khubash",
+            "mishaliya": "Mishaliya",
+            "Primary Health Care Center GOILLA": "Goilla",
+            "taslal health center": "Taslal",
+            "atheabah phcc": "Al Athaibah",
+            "legam primary health care center": "Lejam",
+            "mohammadia phcc": "Mohammadia",
+            "sultana primaryhealth care center": "Sultana",
+            "wadi wasat": "Wadi Wasat",
+            "yadama primary health care center": "Yaddamah"
         };
 
         const SCREENING_ZONE_START_ROW = 10; // Will be found dynamically
@@ -2483,10 +2583,12 @@
                         indicatorText = '0';
                     }
                     
+                    const displayName = PHC_DISPLAY_NAMES[phc.name] || PHC_DISPLAY_NAMES[phc.name?.toLowerCase()] || phc.name;
+                    
                     html += `
                         <div class="zone-item zone-item--screening">
                             <div class="zone-name">
-                                <span class="zone-name-text">${phc.name}</span>
+                                <span class="zone-name-text">${displayName}</span>
                             </div>
                             <span class="zone-value">${phc.value}</span>
                             <div class="zone-7d-indicator">
@@ -2515,10 +2617,12 @@
                     const controlledText = !isNaN(phc.controlled) ? phc.controlled.toLocaleString() : '0';
                     const uncontrolledText = !isNaN(phc.total) && !isNaN(phc.controlled) ? Math.max(0, phc.total - phc.controlled).toLocaleString() : '0';
 
+                    const displayName = PHC_DISPLAY_NAMES[phc.name] || PHC_DISPLAY_NAMES[phc.name?.toLowerCase()] || phc.name;
+
                     html += `
                         <div class="zone-item zone-item--dm">
                             <div class="zone-name">
-                                <span class="zone-name-text">${phc.name}</span>
+                                <span class="zone-name-text">${displayName}</span>
                             </div>
                             <span class="zone-value">${controlledText}</span>
                             <span class="zone-value">${uncontrolledText}</span>
@@ -2548,10 +2652,12 @@
                     const normalText = !isNaN(phc.normal) ? phc.normal.toLocaleString() : '0';
                     const followupText = !isNaN(phc.followup) ? phc.followup.toLocaleString() : '0';
 
+                    const displayName = PHC_DISPLAY_NAMES[phc.name] || PHC_DISPLAY_NAMES[phc.name?.toLowerCase()] || phc.name;
+
                     html += `
                         <div class="zone-item zone-item--predm">
                             <div class="zone-name">
-                                <span class="zone-name-text">${phc.name}</span>
+                                <span class="zone-name-text">${displayName}</span>
                             </div>
                             <span class="zone-value" style="color: #4a9e5f;">${normalText}</span>
                             <span class="zone-value" style="color: #c85a5a;">${followupText}</span>
@@ -2581,13 +2687,11 @@
             if (mainView) mainView.classList.add('hidden');
             if (zoneDetailView) zoneDetailView.style.display = 'flex';
 
-            // Update zone detail page title
-            const titleEl = document.getElementById('zoneDetailTitle');
-            if (titleEl) titleEl.textContent = zoneName;
+            // Update zone detail page title (use full name if available)
+            const fullZoneName = ZONE_FULL_NAMES[zoneName] || ZONE_FULL_NAMES[zoneName?.toUpperCase?.()] || zoneName;
 
-            // Also update the Screen Count card title inside zone detail
-            const screenCardTitle = document.getElementById('zoneDetailScreenTitle');
-            if (screenCardTitle) screenCardTitle.textContent = zoneName;
+            const titleEl = document.getElementById('zoneDetailTitle');
+            if (titleEl) titleEl.textContent = fullZoneName;
 
             // Initialize carousel for zone detail view
             const zoneCarousel = document.getElementById('zoneDetailCarousel');
