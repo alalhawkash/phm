@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="PHM">
     <link rel="apple-touch-icon" href="loading-logo.gif">
     <link rel="apple-touch-icon" sizes="180x180" href="loading-logo.gif">
-    <link rel="icon" type="image/gif" href="loading-logo.gif">
+    <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAMklEQVR42u3MMQ0AIAzDsP6v7SPl8gWQEG1zkRCX9PqygwAAAADgMfhWcAAAgIADwDfAV71YqyCAAAAAElFTkSuQmCC">
     <title>PHM</title>
     <style>
         * {
@@ -76,11 +76,33 @@
             gap: 4px;
         }
 
+        .error-banner {
+            display: none;
+            align-items: center;
+            padding: 10px 16px;
+            background: #ffe8e6;
+            color: #8a1f1f;
+            border-bottom: 1px solid #f5c1bc;
+            font-size: 13px;
+            gap: 8px;
+        }
+
+        .error-banner.active {
+            display: flex;
+        }
+
+        .dark-mode .error-banner {
+            background: #2a1b1b;
+            color: #f6d7d4;
+            border-bottom-color: #4a2a2a;
+        }
+
         .header-meta {
             display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 2px;
+            align-items: flex-start;
+            flex-wrap: nowrap;
             font-size: 11px;
             color: #666;
         }
@@ -92,6 +114,7 @@
             margin: 0;
             font-weight: 400;
             white-space: nowrap;
+            line-height: 1.3;
         }
 
         .last-updated {
@@ -99,6 +122,7 @@
             color: #666;
             margin: 0;
             white-space: nowrap;
+            line-height: 1.3;
         }
 
         .header-actions {
@@ -228,6 +252,17 @@
             color: #d3d8df;
         }
 
+        /* Dark mode text for metric values */
+        .dark-mode .metric-value,
+        .dark-mode .dm-metric-value,
+        .dark-mode .dm-value,
+        .dark-mode .predm-metric-value,
+        .dark-mode .predm-value,
+        .dark-mode .predm-normal-value,
+        .dark-mode .predm-nofollowup-value {
+            color: #e8e8e8;
+        }
+
         .dark-mode .zones-title {
             color: #e0e6ee;
         }
@@ -294,6 +329,12 @@
     overflow: hidden;
     padding: 0 8px;
     box-sizing: border-box;
+}
+
+.dark-mode .container,
+.dark-mode .carousel-wrapper,
+.dark-mode .carousel {
+    background: #0f1115;
 }
 
 .carousel-dots {
@@ -496,6 +537,35 @@
             color: #333;
         }
 
+        /* Pre-DM percentage displays */
+        #preDMToNormalPercent,
+        #zoneDetailPreDMToNormalPercent {
+            display: inline;
+            margin-right: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        #preDMNoFollowupPercent,
+        #zoneDetailPreDMNoFollowupPercent {
+            display: inline;
+            margin-right: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .dark-mode #preDMToNormalPercent,
+        .dark-mode #zoneDetailPreDMToNormalPercent {
+            color: #bfc7d1;
+        }
+
+        .dark-mode #preDMNoFollowupPercent,
+        .dark-mode #zoneDetailPreDMNoFollowupPercent {
+            color: #bfc7d1;
+        }
+
         .indicator-positive {
             color: #4a9e5f;
         }
@@ -577,6 +647,26 @@
             background: #e8e8e8;
         }
 
+        /* Ensure zone items and headers follow dark-mode background */
+        .dark-mode .zone-item {
+            background: #1d222b;
+            border-left-color: #8aa2ff;
+        }
+
+        .dark-mode .zone-item:hover {
+            background: #252b35;
+        }
+
+        .dark-mode .zone-item:active {
+            background: #1d222b;
+        }
+
+        .dark-mode .zone-header {
+            background: #1d222b;
+            border: 1px solid #2a323d;
+            color: #d8deea;
+        }
+
         .zone-rank {
             font-size: 16px;
             font-weight: 600;
@@ -637,6 +727,45 @@
 
         .zone-item--screening .zone-7d-indicator {
             justify-content: center;
+        }
+
+        /* DM zone rows with four columns: Zone | Controlled | Uncontrolled | Weekly */
+        .zone-item--dm {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 0.8fr;
+            gap: 12px;
+        }
+
+        .zone-item--dm .zone-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .zone-item--dm .zone-name-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .zone-item--dm .zone-value {
+            text-align: center;
+        }
+
+        /* DM headers: 4 columns aligned with rows */
+        .zone-header--dm {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 0.8fr;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .zone-header--dm .zone-header-item {
+            text-align: center;
+        }
+
+        .zone-header--dm .zone-header-item:first-child {
+            text-align: left;
         }
 
         .zone-item--predm {
@@ -730,6 +859,17 @@
 
         .back-button:active {
             background: #ddd;
+        }
+
+        /* Zone detail header (light and dark) */
+        #zoneDetailView .zone-detail-header {
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .dark-mode #zoneDetailView .zone-detail-header {
+            background: #161a20 !important;
+            border-bottom-color: #262c36 !important;
         }
 
         .zone-detail-title {
@@ -838,7 +978,23 @@
         .dm-metric-value-container {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
+        }
+
+        /* Minimal percent styling (neutral color, lighter weight) */
+        .dm-metric-value.dm-percent {
+            font-size: 12px;
+            font-weight: 400;
+            color: #888 !important;
+            order: 1;
+        }
+
+        .dark-mode .dm-metric-value.dm-percent {
+            color: #a8b3c3 !important;
+        }
+
+        .dm-count {
+            order: 2;
         }
 
         .dm-metric-label {
@@ -1046,21 +1202,24 @@
             <p class="loading-text">Loading data...</p>
         </div>
     </div>
+    <div id="loadError" class="error-banner" role="alert" aria-live="polite">
+        Unable to load data. Please check your connection and try again.
+    </div>
     <header>
         <div class="header-brand">
-            <img src="loading-logo.gif" alt="PHM Logo" class="header-logo">
+            <img src="nhc-logo.png" alt="Najran Health Cluster Logo" class="header-logo">
             <div class="header-text">
                 <div class="header-title">Najran Health Cluster</div>
                 <div class="header-meta">
-                    <div class="subtitle">Health Population Management</div>
+                    <div class="subtitle">Population Health Management</div>
                     <div class="last-updated" id="lastUpdated">Last update: --</div>
                 </div>
             </div>
-            <div class="header-actions">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" type="button">
-                    <span class="visually-hidden">Toggle theme</span>
-                </button>
-            </div>
+        </div>
+        <div class="header-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" type="button">
+                <span class="visually-hidden">Toggle theme</span>
+            </button>
         </div>
     </header>
     <div class="container">
@@ -1111,17 +1270,17 @@
                                 <div class="dm-metric-row">
                                     <span class="dm-metric-label">Controlled DM</span>
                                     <div class="dm-metric-value-container">
-                                        <span class="dm-metric-value controlled-value" id="controlledDMValue">0</span>
-                                        <span class="dm-metric-value controlled-value" id="controlledDMPercent">0%</span>
-                </div>
-            </div>
+                                        <span class="dm-metric-value controlled-value dm-percent" id="controlledDMPercent">0%</span>
+                                        <span class="dm-metric-value controlled-value dm-count" id="controlledDMValue">0</span>
+                                    </div>
+                                </div>
                                 <div class="dm-metric-row">
                                     <span class="dm-metric-label">Uncontrolled DM</span>
                                     <div class="dm-metric-value-container">
-                                        <span class="dm-metric-value uncontrolled-value" id="uncontrolledDMValue">0</span>
-                                        <span class="dm-metric-value uncontrolled-value" id="uncontrolledDMPercent">0%</span>
-                    </div>
-                </div>
+                                        <span class="dm-metric-value uncontrolled-value dm-percent" id="uncontrolledDMPercent">0%</span>
+                                        <span class="dm-metric-value uncontrolled-value dm-count" id="uncontrolledDMValue">0</span>
+                                    </div>
+                                </div>
             </div>
                             <div class="zones-ranking" id="dmZonesList">
                                 <div class="zone-item">
@@ -1146,15 +1305,15 @@
                                 <div class="predm-metric-row">
                                     <span class="predm-metric-label">Pre-DM to Normal</span>
                                     <div class="dm-metric-value-container">
-                                        <span class="predm-metric-value predm-normal-value" id="preDMToNormalValue">0</span>
                                         <span class="predm-metric-value predm-normal-value" id="preDMToNormalPercent">0%</span>
+                                        <span class="predm-metric-value predm-normal-value" id="preDMToNormalValue">0</span>
                                     </div>
                                 </div>
                                 <div class="predm-metric-row">
                                     <span class="predm-metric-label">Pre-DM No Follow-up</span>
                                     <div class="dm-metric-value-container">
-                                        <span class="predm-metric-value predm-nofollowup-value" id="preDMNoFollowupValue">0</span>
                                         <span class="predm-metric-value predm-nofollowup-value" id="preDMNoFollowupPercent">0%</span>
+                                        <span class="predm-metric-value predm-nofollowup-value" id="preDMNoFollowupValue">0</span>
                                     </div>
             </div>
                     </div>
@@ -1184,7 +1343,7 @@
                         <div class="card-content">
                             <div class="screen-count-template">
                                 <div class="template-header">
-                                    <h2>Screen Count</h2>
+                                    <h2 id="zoneDetailScreenTitle">Screen Count</h2>
                                     <div class="subtitle">Performance Overview</div>
                                 </div>
                                 <div class="metrics-section">
@@ -1223,18 +1382,18 @@
                                     </div>
                                     <div class="dm-metric-row">
                                         <span class="dm-metric-label">Controlled DM</span>
-                                        <div class="dm-metric-value-container">
-                                            <span class="dm-metric-value controlled-value" id="zoneDetailControlledDMValue">0</span>
-                                            <span class="dm-metric-value controlled-value" id="zoneDetailControlledDMPercent">0%</span>
-                                        </div>
+                                    <div class="dm-metric-value-container">
+                                        <span class="dm-metric-value controlled-value dm-percent" id="zoneDetailControlledDMPercent">0%</span>
+                                            <span class="dm-metric-value controlled-value dm-count" id="zoneDetailControlledDMValue">0</span>
                                     </div>
-                                    <div class="dm-metric-row">
-                                        <span class="dm-metric-label">Uncontrolled DM</span>
-                                        <div class="dm-metric-value-container">
-                                            <span class="dm-metric-value uncontrolled-value" id="zoneDetailUncontrolledDMValue">0</span>
-                                            <span class="dm-metric-value uncontrolled-value" id="zoneDetailUncontrolledDMPercent">0%</span>
-                                        </div>
+                                </div>
+                                <div class="dm-metric-row">
+                                    <span class="dm-metric-label">Uncontrolled DM</span>
+                                    <div class="dm-metric-value-container">
+                                        <span class="dm-metric-value uncontrolled-value dm-percent" id="zoneDetailUncontrolledDMPercent">0%</span>
+                                            <span class="dm-metric-value uncontrolled-value dm-count" id="zoneDetailUncontrolledDMValue">0</span>
                                     </div>
+                                </div>
                                 </div>
                                 <div class="zones-ranking" id="zoneDetailDMPHCs">
                                     <div class="zone-item">
@@ -1259,15 +1418,15 @@
                                     <div class="predm-metric-row">
                                         <span class="predm-metric-label">Pre-DM to Normal</span>
                                         <div class="dm-metric-value-container">
-                                            <span class="predm-metric-value predm-normal-value" id="zoneDetailPreDMToNormalValue">0</span>
                                             <span class="predm-metric-value predm-normal-value" id="zoneDetailPreDMToNormalPercent">0%</span>
+                                            <span class="predm-metric-value predm-normal-value" id="zoneDetailPreDMToNormalValue">0</span>
                                         </div>
                                     </div>
                                     <div class="predm-metric-row">
                                         <span class="predm-metric-label">Pre-DM No Follow-up</span>
                                         <div class="dm-metric-value-container">
-                                            <span class="predm-metric-value predm-nofollowup-value" id="zoneDetailPreDMNoFollowupValue">0</span>
                                             <span class="predm-metric-value predm-nofollowup-value" id="zoneDetailPreDMNoFollowupPercent">0%</span>
+                                            <span class="predm-metric-value predm-nofollowup-value" id="zoneDetailPreDMNoFollowupValue">0</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1454,8 +1613,8 @@
         const PREDM_PATIENTS_ROW = 173; // Will be found dynamically
         const PREDM_TO_NORMAL_ROW = 174; // Will be found dynamically
         const PREDM_NO_FOLLOWUP_ROW = 175; // Will be found dynamically
-        const PREDM_LABEL_COL = 29; // column AC (zero-indexed: 28)
-        const PREDM_VALUE_COL = 30; // column AD (zero-indexed: 29)
+        const PREDM_LABEL_COL = 28; // column AC (zero-indexed: 28)
+        const PREDM_VALUE_COL = 29; // column AD (zero-indexed: 29)
 
         const PREDM_ZONE_START_ROW = 179; // Will be found dynamically
         const PREDM_ZONE_NAME_COL = 31; // column AF (zero-indexed: 30)
@@ -1480,40 +1639,41 @@
             const remainingEl = document.getElementById('percentageValue');
             if (!screenedEl || !remainingEl) return;
 
-            if (screeningTargetTotal && screeningCurrentTotal !== null) {
-                const screenedPct = screeningTargetTotal ? (screeningCurrentTotal / screeningTargetTotal) * 100 : 0;
-                const remaining = Math.max(0, screeningTargetTotal - screeningCurrentTotal);
-                const remainingPct = screeningTargetTotal ? (remaining / screeningTargetTotal) * 100 : 0;
+            const hasTarget = screeningTargetTotal !== null && screeningTargetTotal !== undefined;
+            const hasCurrent = screeningCurrentTotal !== null && screeningCurrentTotal !== undefined;
+            const target = hasTarget ? screeningTargetTotal : 0;
+            const current = hasCurrent ? screeningCurrentTotal : 0;
 
-                screenedEl.innerHTML = `<span class="metric-percent">${screenedPct.toFixed(1)}%</span><span class="metric-count">${screeningCurrentTotal.toLocaleString()}</span>`;
-                remainingEl.innerHTML = `<span class="metric-percent">${remainingPct.toFixed(1)}%</span><span class="metric-count">${remaining.toLocaleString()}</span>`;
-            }
+            const screenedPct = target > 0 ? (current / target) * 100 : 0;
+            const remaining = Math.max(0, target - current);
+            const remainingPct = target > 0 ? (remaining / target) * 100 : 0;
+
+            screenedEl.innerHTML = `<span class="metric-percent">${screenedPct.toFixed(1)}%</span><span class="metric-count">${current.toLocaleString()}</span>`;
+            remainingEl.innerHTML = `<span class="metric-percent">${remainingPct.toFixed(1)}%</span><span class="metric-count">${remaining.toLocaleString()}</span>`;
         }
 
         function updateDMPercentages() {
-            if (dmPatientsTotal && dmPatientsTotal !== 0) {
-                if (controlledDMTotal !== null) {
-                    const percent = (controlledDMTotal / dmPatientsTotal) * 100;
-                    document.getElementById('controlledDMPercent').textContent = `${percent.toFixed(1)}%`;
-                }
-                if (uncontrolledDMTotal !== null) {
-                    const percent = (uncontrolledDMTotal / dmPatientsTotal) * 100;
-                    document.getElementById('uncontrolledDMPercent').textContent = `${percent.toFixed(1)}%`;
-                }
-            }
+            const patients = dmPatientsTotal ?? 0;
+            const controlled = controlledDMTotal ?? 0;
+            const uncontrolled = uncontrolledDMTotal ?? 0;
+
+            const controlledPct = patients > 0 ? (controlled / patients) * 100 : 0;
+            const uncontrolledPct = patients > 0 ? (uncontrolled / patients) * 100 : 0;
+
+            document.getElementById('controlledDMPercent').textContent = `${controlledPct.toFixed(1)}%`;
+            document.getElementById('uncontrolledDMPercent').textContent = `${uncontrolledPct.toFixed(1)}%`;
         }
 
         function updatePreDMPercentages() {
-            if (predmPatientsTotal && predmPatientsTotal !== 0) {
-                if (predmToNormalTotal !== null) {
-                    const percent = (predmToNormalTotal / predmPatientsTotal) * 100;
-                    document.getElementById('preDMToNormalPercent').textContent = `${percent.toFixed(1)}%`;
-                }
-                if (predmNoFollowupTotal !== null) {
-                    const percent = (predmNoFollowupTotal / predmPatientsTotal) * 100;
-                    document.getElementById('preDMNoFollowupPercent').textContent = `${percent.toFixed(1)}%`;
-                }
-            }
+            const patients = predmPatientsTotal ?? 0;
+            const toNormal = predmToNormalTotal ?? 0;
+            const noFollowup = predmNoFollowupTotal ?? 0;
+
+            const toNormalPct = patients > 0 ? (toNormal / patients) * 100 : 0;
+            const noFollowupPct = patients > 0 ? (noFollowup / patients) * 100 : 0;
+
+            document.getElementById('preDMToNormalPercent').textContent = `${toNormalPct.toFixed(1)}%`;
+            document.getElementById('preDMNoFollowupPercent').textContent = `${noFollowupPct.toFixed(1)}%`;
         }
 
         function populateScreeningZones(rows) {
@@ -1589,7 +1749,7 @@
             const container = document.getElementById('dmZonesList');
             if (!container) return;
 
-            let html = '<div class="zone-header"><div class="zone-header-item">Zone</div><div class="zone-header-item">Controlled %</div><div class="zone-header-item">Weekly</div></div>';
+            let html = '<div class="zone-header zone-header--dm"><div class="zone-header-item">Zone</div><div class="zone-header-item">Controlled</div><div class="zone-header-item">Uncontrolled</div><div class="zone-header-item">Weekly</div></div>';
             let rank = 1;
 
             // Find the "DM Zone" header row
@@ -1613,12 +1773,10 @@
 
                 const totalNum = parseFloat(totalRaw.replace(/,/g, ''));
                 const controlledNum = parseFloat(controlledRaw.replace(/,/g, ''));
+                const uncontrolledNum = !isNaN(totalNum) && !isNaN(controlledNum) ? Math.max(0, totalNum - controlledNum) : 0;
                 
-                let zoneValueText = '0%';
-                if (!isNaN(totalNum) && !isNaN(controlledNum) && totalNum !== 0) {
-                    const percent = ((controlledNum / totalNum) * 100).toFixed(1);
-                    zoneValueText = `${percent}%`;
-                }
+                const controlledText = !isNaN(controlledNum) ? controlledNum.toLocaleString() : '0';
+                const uncontrolledText = uncontrolledNum.toLocaleString();
 
                 let indicatorArrow = '-';
                 let indicatorClass = 'zone-arrow zone-arrow-neutral';
@@ -1635,11 +1793,12 @@
 
                 const escapedZoneName = zoneName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 html += `
-                    <div class="zone-item zone-item--screening" onclick="navigateToZone('${escapedZoneName}', 'dm', ${totalNum || 0}, ${controlledNum || 0}, ${indicatorNum || 0})">
+                    <div class="zone-item zone-item--dm" onclick="navigateToZone('${escapedZoneName}', 'dm', ${totalNum || 0}, ${controlledNum || 0}, ${indicatorNum || 0})">
                         <div class="zone-name">
                             <span class="zone-name-text">${zoneName}</span>
                         </div>
-                        <span class="zone-value">${zoneValueText}</span>
+                        <span class="zone-value">${controlledText}</span>
+                        <span class="zone-value">${uncontrolledText}</span>
                         <div class="zone-7d-indicator">
                             <span class="${indicatorClass}">
                                 ${indicatorArrow}${indicatorText ? ` ${indicatorText}` : ''}
@@ -1663,7 +1822,7 @@
             const container = document.getElementById('predmZonesList');
             if (!container) return;
 
-            let html = '<div class="zone-header zone-header--predm"><div class="zone-header-item">Zone</div><div class="zone-header-item">% Normal</div><div class="zone-header-item">% Follow-up</div><div class="zone-header-item">Weekly</div></div>';
+            let html = '<div class="zone-header zone-header--predm"><div class="zone-header-item">Zone</div><div class="zone-header-item">Normal</div><div class="zone-header-item">Follow-up</div><div class="zone-header-item">Weekly</div></div>';
             let rank = 1;
 
             // Find the "PRE-DM Zone" header row
@@ -1690,17 +1849,8 @@
                 const normalNum = parseFloat(normalRaw.replace(/,/g, ''));
                 const followupNum = parseFloat(followupRaw.replace(/,/g, ''));
                 
-                let normalPercentText = '0%';
-                if (!isNaN(totalNum) && !isNaN(normalNum) && totalNum !== 0) {
-                    const percent = ((normalNum / totalNum) * 100).toFixed(1);
-                    normalPercentText = `${percent}%`;
-                }
-
-                let followupPercentText = '0%';
-                if (!isNaN(totalNum) && !isNaN(followupNum) && totalNum !== 0) {
-                    const percent = ((followupNum / totalNum) * 100).toFixed(1);
-                    followupPercentText = `${percent}%`;
-                }
+                const normalText = normalRaw || (!isNaN(normalNum) ? normalNum.toLocaleString() : '0');
+                const followupText = followupRaw || (!isNaN(followupNum) ? followupNum.toLocaleString() : '0');
 
                 let indicatorArrow = '-';
                 let indicatorClass = 'zone-arrow zone-arrow-neutral';
@@ -1721,8 +1871,8 @@
                         <div class="zone-name">
                             <span class="zone-name-text">${zoneName}</span>
                         </div>
-                        <span class="zone-value" style="color: #4a9e5f;">${normalPercentText}</span>
-                        <span class="zone-value" style="color: #c85a5a;">${followupPercentText}</span>
+                        <span class="zone-value" style="color: #4a9e5f;">${normalText}</span>
+                        <span class="zone-value" style="color: #c85a5a;">${followupText}</span>
                         <div class="zone-7d-indicator">
                             <span class="${indicatorClass}">
                                 ${indicatorArrow}${indicatorText ? ` ${indicatorText}` : ''}
@@ -1748,34 +1898,46 @@
             const SHEET_NAME = 'Summary';
             
             function parseCSV(csvText) {
-                const lines = csvText.split('\n');
-                const data = [];
-                
-                lines.forEach(line => {
-                    if (line.trim()) {
-                        // Simple CSV parsing (handles quoted fields)
-                        const row = [];
-                        let current = '';
-                        let inQuotes = false;
-                        
-                        for (let i = 0; i < line.length; i++) {
-                            const char = line[i];
-                            
-                            if (char === '"') {
-                                inQuotes = !inQuotes;
-                            } else if (char === ',' && !inQuotes) {
-                                row.push(current.trim());
-                                current = '';
-            } else {
-                                current += char;
-                            }
+                const rows = [];
+                let row = [];
+                let field = '';
+                let inQuotes = false;
+            
+                for (let i = 0; i < csvText.length; i++) {
+                    const char = csvText[i];
+                    const nextChar = csvText[i + 1];
+            
+                    if (char === '"') {
+                        if (inQuotes && nextChar === '"') {
+                            field += '"';
+                            i++; // skip escaped quote
+                        } else {
+                            inQuotes = !inQuotes;
                         }
-                        row.push(current.trim());
-                        data.push(row);
+                    } else if (char === ',' && !inQuotes) {
+                        row.push(field.trim());
+                        field = '';
+                    } else if ((char === '\n' || char === '\r') && !inQuotes) {
+                        // handle Windows newlines \r\n
+                        if (char === '\r' && nextChar === '\n') {
+                            i++;
+                        }
+                        row.push(field.trim());
+                        rows.push(row);
+                        row = [];
+                        field = '';
+                    } else {
+                        field += char;
                     }
-                });
-                
-                return data;
+                }
+            
+                // Push any trailing field/row
+                if (field.length > 0 || row.length > 0) {
+                    row.push(field.trim());
+                    rows.push(row);
+                }
+            
+                return rows.filter(r => r.some(cell => (cell || '').trim() !== ''));
             }
             
             function showLoading() {
@@ -1787,27 +1949,42 @@
                 const loadingOverlay = document.getElementById('loadingOverlay');
                 if (loadingOverlay) loadingOverlay.classList.remove('active');
             }
+            
+            function showLoadError(message) {
+                const errorEl = document.getElementById('loadError');
+                if (!errorEl) return;
+                if (message) {
+                    errorEl.textContent = message;
+                }
+                errorEl.classList.add('active');
+            }
+
+            function hideLoadError() {
+                const errorEl = document.getElementById('loadError');
+                if (!errorEl) return;
+                errorEl.classList.remove('active');
+            }
 
             function loadDataFromGoogleSheets() {
                 showLoading();
+                hideLoadError();
                 // Use CSV export which is more reliable for CORS
-                // First try: Published CSV export (requires sheet to be published)
                 const publishedUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
-                
-                // Second try: gviz CSV export
                 const gvizUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
                 
-                // Try multiple CORS proxy services
-                const proxies = [
+                // Try direct fetch first, then fall back to proxies
+                const sources = [
+                    publishedUrl,
+                    gvizUrl,
                     `https://api.allorigins.win/raw?url=${encodeURIComponent(publishedUrl)}`,
                     `https://api.allorigins.win/raw?url=${encodeURIComponent(gvizUrl)}`,
                     `https://corsproxy.io/?${encodeURIComponent(publishedUrl)}`,
                     `https://corsproxy.io/?${encodeURIComponent(gvizUrl)}`
                 ];
                 
-                function tryProxy(index) {
-                    if (index >= proxies.length) {
-                        console.error('All proxy methods failed.');
+                function trySource(index) {
+                    if (index >= sources.length) {
+                        console.error('All fetch methods failed.');
                         const errorMsg = 'Unable to load data from Google Sheets due to CORS restrictions.\n\n' +
                             'SOLUTION: Run a local web server:\n' +
                             '1. Double-click "start_server.bat" in this folder, OR\n' +
@@ -1815,11 +1992,12 @@
                             '3. Then open: http://localhost:8000/mobile_app.html\n\n' +
                             'Make sure the Google Sheet is set to "Anyone with the link can view"';
                         console.log(errorMsg);
+                        showLoadError('Unable to load data from Google Sheets. Check your connection or try again.');
                         hideLoading();
                         return;
                     }
             
-                    fetch(proxies[index])
+                    fetch(sources[index], { mode: 'cors' })
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -1832,6 +2010,7 @@
                             }
                             const sheetData = parseCSV(text);
                             if (sheetData.length > 0) {
+                                hideLoadError();
                                 updateMobileAppData(sheetData);
                                 console.log('✓ Data loaded successfully from Google Sheets');
                                 hideLoading();
@@ -1839,16 +2018,17 @@
                                 throw new Error('No data parsed');
                             }
                         })
-                        .catch(error => {
-                            // Silently try next proxy - only log if all proxies fail
-                            if (index + 1 >= proxies.length) {
+                        .catch(() => {
+                            // Silently try next source
+                            if (index + 1 >= sources.length) {
+                                showLoadError('Unable to load data from Google Sheets. Check your connection or try again.');
                                 hideLoading();
                             }
-                            tryProxy(index + 1);
+                            trySource(index + 1);
                         });
                 }
                 
-                tryProxy(0);
+                trySource(0);
             }
             
         function updateMobileAppData(data) {
@@ -1883,7 +2063,7 @@
                     
                     // Detect section headers (check column A, column N for DM, column AC for Pre-DM)
                     const colNCell = String(row[13] || '').trim(); // column N
-                    const colACCell = String(row[28] || '').trim(); // column AC
+                    const colACCell = String(row[PREDM_LABEL_COL] || '').trim(); // column AC
                     if (firstCell.includes('SCREENING OVERVIEW')) {
                         currentSection = 'screening';
                         rowIndex++;
@@ -1899,35 +2079,26 @@
                     }
                     
                     // Parse Pre-DM Overview (columns AC and AD)
-                    if (currentSection === 'predm') {
-                        const predmLabelCol = 28; // column AC
-                        const predmValueCol = 29; // column AD
-                        const predmLabel = String(row[predmLabelCol] || '').trim();
-                        const predmValue = row[predmValueCol];
-                        
-                        if (predmLabel === 'Pre-DM Patients' && predmValue) {
-                            const num = parseInt(String(predmValue || '').replace(/,/g, ''), 10);
-                            if (!isNaN(num)) {
-                                predmPatientsTotal = num;
-                                document.getElementById('preDMPatientsValue').textContent = num.toLocaleString();
-                                updatePreDMPercentages();
-                            }
-                        } else if (predmLabel === 'Pre-DM to Normal' && predmValue) {
-                            const num = parseInt(String(predmValue || '').replace(/,/g, ''), 10);
-                            if (!isNaN(num)) {
-                                predmToNormalTotal = num;
-                                document.getElementById('preDMToNormalValue').textContent = num.toLocaleString();
-                                updatePreDMPercentages();
-                            }
-                        } else if (predmLabel === 'Pre-DM No Follow-up' && predmValue) {
-                            const num = parseInt(String(predmValue || '').replace(/,/g, ''), 10);
-                            if (!isNaN(num)) {
-                                predmNoFollowupTotal = num;
-                                document.getElementById('preDMNoFollowupValue').textContent = num.toLocaleString();
-                                updatePreDMPercentages();
-                            }
-                        }
+                if (currentSection === 'predm') {
+                    const rawLabel = String(row[PREDM_LABEL_COL] || '').trim().toLowerCase();
+                    const predmValue = row[PREDM_VALUE_COL];
+                    const parsedValue = parseInt(String(predmValue ?? '').replace(/,/g, ''), 10);
+                    const hasNumber = !isNaN(parsedValue);
+                    
+                    if (rawLabel.includes('pre-dm patients') && hasNumber) {
+                        predmPatientsTotal = parsedValue;
+                        document.getElementById('preDMPatientsValue').textContent = parsedValue.toLocaleString();
+                        updatePreDMPercentages();
+                    } else if (rawLabel.includes('pre-dm to normal') && hasNumber) {
+                        predmToNormalTotal = parsedValue;
+                        document.getElementById('preDMToNormalValue').textContent = parsedValue.toLocaleString();
+                        updatePreDMPercentages();
+                    } else if (rawLabel.includes('pre-dm no follow-up') && hasNumber) {
+                        predmNoFollowupTotal = parsedValue;
+                        document.getElementById('preDMNoFollowupValue').textContent = parsedValue.toLocaleString();
+                        updatePreDMPercentages();
                     }
+                }
                         
                 // Parse Screening Overview (new labels in column A/B)
                 if (currentSection === 'screening') {
@@ -1991,6 +2162,35 @@
                 populateScreeningZones(data);
                 populateDMZones(data);
                 populatePreDMZones(data);
+
+                // Fallback: Pre-DM overview when section detection misses
+                // AD2 (row index 1, col index 29) expected to hold Pre-DM Patients
+                if (predmPatientsTotal === null && data.length > 1 && typeof data[1][29] !== 'undefined') {
+                    const val = parseInt(String(data[1][29] || '').replace(/,/g, ''), 10);
+                    if (!isNaN(val)) {
+                        predmPatientsTotal = val;
+                        document.getElementById('preDMPatientsValue').textContent = val.toLocaleString();
+                        updatePreDMPercentages();
+                    }
+                }
+                // AD3 -> row index 2, col 29: Pre-DM to Normal
+                if (predmToNormalTotal === null && data.length > 2 && typeof data[2][29] !== 'undefined') {
+                    const val = parseInt(String(data[2][29] || '').replace(/,/g, ''), 10);
+                    if (!isNaN(val)) {
+                        predmToNormalTotal = val;
+                        document.getElementById('preDMToNormalValue').textContent = val.toLocaleString();
+                        updatePreDMPercentages();
+                    }
+                }
+                // AD4 -> row index 3, col 29: Pre-DM No Follow-up
+                if (predmNoFollowupTotal === null && data.length > 3 && typeof data[3][29] !== 'undefined') {
+                    const val = parseInt(String(data[3][29] || '').replace(/,/g, ''), 10);
+                    if (!isNaN(val)) {
+                        predmNoFollowupTotal = val;
+                        document.getElementById('preDMNoFollowupValue').textContent = val.toLocaleString();
+                        updatePreDMPercentages();
+                    }
+                }
 
                 // Fallback: explicit rows if section headers are missing
                 // Screening overview
@@ -2298,7 +2498,7 @@
                     `;
                 });
             } else if (context === 'dm') {
-                html = '<div class="zone-header"><div class="zone-header-item">PHC</div><div class="zone-header-item">Controlled %</div><div class="zone-header-item">Weekly</div></div>';
+                html = '<div class="zone-header zone-header--dm"><div class="zone-header-item">PHC</div><div class="zone-header-item">Controlled</div><div class="zone-header-item">Uncontrolled</div><div class="zone-header-item">Weekly</div></div>';
                 phcs.forEach(phc => {
                     const indicatorNum = phc.indicator || 0;
                     let indicatorArrow = '-';
@@ -2312,12 +2512,16 @@
                         indicatorText = '0';
                     }
                     
+                    const controlledText = !isNaN(phc.controlled) ? phc.controlled.toLocaleString() : '0';
+                    const uncontrolledText = !isNaN(phc.total) && !isNaN(phc.controlled) ? Math.max(0, phc.total - phc.controlled).toLocaleString() : '0';
+
                     html += `
-                        <div class="zone-item zone-item--screening">
+                        <div class="zone-item zone-item--dm">
                             <div class="zone-name">
                                 <span class="zone-name-text">${phc.name}</span>
                             </div>
-                            <span class="zone-value">${phc.value}</span>
+                            <span class="zone-value">${controlledText}</span>
+                            <span class="zone-value">${uncontrolledText}</span>
                             <div class="zone-7d-indicator">
                                 <span class="${indicatorClass}">
                                     ${indicatorArrow}${indicatorText ? ` ${indicatorText}` : ''}
@@ -2327,7 +2531,7 @@
                     `;
                 });
             } else if (context === 'predm') {
-                html = '<div class="zone-header zone-header--predm"><div class="zone-header-item">PHC</div><div class="zone-header-item">% Normal</div><div class="zone-header-item">% Follow-up</div><div class="zone-header-item">Weekly</div></div>';
+                html = '<div class="zone-header zone-header--predm"><div class="zone-header-item">PHC</div><div class="zone-header-item">Normal</div><div class="zone-header-item">Follow-up</div><div class="zone-header-item">Weekly</div></div>';
                 phcs.forEach(phc => {
                     const indicatorNum = phc.indicator || 0;
                     let indicatorArrow = '-';
@@ -2341,13 +2545,16 @@
                         indicatorText = '0';
                     }
                     
+                    const normalText = !isNaN(phc.normal) ? phc.normal.toLocaleString() : '0';
+                    const followupText = !isNaN(phc.followup) ? phc.followup.toLocaleString() : '0';
+
                     html += `
                         <div class="zone-item zone-item--predm">
                             <div class="zone-name">
                                 <span class="zone-name-text">${phc.name}</span>
                             </div>
-                            <span class="zone-value" style="color: #4a9e5f;">${phc.normalPercent}</span>
-                            <span class="zone-value" style="color: #c85a5a;">${phc.followupPercent}</span>
+                            <span class="zone-value" style="color: #4a9e5f;">${normalText}</span>
+                            <span class="zone-value" style="color: #c85a5a;">${followupText}</span>
                             <div class="zone-7d-indicator">
                                 <span class="${indicatorClass}">
                                     ${indicatorArrow}${indicatorText ? ` ${indicatorText}` : ''}
@@ -2377,6 +2584,10 @@
             // Update zone detail page title
             const titleEl = document.getElementById('zoneDetailTitle');
             if (titleEl) titleEl.textContent = zoneName;
+
+            // Also update the Screen Count card title inside zone detail
+            const screenCardTitle = document.getElementById('zoneDetailScreenTitle');
+            if (screenCardTitle) screenCardTitle.textContent = zoneName;
 
             // Initialize carousel for zone detail view
             const zoneCarousel = document.getElementById('zoneDetailCarousel');
