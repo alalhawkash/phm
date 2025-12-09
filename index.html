@@ -1556,6 +1556,9 @@
             "primary health care center north": "KKH",
             "prince mishal health center": "KKH",
             "al fahad al janubi phcc": "MCH",
+            "Al Fahad Al Janubi PHCC": "MCH",
+            "Al Fahad Al Janubi phcc": "MCH",
+            "al fahad al janubi PHCC": "MCH",
             "atheabah phcc": "MCH",
             "Al Safa Health Center": "WNH",
             "Al muratah phcc": "WNH",
@@ -1662,7 +1665,11 @@
             "mohammadia phcc": "Mohammadia",
             "sultana primaryhealth care center": "Sultana",
             "wadi wasat": "Wadi Wasat",
-            "yadama primary health care center": "Yaddamah"
+            "yadama primary health care center": "Yaddamah",
+            "al fahad al janubi phcc": "Al Fahad Al Janubi",
+            "Al Fahad Al Janubi PHCC": "Al Fahad Al Janubi",
+            "Al Fahad Al Janubi phcc": "Al Fahad Al Janubi",
+            "al fahad al janubi PHCC": "Al Fahad Al Janubi"
         };
 
         const SCREENING_ZONE_START_ROW = 10; // Will be found dynamically
@@ -2466,6 +2473,11 @@
                 
                 if (!phcName || phcName === '') break;
                 
+                // Debug: log PHC names that might match "al fahad al janubi"
+                if (normalizePHC(phcName).includes('fahad') && normalizePHC(phcName).includes('janubi')) {
+                    console.log('Found potential match for al fahad al janubi:', phcName, 'Normalized:', normalizePHC(phcName));
+                }
+                
                 // Check if this PHC belongs to the selected zone
                 let phcZone = PHC_ZONE_MAP[phcName];
                 
@@ -2477,6 +2489,16 @@
                     );
                     if (matchingKey) {
                         phcZone = PHC_ZONE_MAP[matchingKey];
+                    } else {
+                        // Try more flexible matching - remove all spaces and compare
+                        const phcNameNoSpaces = normalizedPhcName.replace(/\s+/g, '');
+                        const matchingKeyNoSpaces = Object.keys(PHC_ZONE_MAP).find(key => {
+                            const keyNoSpaces = normalizePHC(key).replace(/\s+/g, '');
+                            return keyNoSpaces === phcNameNoSpaces;
+                        });
+                        if (matchingKeyNoSpaces) {
+                            phcZone = PHC_ZONE_MAP[matchingKeyNoSpaces];
+                        }
                     }
                 }
                 
