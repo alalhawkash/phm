@@ -119,10 +119,15 @@
 
         .last-updated {
             font-size: 11px;
-            color: #f59e0b;
+            color: #666;
             margin: 0;
             white-space: nowrap;
             line-height: 1.3;
+        }
+
+        .last-updated-date {
+            color: #f6a623;
+            font-weight: 600;
         }
 
         .header-actions {
@@ -133,8 +138,8 @@
 
         .theme-toggle {
             position: relative;
-            width: 26px;
-            height: 14px;
+            width: 52px;
+            height: 28px;
             border: 1px solid #dcdcdc;
             background: #e9e9e9;
             border-radius: 999px;
@@ -148,10 +153,10 @@
         .theme-toggle::after {
             content: '';
             position: absolute;
-            top: 1px;
-            left: 1px;
-            width: 12px;
-            height: 12px;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
             background: #ffffff;
             border-radius: 50%;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
@@ -169,7 +174,7 @@
         }
 
         .dark-mode .theme-toggle::after {
-            transform: translateX(12px);
+            transform: translateX(24px);
             background: #0f1115;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
         }
@@ -200,7 +205,11 @@
         .dark-mode header h1,
         .dark-mode .subtitle,
         .dark-mode .last-updated {
-            color: #f59e0b;
+            color: #e8e8e8;
+        }
+
+        .dark-mode .last-updated-date {
+            color: #f6a623;
         }
 
         .dark-mode .theme-toggle {
@@ -411,6 +420,12 @@
         .carousel .card {
             height: 600px;
             max-height: 600px;
+        }
+
+        /* Zone detail cards should be 520px */
+        #zoneDetailCarousel .card {
+            height: 520px;
+            max-height: 520px;
         }
 
         .card-content {
@@ -1253,7 +1268,7 @@
                 <div class="header-title">Najran Health Cluster</div>
                 <div class="header-meta">
                     <div class="subtitle">Population Health Management</div>
-                    <div class="last-updated" id="lastUpdated">Last update: --</div>
+                    <div class="last-updated" id="lastUpdated">Last update: <span class="last-updated-date" id="lastUpdatedValue">--</span></div>
                 </div>
             </div>
         </div>
@@ -2179,12 +2194,12 @@
             (data && data[5] && typeof data[5][1] !== 'undefined' ? data[5][1] : '') ||
             (data && data[0] && typeof data[0][8] !== 'undefined' ? data[0][8] : '');
         const lastUpdatedEl = document.getElementById('lastUpdated');
-        if (lastUpdatedEl) {
-            if (lastUpdatedCell) {
-                lastUpdatedEl.textContent = `Last update: ${lastUpdatedCell}`;
-            } else {
-                lastUpdatedEl.textContent = 'Last update: --';
-            }
+        const lastUpdatedValueEl = document.getElementById('lastUpdatedValue');
+        if (lastUpdatedValueEl) {
+            lastUpdatedValueEl.textContent = lastUpdatedCell || '--';
+        } else if (lastUpdatedEl) {
+            // Fallback if span not found
+            lastUpdatedEl.textContent = lastUpdatedCell ? `Last update: ${lastUpdatedCell}` : 'Last update: --';
         }
 
                 // Store data globally for zone detail view
