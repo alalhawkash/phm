@@ -600,7 +600,7 @@
 
         .zone-header {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             gap: 12px;
             padding: 8px 10px;
             background: #f8f8f8;
@@ -699,7 +699,7 @@
 
         .zone-item--screening {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             gap: 12px;
         }
 
@@ -1265,6 +1265,10 @@
                                     <span class="metric-label">Remaining</span>
                                     <span class="metric-value percentage-value" id="percentageValue">0</span>
         </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">Opportunities</span>
+                                    <span class="metric-value percentage-value" id="opportunitiesValue">0</span>
+                                </div>
         </div>
                             <div class="zones-ranking" id="screeningZonesList">
                                 <div class="zone-item">
@@ -1673,45 +1677,59 @@
         };
 
         const SCREENING_ZONE_START_ROW = 10; // Will be found dynamically
-        const SCREENING_ZONE_NAME_COL = 3; // column D (zero-indexed: 3)
-        const SCREENING_ZONE_VALUE_COL = 4; // column E (Screened by Zone)
-        const SCREENING_ZONE_TARGET_COL = 5; // column F (Target by Zone)
-        const SCREENING_ZONE_INDICATOR_COL = 6; // column G (7-Day Indicator)
+        const SCREENING_ZONE_NAME_COL = 3; // column D
+        const SCREENING_ZONE_OPP_COL = 4; // Opportunities By Zone
+        const SCREENING_ZONE_VALUE_COL = 5; // Screened by Zone
+        const SCREENING_ZONE_TARGET_COL = 6; // Target by Zone
+        const SCREENING_ZONE_INDICATOR_COL = 7; // 7-Day Indicator by Zone
         const SCREENING_ZONE_LIMIT = 10;
 
         // PHC Rankings rows (after zone rankings)
         const SCREENING_PHC_START_ROW = 23; // B24 -> zero-indexed row 23
-        const SCREENING_PHC_NAME_COL = 8; // column I (zero-indexed: 8)
-        const SCREENING_PHC_VALUE_COL = 9; // column J (Screened by PHC)
-        const SCREENING_PHC_TARGET_COL = 10; // column K (Target by PHC)
-        const SCREENING_PHC_INDICATOR_COL = 11; // column L (7-Day Indicator)
+        const SCREENING_PHC_NAME_COL = 9; // column J
+        const SCREENING_PHC_OPP_COL = 10; // Opportunities By PHC
+        const SCREENING_PHC_VALUE_COL = 11; // Screened by PHC
+        const SCREENING_PHC_TARGET_COL = 12; // Target by PHC
+        const SCREENING_PHC_INDICATOR_COL = 13; // 7-Day Indicator by PHC
 
         const DM_PHC_START_ROW = 111; // Will be found dynamically
-        const DM_PHC_NAME_COL = 22; // column W (zero-indexed: 22)
-        const DM_PHC_TOTAL_COL = 23; // column X (DM Patients)
-        const DM_PHC_CONTROLLED_COL = 24; // column Y (Controlled DM)
-        const DM_PHC_UNCONTROLLED_COL = 25; // column Z (Uncontrolled DM)
-        const DM_PHC_INDICATOR_COL = 26; // column AA (7-Day Indicator)
+        const DM_PHC_NAME_COL = 24; // DM PHC
+        const DM_PHC_TOTAL_COL = 25; // DM Patients
+        const DM_PHC_CONTROLLED_COL = 26; // Controlled DM
+        const DM_PHC_UNCONTROLLED_COL = 27; // Uncontrolled DM
+        const DM_PHC_INDICATOR_COL = 28; // 7-Day Indicator DM
 
         const PREDM_PHC_START_ROW = 192; // Will be found dynamically
-        const PREDM_PHC_NAME_COL = 37; // column AL (zero-indexed: 37)
-        const PREDM_PHC_TOTAL_COL = 38; // column AM (Pre-DM Patients)
-        const PREDM_PHC_NORMAL_COL = 39; // column AN (Pre-DM to Normal)
-        const PREDM_PHC_FOLLOWUP_COL = 40; // column AO (Pre-DM No Follow-up)
-        const PREDM_PHC_INDICATOR_COL = 41; // column AP (7-Day Indicator)
+        const PREDM_PHC_NAME_COL = 39; // PRE-DM PHC
+        const PREDM_PHC_TOTAL_COL = 40; // Pre-DM Patients
+        const PREDM_PHC_NORMAL_COL = 41; // Pre-DM to Normal
+        const PREDM_PHC_FOLLOWUP_COL = 42; // Pre-DM No Follow-up
+        const PREDM_PHC_INDICATOR_COL = 43; // 7-Day Indicator PRE-DM
 
         const DM_ZONE_START_ROW = 98; // Will be found dynamically
-        const DM_ZONE_NAME_COL = 16; // column Q (zero-indexed: 16)
-        const DM_ZONE_TOTAL_COL = 17; // column R (DM Patients)
-        const DM_ZONE_CONTROLLED_COL = 18; // column S (Controlled DM)
-        const DM_ZONE_UNCONTROLLED_COL = 19; // column T (Uncontrolled DM)
-        const DM_ZONE_INDICATOR_COL = 20; // column U (7-Day Indicator)
+        const DM_ZONE_NAME_COL = 18; // DM Zone
+        const DM_ZONE_TOTAL_COL = 19; // DM Patients
+        const DM_ZONE_CONTROLLED_COL = 20; // Controlled DM
+        const DM_ZONE_UNCONTROLLED_COL = 21; // Uncontrolled DM
+        const DM_ZONE_INDICATOR_COL = 22; // 7-Day Indicator DM
         const DM_ZONE_LIMIT = 10;
 
         // Explicit overview rows
         const SCREENING_TARGET_ROW = 4; // B5 -> zero-indexed 4
         const SCREENING_CURRENT_ROW = 5; // B6 -> zero-indexed 5
         const SCREENING_REMAINING_ROW = 6; // B7 -> zero-indexed 6
+
+        // DM overview (fixed cells in column Q)
+        const DM_OVERVIEW_COL = 16; // column Q (zero-indexed)
+        const DM_OVERVIEW_PATIENTS_ROW = 1; // Q2
+        const DM_OVERVIEW_CONTROLLED_ROW = 2; // Q3
+        const DM_OVERVIEW_UNCONTROLLED_ROW = 3; // Q4
+
+        // PRE-DM overview (fixed cells in column AF)
+        const PREDM_OVERVIEW_COL = 31; // column AF (zero-indexed)
+        const PREDM_OVERVIEW_PATIENTS_ROW = 1; // AF2
+        const PREDM_OVERVIEW_NORMAL_ROW = 2; // AF3
+        const PREDM_OVERVIEW_NOFOLLOW_ROW = 3; // AF4
 
         const DM_PATIENTS_ROW = 92; // B93 -> zero-indexed 92
         const DM_CONTROLLED_ROW = 90; // B91 -> zero-indexed 90
@@ -1724,15 +1742,16 @@
         const PREDM_VALUE_COL = 29; // column AD (zero-indexed: 29)
 
         const PREDM_ZONE_START_ROW = 179; // Will be found dynamically
-        const PREDM_ZONE_NAME_COL = 31; // column AF (zero-indexed: 30)
-        const PREDM_ZONE_TOTAL_COL = 32; // column AG (Pre-DM Patients)
-        const PREDM_ZONE_NORMAL_COL = 33; // column AH (Pre-DM to Normal)
-        const PREDM_ZONE_FOLLOWUP_COL = 34; // column AI (Pre-DM No Follow-up)
-        const PREDM_ZONE_INDICATOR_COL = 35; // column AJ (7-Day Indicator)
+        const PREDM_ZONE_NAME_COL = 33; // PRE-DM Zone
+        const PREDM_ZONE_TOTAL_COL = 34; // Pre-DM Patients
+        const PREDM_ZONE_NORMAL_COL = 35; // Pre-DM to Normal
+        const PREDM_ZONE_FOLLOWUP_COL = 36; // Pre-DM No Follow-up
+        const PREDM_ZONE_INDICATOR_COL = 37; // 7-Day Indicator PRE-DM
         const PREDM_ZONE_LIMIT = 10;
 
         let screeningTargetTotal = null;
         let screeningCurrentTotal = null;
+        let screeningOpportunitiesTotal = null;
         let dmPatientsTotal = null;
         let controlledDMTotal = null;
         let uncontrolledDMTotal = null;
@@ -1744,12 +1763,14 @@
         function updateScreeningPercentage() {
             const screenedEl = document.getElementById('currentValue');
             const remainingEl = document.getElementById('percentageValue');
+            const opportunitiesEl = document.getElementById('opportunitiesValue');
             if (!screenedEl || !remainingEl) return;
 
             const hasTarget = screeningTargetTotal !== null && screeningTargetTotal !== undefined;
             const hasCurrent = screeningCurrentTotal !== null && screeningCurrentTotal !== undefined;
             const target = hasTarget ? screeningTargetTotal : 0;
             const current = hasCurrent ? screeningCurrentTotal : 0;
+            const opportunities = screeningOpportunitiesTotal ?? 0;
 
             const screenedPct = target > 0 ? (current / target) * 100 : 0;
             const remaining = Math.max(0, target - current);
@@ -1757,6 +1778,9 @@
 
             screenedEl.innerHTML = `<span class="metric-percent">${screenedPct.toFixed(1)}%</span><span class="metric-count">${current.toLocaleString()}</span>`;
             remainingEl.innerHTML = `<span class="metric-percent">${remainingPct.toFixed(1)}%</span><span class="metric-count">${remaining.toLocaleString()}</span>`;
+            if (opportunitiesEl) {
+                opportunitiesEl.innerHTML = `<span class="metric-count">${opportunities.toLocaleString()}</span>`;
+            }
         }
 
         function updateDMPercentages() {
@@ -1787,7 +1811,7 @@
             const container = document.getElementById('screeningZonesList');
             if (!container) return;
 
-            let html = '<div class="zone-header"><div class="zone-header-item">Zone</div><div class="zone-header-item">Screened</div><div class="zone-header-item">Weekly</div></div>';
+            let html = '<div class="zone-header"><div class="zone-header-item">Zone</div><div class="zone-header-item">Missed Opps</div><div class="zone-header-item">Screened</div><div class="zone-header-item">Weekly</div></div>';
             let rank = 1;
 
             // Find the "SCREENING Zone" header row
@@ -1804,14 +1828,17 @@
             for (let i = startRow; i < rows.length; i++) {
                 const row = rows[i] || [];
                 const zoneName = (row[SCREENING_ZONE_NAME_COL] || '').trim();
+                const oppRaw = (row[SCREENING_ZONE_OPP_COL] || '').trim();
                 const achievedRaw = (row[SCREENING_ZONE_VALUE_COL] || '').trim();
                 const targetRaw = (row[SCREENING_ZONE_TARGET_COL] || '').trim();
                 const indicatorRaw = (row[SCREENING_ZONE_INDICATOR_COL] || '').toString().trim();
                 const indicatorNum = parseFloat(indicatorRaw);
 
+                const oppNum = parseFloat(oppRaw.replace(/,/g, ''));
                 const achievedNum = parseFloat(achievedRaw.replace(/,/g, ''));
                 const targetNum = parseFloat(targetRaw.replace(/,/g, ''));
-                let zoneValueText = achievedRaw || achievedNum.toLocaleString();
+                const oppText = oppRaw || (!isNaN(oppNum) ? oppNum.toLocaleString() : '0');
+                let zoneValueText = achievedRaw || (isNaN(achievedNum) ? '0' : achievedNum.toLocaleString());
 
                 let indicatorArrow = '-';
                 let indicatorClass = 'zone-arrow zone-arrow-neutral';
@@ -1832,6 +1859,7 @@
                         <div class="zone-name">
                             <span class="zone-name-text">${zoneName}</span>
                         </div>
+                        <span class="zone-value">${oppText}</span>
                         <span class="zone-value">${zoneValueText}</span>
                         <div class="zone-7d-indicator">
                             <span class="${indicatorClass}">
@@ -2139,9 +2167,9 @@
             }
             
         function updateMobileAppData(data) {
-        // Update last updated timestamp (now in B5). Fallback to old I1 if missing.
+        // Update last updated timestamp (now in B6 -> row index 5, col index 1). Fallback to old I1 if missing.
         const lastUpdatedCell =
-            (data && data[4] && typeof data[4][1] !== 'undefined' ? data[4][1] : '') ||
+            (data && data[5] && typeof data[5][1] !== 'undefined' ? data[5][1] : '') ||
             (data && data[0] && typeof data[0][8] !== 'undefined' ? data[0][8] : '');
         const lastUpdatedEl = document.getElementById('lastUpdated');
         if (lastUpdatedEl) {
@@ -2227,6 +2255,14 @@
                         const remainingNum = parseInt((row[1] || '').replace(/,/g, ''), 10);
                         if (!isNaN(remainingNum)) {
                             // current + remaining should equal target; we keep current/target for percentage
+                        }
+                    } else if (firstCell.toLowerCase().startsWith('screening opportunities') && row[1]) {
+                        const oppNum = parseInt((row[1] || '').replace(/,/g, ''), 10);
+                        if (!isNaN(oppNum)) {
+                            screeningOpportunitiesTotal = oppNum;
+                            const oppEl = document.getElementById('opportunitiesValue');
+                            if (oppEl) oppEl.textContent = oppNum.toLocaleString();
+                            updateScreeningPercentage();
                         }
                     }
                 }
@@ -2316,6 +2352,62 @@
                     }
                 }
                 updateScreeningPercentage();
+
+                // DM overview from fixed cells Q2-Q4
+                if (dmPatientsTotal === null || controlledDMTotal === null || uncontrolledDMTotal === null) {
+                    const dmPatientsCell = data?.[DM_OVERVIEW_PATIENTS_ROW]?.[DM_OVERVIEW_COL];
+                    const dmControlledCell = data?.[DM_OVERVIEW_CONTROLLED_ROW]?.[DM_OVERVIEW_COL];
+                    const dmUncontrolledCell = data?.[DM_OVERVIEW_UNCONTROLLED_ROW]?.[DM_OVERVIEW_COL];
+
+                    const dmPatientsVal = parseInt(String(dmPatientsCell ?? '').replace(/,/g, ''), 10);
+                    const dmControlledVal = parseInt(String(dmControlledCell ?? '').replace(/,/g, ''), 10);
+                    const dmUncontrolledVal = parseInt(String(dmUncontrolledCell ?? '').replace(/,/g, ''), 10);
+
+                    if (!isNaN(dmPatientsVal)) {
+                        dmPatientsTotal = dmPatientsVal;
+                        const el = document.getElementById('dmPatientsValue');
+                        if (el) el.textContent = dmPatientsVal.toLocaleString();
+                    }
+                    if (!isNaN(dmControlledVal)) {
+                        controlledDMTotal = dmControlledVal;
+                        const el = document.getElementById('controlledDMValue');
+                        if (el) el.textContent = dmControlledVal.toLocaleString();
+                    }
+                    if (!isNaN(dmUncontrolledVal)) {
+                        uncontrolledDMTotal = dmUncontrolledVal;
+                        const el = document.getElementById('uncontrolledDMValue');
+                        if (el) el.textContent = dmUncontrolledVal.toLocaleString();
+                    }
+                    updateDMPercentages();
+                }
+
+                // PRE-DM overview from fixed cells AF2-AF4
+                if (predmPatientsTotal === null || predmToNormalTotal === null || predmNoFollowupTotal === null) {
+                    const prePatientsCell = data?.[PREDM_OVERVIEW_PATIENTS_ROW]?.[PREDM_OVERVIEW_COL];
+                    const preNormalCell = data?.[PREDM_OVERVIEW_NORMAL_ROW]?.[PREDM_OVERVIEW_COL];
+                    const preNoFollowCell = data?.[PREDM_OVERVIEW_NOFOLLOW_ROW]?.[PREDM_OVERVIEW_COL];
+
+                    const prePatientsVal = parseInt(String(prePatientsCell ?? '').replace(/,/g, ''), 10);
+                    const preNormalVal = parseInt(String(preNormalCell ?? '').replace(/,/g, ''), 10);
+                    const preNoFollowVal = parseInt(String(preNoFollowCell ?? '').replace(/,/g, ''), 10);
+
+                    if (!isNaN(prePatientsVal)) {
+                        predmPatientsTotal = prePatientsVal;
+                        const el = document.getElementById('preDMPatientsValue');
+                        if (el) el.textContent = prePatientsVal.toLocaleString();
+                    }
+                    if (!isNaN(preNormalVal)) {
+                        predmToNormalTotal = preNormalVal;
+                        const el = document.getElementById('preDMToNormalValue');
+                        if (el) el.textContent = preNormalVal.toLocaleString();
+                    }
+                    if (!isNaN(preNoFollowVal)) {
+                        predmNoFollowupTotal = preNoFollowVal;
+                        const el = document.getElementById('preDMNoFollowupValue');
+                        if (el) el.textContent = preNoFollowVal.toLocaleString();
+                    }
+                    updatePreDMPercentages();
+                }
 
                 // DM overview fallback (check columns N and O)
                 if (dmPatientsTotal === null) {
@@ -2440,12 +2532,13 @@
         // Populate PHCs for a specific zone
         function populateZonePHCs(data, zoneName, context) {
             let sectionName = '';
-            let nameCol, valueCol, targetCol, indicatorCol, controlledCol, normalCol, followupCol;
+            let nameCol, valueCol, targetCol, indicatorCol, controlledCol, normalCol, followupCol, oppCol;
             
             if (context === 'screening') {
                 sectionName = 'PHC Rankings - Screening';
                 nameCol = SCREENING_PHC_NAME_COL;
                 valueCol = SCREENING_PHC_VALUE_COL;
+                oppCol = SCREENING_PHC_OPP_COL;
                 targetCol = SCREENING_PHC_TARGET_COL;
                 indicatorCol = SCREENING_PHC_INDICATOR_COL;
             } else if (context === 'dm') {
@@ -2505,18 +2598,22 @@
                 if (phcZone === zoneName) {
                     if (context === 'screening') {
                         const achievedRaw = (row[valueCol] || '').trim();
+                        const oppRaw = oppCol !== undefined ? (row[oppCol] || '').trim() : '';
                         const targetRaw = (row[targetCol] || '').trim();
                         const indicatorRaw = (row[indicatorCol] || '').toString().trim();
                         
+                        const oppNum = parseFloat(oppRaw.replace(/,/g, ''));
                         const achievedNum = parseFloat(achievedRaw.replace(/,/g, ''));
                         const targetNum = parseFloat(targetRaw.replace(/,/g, ''));
                         const indicatorNum = parseFloat(indicatorRaw);
                         
                         // Show count instead of percentage
                         let valueText = achievedRaw || (achievedNum ? achievedNum.toLocaleString() : '0');
+                        const oppText = oppRaw || (!isNaN(oppNum) ? oppNum.toLocaleString() : '0');
                         
                         phcs.push({
                             name: phcName,
+                            opportunities: oppText,
                             value: valueText,
                             achieved: achievedNum,
                             target: targetNum,
@@ -2591,7 +2688,7 @@
             let html = '';
             
             if (context === 'screening') {
-                html = '<div class="zone-header"><div class="zone-header-item">PHC</div><div class="zone-header-item">Screened</div><div class="zone-header-item">Weekly</div></div>';
+                html = '<div class="zone-header"><div class="zone-header-item">PHC</div><div class="zone-header-item">Missed Opps</div><div class="zone-header-item">Screened</div><div class="zone-header-item">Weekly</div></div>';
                 phcs.forEach(phc => {
                     const indicatorNum = phc.indicator || 0;
                     let indicatorArrow = '-';
@@ -2612,6 +2709,7 @@
                             <div class="zone-name">
                                 <span class="zone-name-text">${displayName}</span>
                             </div>
+                            <span class="zone-value">${phc.opportunities || '0'}</span>
                             <span class="zone-value">${phc.value}</span>
                             <div class="zone-7d-indicator">
                                 <span class="${indicatorClass}">
