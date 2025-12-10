@@ -20,7 +20,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: #f5f5f5;
-            min-height: 100dvh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             padding: 0;
@@ -310,10 +310,8 @@
             position: relative;
             overflow: hidden;
             display: flex;
-            flex-direction: column;
             align-items: stretch;
             padding: 10px;
-            padding-bottom: env(safe-area-inset-bottom);
             min-height: 0;
         }
 
@@ -404,15 +402,15 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            min-height: 0;
             overflow: hidden;
+            min-height: 0;
         }
 
         /* Screen Count Template Styles */
         .screen-count-template {
             display: flex;
             flex-direction: column;
-            height: 100%;
+            flex: 1;
             gap: 16px;
             min-height: 0;
         }
@@ -982,7 +980,7 @@
         .dm-template {
             display: flex;
             flex-direction: column;
-            height: 100%;
+            flex: 1;
             gap: 16px;
             min-height: 0;
         }
@@ -1054,7 +1052,7 @@
         .predm-template {
             display: flex;
             flex-direction: column;
-            height: 100%;
+            flex: 1;
             gap: 16px;
             min-height: 0;
         }
@@ -1116,7 +1114,6 @@
 
             .container {
                 padding: 8px;
-                padding-bottom: calc(8px + env(safe-area-inset-bottom));
             }
 
             .card {
