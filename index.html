@@ -1685,21 +1685,15 @@
         const SCREENING_ZONE_LIMIT = 10;
 
         // PHC Rankings rows (after zone rankings)
-        const SCREENING_PHC_START_ROW = 23; // B24 -> zero-indexed row 23
         const SCREENING_PHC_NAME_COL = 9; // column J
         const SCREENING_PHC_OPP_COL = 10; // Opportunities By PHC
         const SCREENING_PHC_VALUE_COL = 11; // Screened by PHC
         const SCREENING_PHC_TARGET_COL = 12; // Target by PHC
         const SCREENING_PHC_INDICATOR_COL = 13; // 7-Day Indicator by PHC
-
-        const DM_PHC_START_ROW = 111; // Will be found dynamically
         const DM_PHC_NAME_COL = 24; // DM PHC
         const DM_PHC_TOTAL_COL = 25; // DM Patients
         const DM_PHC_CONTROLLED_COL = 26; // Controlled DM
-        const DM_PHC_UNCONTROLLED_COL = 27; // Uncontrolled DM
         const DM_PHC_INDICATOR_COL = 28; // 7-Day Indicator DM
-
-        const PREDM_PHC_START_ROW = 192; // Will be found dynamically
         const PREDM_PHC_NAME_COL = 39; // PRE-DM PHC
         const PREDM_PHC_TOTAL_COL = 40; // Pre-DM Patients
         const PREDM_PHC_NORMAL_COL = 41; // Pre-DM to Normal
@@ -1710,14 +1704,12 @@
         const DM_ZONE_NAME_COL = 18; // DM Zone
         const DM_ZONE_TOTAL_COL = 19; // DM Patients
         const DM_ZONE_CONTROLLED_COL = 20; // Controlled DM
-        const DM_ZONE_UNCONTROLLED_COL = 21; // Uncontrolled DM
         const DM_ZONE_INDICATOR_COL = 22; // 7-Day Indicator DM
         const DM_ZONE_LIMIT = 10;
 
         // Explicit overview rows
         const SCREENING_TARGET_ROW = 4; // B5 -> zero-indexed 4
         const SCREENING_CURRENT_ROW = 5; // B6 -> zero-indexed 5
-        const SCREENING_REMAINING_ROW = 6; // B7 -> zero-indexed 6
 
         // DM overview (fixed cells in column Q)
         const DM_OVERVIEW_COL = 16; // column Q (zero-indexed)
@@ -1731,13 +1723,6 @@
         const PREDM_OVERVIEW_NORMAL_ROW = 2; // AF3
         const PREDM_OVERVIEW_NOFOLLOW_ROW = 3; // AF4
 
-        const DM_PATIENTS_ROW = 92; // B93 -> zero-indexed 92
-        const DM_CONTROLLED_ROW = 90; // B91 -> zero-indexed 90
-        const DM_UNCONTROLLED_ROW = 94; // B95 -> zero-indexed 94
-
-        const PREDM_PATIENTS_ROW = 173; // Will be found dynamically
-        const PREDM_TO_NORMAL_ROW = 174; // Will be found dynamically
-        const PREDM_NO_FOLLOWUP_ROW = 175; // Will be found dynamically
         const PREDM_LABEL_COL = 28; // column AC (zero-indexed: 28)
         const PREDM_VALUE_COL = 29; // column AD (zero-indexed: 29)
 
@@ -1855,7 +1840,7 @@
 
                 const escapedZoneName = zoneName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 html += `
-                    <div class="zone-item zone-item--screening" onclick="navigateToZone('${escapedZoneName}', 'screening', ${achievedNum || 0}, ${targetNum || 0}, ${indicatorNum || 0})">
+                    <div class="zone-item zone-item--screening" onclick="navigateToZone('${escapedZoneName}', 'screening')">
                         <div class="zone-name">
                             <span class="zone-name-text">${zoneName}</span>
                         </div>
@@ -1928,7 +1913,7 @@
 
                 const escapedZoneName = zoneName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 html += `
-                    <div class="zone-item zone-item--dm" onclick="navigateToZone('${escapedZoneName}', 'dm', ${totalNum || 0}, ${controlledNum || 0}, ${indicatorNum || 0})">
+                    <div class="zone-item zone-item--dm" onclick="navigateToZone('${escapedZoneName}', 'dm')">
                         <div class="zone-name">
                             <span class="zone-name-text">${zoneName}</span>
                         </div>
@@ -2002,7 +1987,7 @@
 
                 const escapedZoneName = zoneName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 html += `
-                    <div class="zone-item zone-item--predm" onclick="navigateToZone('${escapedZoneName}', 'predm', ${totalNum || 0}, ${normalNum || 0}, ${followupNum || 0}, ${indicatorNum || 0})">
+                    <div class="zone-item zone-item--predm" onclick="navigateToZone('${escapedZoneName}', 'predm')">
                         <div class="zone-name">
                             <span class="zone-name-text">${zoneName}</span>
                         </div>
@@ -2799,7 +2784,7 @@
         }
 
         // Zone navigation functions
-        function navigateToZone(zoneName, context, value1, value2, value3, value4) {
+        function navigateToZone(zoneName, context) {
             // Hide main view and show zone detail view
             const mainView = document.getElementById('mainView');
             const zoneDetailView = document.getElementById('zoneDetailView');
